@@ -304,7 +304,7 @@
       const typingRef = ref(database, `rooms/${currentRoom}/typing`);
       onValue(typingRef, (snapshot) => {
         const typingData = snapshot.val();
-        const typingUsers = Object.keys(typingData).filter((username) => typingData[username]);
+        const typingUsers = Object.keys(typingData).filter((username) => typingData[username] && username !== currentUsername);
         if (typingUsers.length > 0) {
           const typingText = typingUsers.length === 1
             ? `${typingUsers[0]} is typing...`
