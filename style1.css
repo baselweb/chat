@@ -76,26 +76,26 @@ body {
   margin: 10px 0;
   padding: 14px;
   font-size: 16px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  border: 1px solid #333;
+  border-radius: 10px;
   outline: none;
   transition: all 0.3s ease;
 }
 
 .login-register input:focus,
 .login-register button:hover {
-  border-color: #ff7f50;
+  border-color: #333;
 }
 
 .login-register button {
   background-color: lightblue;
   color: #333;
   cursor: pointer;
-  font-weight: bold;
+  font-weight: normal;
 }
 
 .login-register button:active {
-  background-color: #e16f4a;
+  background-color: blue;
 }
 
 #chat {
