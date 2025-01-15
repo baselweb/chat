@@ -72,7 +72,7 @@ body {
   z-index: 10;
   padding: 8px; /* Reduced padding to make the header shorter */
   text-align: center;
-  font-size: 1.5rem; /* Adjusted font size for better balance */
+  font-size: 0.75rem; /* Adjusted font size for better balance */
 }
 
 #logout-button {
