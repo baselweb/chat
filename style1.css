@@ -1,19 +1,20 @@
+/* Header */
 .header {
   position: fixed;
   background-color: rgba(254, 254, 254, 0.8);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid #ddd;
-  align-items: center;
-  justify-content: center;
   text-align: center;
+  top: 0;
   right: 0;
   left: 0;
-  top: 0;
-  overflow-y: auto;
-  background-color: white;
   z-index: 9;
+  padding: 15px; /* Adjust padding as needed */
+  background-color: white;
+  box-sizing: border-box;
 }
 
+/* Typing Indicator */
 #typing-indicator {
   color: gray;
   padding: 7px;
@@ -21,158 +22,37 @@
   background-color: #f9f9f9;
 }
 
-#logout-button {
-  position: fixed;
-  top: 15px;
-  right: 10px;
-  background-color: lightblue;
-  color: black;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  z-index: 1000;
-}
-
-#logout-button:hover {
-  background-color: #ff2a3e;
-}
-
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: white;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.container {
-  background-color: white;
-  height: 100%;
-  width: 100%;
-  max-width: 420px;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  transition: background-color 0.3s ease;
-}
-
-.login-register {
-  padding: 30px;
-  text-align: center;
-}
-
-.login-register h2 {
-  font-size: 1.8rem;
-  color: #333;
-  margin-bottom: 20px;
-}
-
-.login-register input,
-.login-register button {
-  width: 90%;
-  margin: 10px 0;
-  padding: 14px;
-  font-size: 16px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  outline: none;
-  transition: all 0.3s ease;
-}
-
-.login-register input:focus,
-.login-register button:hover {
-  border-color: #ff7f50;
-}
-
-.login-register button {
-  background-color: #ff7f50;
-  color: white;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.login-register button:active {
-  background-color: #e16f4a;
-}
-
+/* Chat Container */
 #chat {
-  background-color: white;
   display: flex;
   flex-direction: column;
-  flex: 1;
-  height: 100%;
+  height: 100vh; /* Full viewport height */
   width: 100%;
-  padding-bottom: 70px;
   overflow: hidden;
 }
 
+/* Messages Container */
 .messages {
-  width: 100%;      /* Take up full width */
-  height: 100%;     /* Take up full height */
-  overflow-y: auto; /* Allow scrolling if messages exceed the container height */
-  padding: 20px;    /* Padding for spacing around messages */
-  box-sizing: border-box; /* Ensure padding is included in the height and width calculations */
-  position: relative; /* Position relative for message time positioning */
-  background-color: #f9f9f9; /* Light background color */
-}
-
-.message {
-  padding: 14px 18px;
-  margin: 8px 0;
-  max-width: 75%;
-  border-radius: 20px;
-  line-height: 1.6;
-  word-wrap: break-word;
+  flex-grow: 1;   /* Allow this container to grow and take up available space */
+  overflow-y: auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  box-sizing: border-box;
   position: relative;
-  font-size: 0.95rem;
-  cursor: pointer;
-  user-select: none;
-  transition: all 0.3s ease;
 }
 
-.sent {
-  align-self: flex-end;
-  background-color: lightblue;
-  color: black;
-}
-
-.received {
-  align-self: flex-start;
-  background-color: #e0e0e0;
-  color: black;
-}
-
-.message-time {
-  font-size: 0.75rem;
-  color: darkgrey;
-  position: absolute;
-  bottom: -18px;
-}
-
-.sent .message-time {
-  right: 12px;
-}
-
-.received .message-time {
-  left: 12px;
-}
-
+/* Input Area */
 .input-area {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  margin: auto;
-  display: flex;
   background-color: rgba(254, 254, 254, 0.8);
   backdrop-filter: blur(10px);
   padding: 14px;
   border-top: 1px solid #ddd;
   z-index: 10;
+  box-sizing: border-box;
 }
 
 .input-area input {
@@ -202,14 +82,7 @@ body {
   transition: background-color 0.3s ease;
 }
 
-.input-area button:hover {
-  background-color: lightblue;
-}
-
-.input-area button:active {
-  background-color: lightblue;
-}
-
+/* Dark Theme */
 body.dark-theme {
   background-color: #121212;
   color: white;
@@ -217,14 +90,6 @@ body.dark-theme {
 
 .container.dark-theme {
   background-color: #121212;
-}
-
-.login-register.dark-theme {
-  background-color: #1e1e1e;
-}
-
-.login-register h2.dark-theme {
-  color: #f0f0f0;
 }
 
 .messages.dark-theme {
@@ -263,6 +128,7 @@ body.dark-theme {
   border-color: #2a75d7;
 }
 
+/* Media Queries */
 @media (max-width: 600px) {
   .container {
     width: 100%;
