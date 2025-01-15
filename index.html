@@ -362,18 +362,26 @@ function applyTheme(theme) {
 }
 
 function initializeTheme() {
+  // Get saved theme from localStorage
   const savedTheme = localStorage.getItem("theme");
+
+  // If there's no saved theme, detect system theme
   const theme = savedTheme || detectSystemTheme();
+
+  // Apply the detected or saved theme
   applyTheme(theme);
-  localStorage.setItem("theme", theme); // Store the theme for future visits
+
+  // Save the theme in localStorage for future visits
+  localStorage.setItem("theme", theme);
 }
 
 window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
   const theme = e.matches ? "dark" : "light";
   applyTheme(theme);
-  localStorage.setItem("theme", theme); // Save the updated theme in localStorage
+  localStorage.setItem("theme", theme); // Save updated theme in localStorage
 });
 
+// Initialize theme when the page loads
 initializeTheme();
   </script>
 </body>
