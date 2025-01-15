@@ -188,6 +188,7 @@ body {
   background-color: rgba(254, 254, 254, 0.8);
   backdrop-filter: blur(10px);
   padding: 14px;
+  padding-bottom: 10px;
   border-top: 1px solid #ddd;
   z-index: 10;
 }
