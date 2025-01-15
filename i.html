@@ -5,8 +5,156 @@
   <meta charset="UTF-8">
   <title>Chat Rooms</title>
   <style>
-#logout-button { background-color: lightblue; color: black; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; z-index: 1000; } #logout-button:hover { background-color: #ff2a3e; } /* Global Styles */ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; height: 100vh; display: flex; flex-direction: column; justify-content: flex-start; background-color: #f9f9f9; } .container { display: flex; flex-direction: column; justify-content: flex-start; height: 100%; width: 100%; max-width: 600px; margin: auto; } /* Auth (Login/Register) */ #auth { text-align: center; padding: 20px; flex: 1; } .login-register input, .login-register button { width: 80%; padding: 12px; margin: 10px 0; border-radius: 5px; font-size: 1em; border: 1px solid #ccc; } .login-register button { cursor: pointer; background-color: #4CAF50; color: white; border: none; } .login-register button:hover { background-color: #45a049; } .login-register #auth-error { color: red; margin-top: 10px; } /* Room Selection */ #room-selection { text-align: center; flex: 1; padding: 20px; } /* Chat Room */ #chat { display: none; flex-direction: column; height: 100%; overflow: hidden; } .header { background-color: #f0f0f0; padding: 15px; position: fixed; text-align: center; top: 0; left: 0; right: 0; display: flex; justify-content: space-between; align-items: center; background-color: rgba(254, 254, 254, 0.8); backdrop-filter: blur(10px); border-bottom: 1px solid #ddd; z-index: 10; } .header h3 { margin: 0; font-size: 1.0em; color: #333; flex-grow: 1; text-align: left; } .messages { flex: 1; overflow-y: auto; padding: 20px; background-color: #f9f9f9; display: flex; flex-direction: column; gap: 12px; margin-top: 60px; /* Add space for the header */ } .message { padding: 14px 18px; margin: 8px 0; max-width: 75%; border-radius: 20px; line-height: 1.6; word-wrap: break-word; position: relative; font-size: 0.95rem; cursor: pointer; user-select: none; transition: all 0.3s ease; } .sent { align-self: flex-end; background-color: lightblue; color: black; } .received { align-self: flex-start; background-color: #e0e0e0; color: black; } .input-area { position: fixed; bottom: 0; left: 0; right: 0; margin: auto; display: flex; background-color: rgba(254, 254, 254, 0.8); backdrop-filter: blur(10px); padding: 14px; border-top: 1px solid #ddd; z-index: 10; } .input-area input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 25px; font-size: 16px; outline: none; transition: border-color 0.3s ease, box-shadow 0.3s ease; } .input-area input:focus { border-color: lightblue; box-shadow: 0 0 5px rgba(255, 127, 50, 0.3); } .input-area button { margin-left: 10px; padding: 12px; border: none; background-color: lightblue; color: black; font-size: 18px; border-radius: 50%; cursor: pointer; transition: background-color 0.3s ease; } .input-area button:hover { background-color: lightblue; } .input-area button:active { background-color: lightblue; } /* Error Message */ #room-error, #auth-error { color: red; font-size: 0.9em; } /* Logout Button in Header */ #logout-button { background-color: lightblue; color: black; padding: 8px 15px; border-radius: 5px; cursor: pointer; transition: background-color 0.3s ease; } #logout-button:hover { background-color: #ff2a3e; }
-    /* Back Button in Chat Room */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-color: #f9f9f9;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      height: 100%;
+      width: 100%;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    /* Auth (Login/Register) */
+    #auth {
+      text-align: center;
+      padding: 20px;
+      flex: 1;
+    }
+
+    .login-register input,
+    .login-register button {
+      width: 80%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 5px;
+      font-size: 1em;
+      border: 1px solid #ccc;
+    }
+
+    .login-register button {
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+    }
+
+    .login-register button:hover {
+      background-color: #45a049;
+    }
+
+    .login-register #auth-error {
+      color: red;
+      margin-top: 10px;
+    }
+
+    /* Room Selection */
+    #room-selection {
+      text-align: center;
+      flex: 1;
+      padding: 20px;
+    }
+
+    /* Chat Room */
+    #chat {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #333;
+      color: white;
+      padding: 10px;
+    }
+
+    .header h3 {
+      margin: 0;
+      font-size: 1.2em;
+    }
+
+    /* Messages List */
+    .messages {
+      flex: 1;
+      overflow-y: auto; /* Enable scrolling */
+      padding: 10px;
+      background-color: #f9f9f9;
+      margin-bottom: 10px; /* Space for the input area */
+    }
+
+    .message {
+      padding: 14px 18px;
+      margin: 8px 0;
+      max-width: 75%;
+      border-radius: 20px;
+      line-height: 1.6;
+      word-wrap: break-word;
+      position: relative;
+      font-size: 0.95rem;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.3s ease;
+    }
+
+    .sent {
+      align-self: flex-end;
+      background-color: lightblue;
+      color: black;
+    }
+
+    .received {
+      align-self: flex-start;
+      background-color: #e0e0e0;
+      color: black;
+    }
+
+    /* Input Area (Message Box) */
+    .input-area {
+      padding: 10px;
+      background-color: #fff;
+      border-top: 1px solid #ccc;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #message-input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    #send-button {
+      padding: 10px 15px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+
+    #send-button:hover {
+      background-color: #45a049;
+    }
+
+    /* Back to Room Selector Button */
     #back-to-selector-button {
       background-color: lightblue;
       color: black;
@@ -14,6 +162,7 @@
       border-radius: 5px;
       cursor: pointer;
       z-index: 1000;
+      margin-top: 10px;
       margin-left: 10px;
     }
 
@@ -21,52 +170,50 @@
       background-color: #ff2a3e;
     }
 
-    /* Room Search in Room Selection */
-    #room-search {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      font-size: 1rem;
-    }
-
-    .room-item {
-      padding: 12px;
-      margin: 6px 0;
-      background-color: #f0f0f0;
+    /* Logout Button */
+    #logout-button {
+      background-color: red;
+      color: white;
+      padding: 8px 16px;
       border-radius: 5px;
       cursor: pointer;
-      font-size: 1rem;
+      z-index: 1000;
     }
 
-    .room-item:hover {
-      background-color: #ddd;
+    #logout-button:hover {
+      background-color: darkred;
     }
 
-    .room-item:active {
-      background-color: #ccc;
+    /* Error Messages */
+    #room-error, #auth-error {
+      color: red;
+      font-size: 0.9em;
     }
   </style>
 </head>
 <body>
   <div class="container">
+    <!-- Authentication Section (Login/Register) -->
     <div id="auth">
-      <!-- Authentication UI (Login/Register) -->
+      <div class="login-register">
+        <h2>Login to Chat</h2>
+        <input type="email" id="email" placeholder="Email" />
+        <input type="password" id="password" placeholder="Password" />
+        <button id="login">Login</button>
+        <button id="forgot-password">Forgot Password?</button>
+        <button id="register">Register</button>
+        <div id="auth-error"></div>
+      </div>
     </div>
 
+    <!-- Room Selection -->
     <div id="room-selection" style="display: none;">
       <div class="login-register">
         <h2>Join / Create Room</h2>
-        <input type="text" id="room-search" placeholder="Search for rooms..." />
         <input type="text" id="room-name" placeholder="Enter room name" />
         <button id="join-room">Join Room</button>
         <button id="create-room">Create Room</button>
         <div id="room-error"></div>
-
-        <div id="room-list">
-          <!-- List of available rooms will appear here -->
-        </div>
       </div>
     </div>
 
@@ -90,14 +237,14 @@
     import { sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
-    import { getDatabase, ref, push, onValue, set, get } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
+    import { getDatabase, ref, push, onValue, set } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAC49cgzmUZjqRM1akkEJmIOLz_NKBCC5k",
-      authDomain: "adiasta-d4106.firebaseapp.com",
-      databaseURL: "https://adiasta-d4106-default-rtdb.firebaseio.com",
-      projectId: "adiasta-d4106",
-      storageBucket: "adiasta-d4106.appspot.com",
+      authDomain: "adiasta-686e4.firebaseapp.com",
+      databaseURL: "https://adiasta-686e4-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "adiasta-686e4",
+      storageBucket: "adiasta-686e4.appspot.com",
       messagingSenderId: "822931467224",
       appId: "1:822931467224:web:46f81b5779491efe6260ad",
       measurementId: "G-68996BGLFE",
@@ -115,8 +262,6 @@
     const joinRoomButton = document.getElementById("join-room");
     const createRoomButton = document.getElementById("create-room");
     const roomNameInput = document.getElementById("room-name");
-    const roomSearchInput = document.getElementById("room-search");
-    const roomList = document.getElementById("room-list");
     const authError = document.getElementById("auth-error");
     const roomError = document.getElementById("room-error");
     const messagesDiv = document.getElementById("message-list");
@@ -125,131 +270,93 @@
     const logoutButton = document.getElementById("logout-button");
     const roomNameHeader = document.getElementById("room-name-header");
     const backToSelectorButton = document.getElementById("back-to-selector-button");
+    const typingIndicator = document.getElementById("typing-indicator");
 
     let currentRoom = null;
     let currentUsername = null;
 
-    const savedUser = localStorage.getItem("loggedInUser");
-    if (savedUser) {
-      const { uid, username } = JSON.parse(savedUser);
-      currentUsername = username;
-      showRoomSelection();
-    }
-
-    function displayError(element, message) {
-      element.textContent = message;
-      element.style.color = "red";
-      setTimeout(() => (element.textContent = ""), 3000);
-    }
-
-    function showRoomSelection() {
-      authContainer.style.display = "none";
-      roomSelection.style.display = "block";
-      loadAvailableRooms();
-    }
-
-    function showChat() {
-      roomSelection.style.display = "none";
-      chatContainer.style.display = "flex";
-      roomNameHeader.textContent = currentRoom;
-      loadMessages();
-    }
-
-    loginButton.addEventListener("click", () => {
+    loginButton.addEventListener("click", function() {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
+      
       signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-          const user = userCredential.user;
-          currentUsername = user.email.split("@")[0];
-          localStorage.setItem(
-            "loggedInUser",
-            JSON.stringify({ uid: user.uid, username: currentUsername })
-          );
-          showRoomSelection();
+          currentUsername = userCredential.user.email;
+          authContainer.style.display = "none";
+          roomSelection.style.display = "block";
         })
-        .catch((error) => displayError(authError, error.message));
+        .catch((error) => {
+          authError.innerText = "Login failed: " + error.message;
+        });
     });
 
-    registerButton.addEventListener("click", () => {
+    registerButton.addEventListener("click", function() {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
+      
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-          const user = userCredential.user;
-          currentUsername = user.email.split("@")[0];
-          localStorage.setItem(
-            "loggedInUser",
-            JSON.stringify({ uid: user.uid, username: currentUsername })
-          );
-          showRoomSelection();
+          currentUsername = userCredential.user.email;
+          authContainer.style.display = "none";
+          roomSelection.style.display = "block";
         })
-        .catch((error) => displayError(authError, error.message));
+        .catch((error) => {
+          authError.innerText = "Registration failed: " + error.message;
+        });
     });
 
-    function loadAvailableRooms() {
-      const roomsRef = ref(database, "rooms");
-      get(roomsRef).then((snapshot) => {
-        const rooms = snapshot.val();
-        roomList.innerHTML = ""; // Clear previous rooms
-
-        if (rooms) {
-          Object.keys(rooms).forEach((roomKey) => {
-            const roomDiv = document.createElement("div");
-            roomDiv.classList.add("room-item");
-            roomDiv.textContent = roomKey;
-            roomDiv.addEventListener("click", () => {
-              currentRoom = roomKey;
-              showChat();
-            });
-            roomList.appendChild(roomDiv);
-          });
-        }
-      });
-    }
-
-    function joinOrCreateRoom(action) {
-      const roomName = roomNameInput.value.trim();
+    // Join Room
+    joinRoomButton.addEventListener("click", function() {
+      const roomName = roomNameInput.value;
       if (roomName) {
         currentRoom = roomName;
-        const roomRef = ref(database, `rooms/${roomName}`);
-        if (action === "create") {
-          set(roomRef, { createdAt: Date.now() }).then(() => showChat());
-        } else {
-          onValue(roomRef, (snapshot) => {
-            if (snapshot.exists()) {
-              showChat();
-            } else {
-              displayError(roomError, "Room does not exist. Try creating it.");
-            }
-          });
-        }
+        roomNameHeader.innerText = roomName;
+        roomSelection.style.display = "none";
+        chatContainer.style.display = "block";
+        loadMessages();
       } else {
-        displayError(roomError, "Room name cannot be empty.");
+        roomError.innerText = "Please enter a room name!";
       }
-    }
+    });
 
-    joinRoomButton.addEventListener("click", () => joinOrCreateRoom("join"));
-    createRoomButton.addEventListener("click", () => joinOrCreateRoom("create"));
+    // Create Room
+    createRoomButton.addEventListener("click", function() {
+      const roomName = roomNameInput.value;
+      if (roomName) {
+        currentRoom = roomName;
+        roomNameHeader.innerText = roomName;
+        roomSelection.style.display = "none";
+        chatContainer.style.display = "block";
+        loadMessages();
+      } else {
+        roomError.innerText = "Please enter a room name!";
+      }
+    });
 
-    backToSelectorButton.addEventListener("click", () => {
+    // Send Message
+    sendButton.addEventListener("click", function() {
+      const message = messageInput.value;
+      if (message.trim() !== "") {
+        const messageRef = ref(database, `rooms/${currentRoom}/messages`);
+        const newMessage = {
+          username: currentUsername,
+          text: message,
+          timestamp: Date.now(),
+        };
+        push(messageRef, newMessage);
+        messageInput.value = "";
+      }
+    });
+
+    // Back to Room Selector
+    backToSelectorButton.addEventListener("click", function() {
+      roomSelection.style.display = "block";
+      chatContainer.style.display = "none";
       currentRoom = null;
-      showRoomSelection();
+      roomNameHeader.innerText = "";
     });
 
-    roomSearchInput.addEventListener("input", () => {
-      const query = roomSearchInput.value.toLowerCase();
-      const rooms = roomList.getElementsByClassName("room-item");
-
-      Array.from(rooms).forEach((room) => {
-        if (room.textContent.toLowerCase().includes(query)) {
-          room.style.display = "";
-        } else {
-          room.style.display = "none";
-        }
-      });
-    });
-
+    // Load Messages
     function loadMessages() {
       const messagesRef = ref(database, `rooms/${currentRoom}/messages`);
       messagesDiv.innerHTML = "";
@@ -270,42 +377,21 @@
             `;
             messagesDiv.appendChild(messageDiv);
           }
+          // Scroll to the bottom
           messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
       });
     }
-
-    sendButton.addEventListener("click", () => {
-      const text = messageInput.value.trim();
-      if (text) {
-        push(ref(database, `rooms/${currentRoom}/messages`), {
-          username: currentUsername,
-          text: text,
-          timestamp: Date.now(),
-        });
-        messageInput.value = "";
-      }
-    });
-
-    logoutButton.addEventListener("click", () => {
+    logoutButton.addEventListener("click", function() {
       signOut(auth).then(() => {
-        localStorage.removeItem("loggedInUser");
-        location.reload();
+        authContainer.style.display = "block";
+        chatContainer.style.display = "none";
+        roomSelection.style.display = "none";
+        currentRoom = null;
+        roomNameHeader.innerText = "";
+      }).catch((error) => {
+        console.log("Error logging out:", error);
       });
-    });
-
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        currentUsername = user.email.split("@")[0];
-        showRoomSelection();
-      }
-    });
-
-    messageInput.addEventListener("keypress", (event) => {
-      if (event.key === "Enter") {
-        event.preventDefault();
-        sendButton.click();
-      }
     });
   </script>
 </body>
