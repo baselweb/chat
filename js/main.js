@@ -1,9 +1,9 @@
-import { initializeTheme } from './theme.js';
-import { loginUser, registerUser, logoutUser } from './auth.js';
-import { joinOrCreateRoom } from './room.js';
-import { loadMessages, sendMessage } from './messages.js';
-import { loadUsers } from './users.js';
-import { loadTypingIndicator, updateTypingStatus } from './typing.js';
+import { initializeTheme } from 'js/theme.js';
+import { loginUser, registerUser, logoutUser } from 'js/auth.js';
+import { joinOrCreateRoom } from 'js/room.js';
+import { loadMessages, sendMessage } from 'js/messages.js';
+import { loadUsers } from 'js/users.js';
+import { loadTypingIndicator, updateTypingStatus } from 'js/typing.js';
 
 document.addEventListener("DOMContentLoaded", () => {
   initializeTheme();
