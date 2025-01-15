@@ -349,40 +349,64 @@
         }
       });
     }
- function detectSystemTheme() {
-  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-}
 
-function applyTheme(theme) {
-  if (theme === "dark") {
-    document.body.classList.add("dark-theme");
-  } else {
-    document.body.classList.remove("dark-theme");
+
+    
+ document.addEventListener("DOMContentLoaded", () => {
+  function detectSystemTheme() {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
   }
-}
 
-function initializeTheme() {
-  // Get saved theme from localStorage
-  const savedTheme = localStorage.getItem("theme");
+  function applyTheme(theme) {
+    // Apply the theme class to various elements
+    const elementsToUpdate = [
+      document.body,
+      document.querySelector('.header'),
+      document.querySelector('#typing-indicator'),
+      document.querySelector('#logout-button'),
+      document.querySelector('#go-back'),
+      document.querySelector('.container'),
+      document.querySelector('.messages'),
+      document.querySelector('.input-area'),
+      ...document.querySelectorAll('.login-register'),  // Spread NodeList to apply to each element
+      ...document.querySelectorAll('.message')  // Spread NodeList to apply to each element
+    ];
 
-  // If there's no saved theme, detect system theme
-  const theme = savedTheme || detectSystemTheme();
+    elementsToUpdate.forEach(element => {
+      if (element) {
+        if (theme === 'dark') {
+          element.classList.add('dark-theme');
+        } else {
+          element.classList.remove('dark-theme');
+        }
+      }
+    });
 
-  // Apply the detected or saved theme
-  applyTheme(theme);
+    // Save the selected theme to localStorage
+    localStorage.setItem("theme", theme);
+  }
 
-  // Save the theme in localStorage for future visits
-  localStorage.setItem("theme", theme);
-}
+  function initializeTheme() {
+    // Get theme from localStorage or default to system theme
+    const savedTheme = localStorage.getItem("theme");
+    const theme = savedTheme || detectSystemTheme();
+    applyTheme(theme);
+  }
 
-window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
-  const theme = e.matches ? "dark" : "light";
-  applyTheme(theme);
-  localStorage.setItem("theme", theme); // Save updated theme in localStorage
+  // Detect system theme changes
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
+    const theme = e.matches ? "dark" : "light";
+    applyTheme(theme);
+  });
+
+  // Initialize the theme when the page loads
+  initializeTheme();
 });
 
-// Initialize theme when the page loads
-initializeTheme();
+
+
+
+    
   </script>
 </body>
 </html>
