@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta name="theme-color" content="#ffffff">
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-68996BGLFE"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -350,8 +351,6 @@
       });
     }
 
-
-    
  document.addEventListener("DOMContentLoaded", () => {
   function detectSystemTheme() {
     return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
@@ -368,8 +367,8 @@
       document.querySelector('.container'),
       document.querySelector('.messages'),
       document.querySelector('.input-area'),
-      ...document.querySelectorAll('.login-register'),  // Spread NodeList to apply to each element
-      ...document.querySelectorAll('.message')  // Spread NodeList to apply to each element
+      ...document.querySelectorAll('.login-register'),
+      ...document.querySelectorAll('.message')
     ];
 
     elementsToUpdate.forEach(element => {
@@ -381,6 +380,16 @@
         }
       }
     });
+
+    // Update the theme-color meta tag dynamically
+    const themeColorMetaTag = document.querySelector('meta[name="theme-color"]');
+    if (themeColorMetaTag) {
+      if (theme === 'dark') {
+        themeColorMetaTag.setAttribute('content', '#121212');  // Dark theme color
+      } else {
+        themeColorMetaTag.setAttribute('content', '#ffffff');  // Light theme color
+      }
+    }
 
     // Save the selected theme to localStorage
     localStorage.setItem("theme", theme);
@@ -402,7 +411,8 @@
   // Initialize the theme when the page loads
   initializeTheme();
 });
-
+    
+ 
 
 
 
