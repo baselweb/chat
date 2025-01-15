@@ -38,6 +38,23 @@
   background-color: #ff2a3e;
 }
 
+#go-back {
+  position: fixed;
+  top: 15px;
+  left: 10px;
+  background-color: lightblue;
+  color: black;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+#go-back:hover {
+  background-color: #ff2a3e;
+}
+
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
