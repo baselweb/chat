@@ -73,12 +73,12 @@ body {
 .login-register button {
   width: 90%;
   margin: 10px 0;
-  padding: 14px;
+  padding: 12px;
   font-size: 16px;
   border: 1px solid #ddd;
-  border-radius: 10px;
+  border-radius: 25px;
   outline: none;
-  transition: all 0.3s ease;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .login-register input {
