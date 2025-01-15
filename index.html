@@ -349,12 +349,13 @@
         }
       });
     }
-    function detectSystemTheme() {
+ function detectSystemTheme() {
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
 function applyTheme(theme) {
   document.body.classList.toggle("dark-theme", theme === "dark");
+  document.body.classList.toggle("light-theme", theme === "light");
 }
 
 function initializeTheme() {
