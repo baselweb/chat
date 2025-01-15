@@ -197,15 +197,16 @@
     }
 
     function showChat() {
-      roomSelection.style.display = "none";
-      chatContainer.style.display = "flex";
-      const usersHeader = document.querySelector(".header h3");
-      usersHeader.textContent = currentRoom;
-      loadMessages();
-      loadUsers();
-      loadTypingIndicator();
-      goBackButton.style.display = "inline-block"; // Show Go Back button
-    }
+  roomSelection.style.display = "none";
+  chatContainer.style.display = "flex";
+  const usersHeader = document.querySelector(".header h3");
+  usersHeader.textContent = currentRoom;
+  loadMessages();
+  loadUsers();
+  loadTypingIndicator();
+  autoScrollToBottom(); // Ensure auto-scrolling when entering a room
+  goBackButton.style.display = "inline-block"; // Show Go Back button
+}
 
     loginButton.addEventListener("click", () => {
       const email = document.getElementById("email").value;
@@ -266,30 +267,37 @@
     createRoomButton.addEventListener("click", () => joinOrCreateRoom("create"));
 
     function loadMessages() {
-      const messagesRef = ref(database, `rooms/${currentRoom}/messages`);
+  const messagesRef = ref(database, `rooms/${currentRoom}/messages`);
+  messagesDiv.innerHTML = "";
+
+  onValue(messagesRef, (snapshot) => {
+    const messages = snapshot.val();
+    if (messages) {
       messagesDiv.innerHTML = "";
-
-      onValue(messagesRef, (snapshot) => {
-        const messages = snapshot.val();
-        if (messages) {
-          messagesDiv.innerHTML = "";
-          for (let id in messages) {
-            const message = messages[id];
-            const messageDiv = document.createElement("div");
-            messageDiv.classList.add("message");
-            messageDiv.classList.add(message.username === currentUsername ? "sent" : "received");
-            messageDiv.id = `message-${id}`;
-            messageDiv.innerHTML = `
-              <strong>${message.username}:</strong> ${message.text}
-              <div style="font-size: 0.8em; color: gray;">${new Date(message.timestamp).toLocaleTimeString()}</div>
-            `;
-            messagesDiv.appendChild(messageDiv);
-          }
-          messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        }
-      });
+      for (let id in messages) {
+        const message = messages[id];
+        const messageDiv = document.createElement("div");
+        messageDiv.classList.add("message");
+        messageDiv.classList.add(message.username === currentUsername ? "sent" : "received");
+        messageDiv.id = `message-${id}`;
+        messageDiv.innerHTML = `
+          <strong>${message.username}:</strong> ${message.text}
+          <div style="font-size: 0.8em; color: gray;">${new Date(message.timestamp).toLocaleTimeString()}</div>
+        `;
+        messagesDiv.appendChild(messageDiv);
+      }
+      autoScrollToBottom(); // Ensure auto-scrolling
     }
+  });
+}
 
+function autoScrollToBottom() {
+  const messagesDiv = document.getElementById("message-list");
+  if (messagesDiv) {
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  }
+}
+    
     function loadUsers() {
       const usersRef = ref(database, `rooms/${currentRoom}/users`);
       onValue(usersRef, (snapshot) => {
@@ -340,25 +348,26 @@
     }
 
     sendButton.addEventListener("click", () => {
-      const text = messageInput.value.trim();
-      if (text) {
-        if (privateChatWith) {
-          const privateMessageRef = ref(database, `privateChats/${currentUsername}_${privateChatWith}`);
-          push(privateMessageRef, {
-            username: currentUsername,
-            text: text,
-            timestamp: Date.now(),
-          });
-        } else {
-          push(ref(database, `rooms/${currentRoom}/messages`), {
-            username: currentUsername,
-            text: text,
-            timestamp: Date.now(),
-          });
-        }
-        messageInput.value = "";
-      }
-    });
+  const text = messageInput.value.trim();
+  if (text) {
+    if (privateChatWith) {
+      const privateMessageRef = ref(database, `privateChats/${currentUsername}_${privateChatWith}`);
+      push(privateMessageRef, {
+        username: currentUsername,
+        text: text,
+        timestamp: Date.now(),
+      });
+    } else {
+      push(ref(database, `rooms/${currentRoom}/messages`), {
+        username: currentUsername,
+        text: text,
+        timestamp: Date.now(),
+      });
+    }
+    messageInput.value = "";
+    autoScrollToBottom(); // Ensure auto-scrolling
+  }
+});
 
     // Go Back Button event listener
     goBackButton.addEventListener("click", () => {
