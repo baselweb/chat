@@ -1,0 +1,40 @@
+.message {
+  padding: 14px 18px;
+  margin: 8px 0;
+  max-width: 75%;
+  border-radius: 20px;
+  line-height: 1.6;
+  word-wrap: break-word;
+  position: relative;
+  font-size: 0.95rem;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.3s ease;
+}
+
+.sent {
+  align-self: flex-end;
+  background-color: lightblue;
+  color: black;
+}
+
+.received {
+  align-self: flex-start;
+  background-color: #e0e0e0;
+  color: black;
+}
+
+.message-time {
+  font-size: 0.75rem;
+  color: darkgrey;
+  position: absolute;
+  bottom: -18px;
+}
+
+.sent .message-time {
+  right: 12px;
+}
+
+.received .message-time {
+  left: 12px;
+}
