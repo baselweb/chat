@@ -111,14 +111,13 @@ body {
 }
 
 .messages {
-  flex: 1;
-  overflow-y: auto;
-  padding: 20px;
-  background-color: #f9f9f9;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  transition: background-color 0.3s ease;
+  width: 100%;      /* Take up full width */
+  height: 100%;     /* Take up full height */
+  overflow-y: auto; /* Allow scrolling if messages exceed the container height */
+  padding: 20px;    /* Padding for spacing around messages */
+  box-sizing: border-box; /* Ensure padding is included in the height and width calculations */
+  position: relative; /* Position relative for message time positioning */
+  background-color: #f9f9f9; /* Light background color */
 }
 
 .message {
