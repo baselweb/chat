@@ -70,8 +70,18 @@ body {
   margin-bottom: 20px;
 }
 
-.login-register input,
 .login-register button {
+  width: 40%;
+  margin: 10px 0;
+  padding: 14px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.login-register input {
   width: 100%;
   margin: 10px 0;
   padding: 14px;
