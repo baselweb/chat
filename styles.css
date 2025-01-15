@@ -236,55 +236,108 @@ body {
 
 body.dark-theme {
   background-color: #121212;
-  color: white;
+  color: #ffffff;
 }
 
 .container.dark-theme {
   background-color: #121212;
 }
 
-.login-register.dark-theme {
-  background-color: #1e1e1e;
+.header.dark-theme {
+  background-color: #1f1f1f;
+  border-bottom: 1px solid #444;
 }
 
-.login-register h2.dark-theme {
-  color: #f0f0f0;
+#typing-indicator.dark-theme {
+  background-color: #1f1f1f;
+  color: #b0b0b0;
+}
+
+#logout-button.dark-theme,
+#go-back.dark-theme {
+  background-color: #333;
+  color: #fff;
+}
+
+#logout-button.dark-theme:hover,
+#go-back.dark-theme:hover {
+  background-color: #ff2a3e;
+}
+
+.login-register.dark-theme h2 {
+  color: #ffffff;
+}
+
+.login-register.dark-theme input,
+.login-register.dark-theme button {
+  background-color: #1f1f1f;
+  color: #ffffff;
+  border: 1px solid #444;
+}
+
+.login-register.dark-theme input:focus,
+.login-register.dark-theme button:hover {
+  border-color: #ff7f50;
+}
+
+.login-register.dark-theme button {
+  background-color: #ff7f50;
+  color: #ffffff;
+}
+
+.login-register.dark-theme button:active {
+  background-color: #e16f4a;
+}
+
+#chat.dark-theme {
+  background-color: #121212;
 }
 
 .messages.dark-theme {
-  background-color: #333;
+  background-color: #121212;
 }
 
-.message.dark-theme {
+.message.dark-theme.sent {
   background-color: #444;
-  color: white;
+  color: #fff;
 }
 
-.sent.dark-theme {
-  background-color: #2a75d7;
+.message.dark-theme.received {
+  background-color: #333;
+  color: #fff;
 }
 
-.received.dark-theme {
-  background-color: #555;
+.message.dark-theme .message-time {
+  color: #888;
 }
 
 .input-area.dark-theme {
-  background-color: rgba(50, 50, 50, 0.8);
+  background-color: #1f1f1f;
+  border-top: 1px solid #444;
 }
 
-.input-area input.dark-theme {
+.input-area.dark-theme input {
   background-color: #333;
-  color: white;
-  border-color: #555;
+  color: #ffffff;
+  border: 1px solid #444;
 }
 
-.input-area button.dark-theme {
-  background-color: #2a75d7;
-  color: white;
+.input-area.dark-theme input:focus {
+  border-color: #ff7f50;
+  box-shadow: 0 0 5px rgba(255, 127, 50, 0.3);
 }
 
-.input-area input.dark-theme:focus {
-  border-color: #2a75d7;
+.input-area.dark-theme button {
+  background-color: #444;
+  color: #fff;
+}
+
+.input-area.dark-theme button:hover {
+  background-color: #555;
+}
+
+.input-area.dark-theme button:active {
+  background-color: #666;
 }
 
 @media (max-width: 600px) {
