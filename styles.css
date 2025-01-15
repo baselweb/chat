@@ -18,8 +18,9 @@
   color: gray;
   padding: 7px;
   font-size: 0.9em;
-  margin-bottom: 8px; ///////////////
+  margin-bottom: 8px;
   background-color: #f9f9f9;
+  z-index: 100;
 }
 
 #logout-button {
