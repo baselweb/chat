@@ -15,7 +15,7 @@
 }
 
 #typing-indicator {
-  color: gray;
+  color: #333;
   padding: 7px;
   font-size: 0.9em;
   background-color: #f9f9f9;
@@ -26,7 +26,7 @@
   top: 15px;
   right: 10px;
   background-color: lightblue;
-  color: black;
+  color: #333;
   border: none;
   padding: 10px 15px;
   border-radius: 5px;
@@ -61,6 +61,7 @@ body {
 }
 
 .login-register {
+  color: #333;
   padding: 30px;
   text-align: center;
 }
@@ -90,7 +91,7 @@ body {
 
 .login-register button {
   background-color: lightblue;
-  color: white;
+  color: #333;
   cursor: pointer;
   font-weight: bold;
 }
