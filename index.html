@@ -33,7 +33,10 @@
     <div id="chat" style="display: none;">
       <div class="header">
         <h3>Users</h3>
-        <div id="header"></div>
+        <div id="header">
+          <button id="go-back" style="display: none;">Go Back</button>
+          <button id="logout-button">Logout</button>
+        </div>
       </div>
 
       <div class="messages" id="message-list"></div>
@@ -80,16 +83,33 @@
     const sendButton = document.getElementById("send-button");
     const messageInput = document.getElementById("message-input");
     const userList = document.getElementById("user-list");
+    const goBackButton = document.getElementById("go-back");
 
     let currentRoom = null;
     let currentUsername = null;
     let privateChatWith = null;
 
     const savedUser = localStorage.getItem("loggedInUser");
+    const logoutButton = document.createElement("button");
+    logoutButton.textContent = "Logout";
+    logoutButton.id = "logout-button";
+    logoutButton.addEventListener("click", () => {
+      signOut(auth).then(() => {
+        localStorage.removeItem("loggedInUser");
+        location.reload();
+      });
+    });
+
+    // Append the logout button only when a user is logged in
+    function appendLogoutButton() {
+      document.body.appendChild(logoutButton);
+    }
+
     if (savedUser) {
       const { uid, username } = JSON.parse(savedUser);
       currentUsername = username;
       showRoomSelection();
+      appendLogoutButton();
     }
 
     function displayError(element, message) {
@@ -111,6 +131,7 @@
       loadMessages();
       loadUsers();
       loadTypingIndicator();
+      goBackButton.style.display = "inline-block"; // Show Go Back button
     }
 
     loginButton.addEventListener("click", () => {
@@ -125,6 +146,7 @@
             JSON.stringify({ uid: user.uid, username: currentUsername })
           );
           showRoomSelection();
+          appendLogoutButton();
         })
         .catch((error) => displayError(authError, error.message));
     });
@@ -141,6 +163,7 @@
             JSON.stringify({ uid: user.uid, username: currentUsername })
           );
           showRoomSelection();
+          appendLogoutButton();
         })
         .catch((error) => displayError(authError, error.message));
     });
@@ -264,21 +287,23 @@
       }
     });
 
-    const logoutButton = document.createElement("button");
-    logoutButton.textContent = "Logout";
-    logoutButton.id = "logout-button";
-    logoutButton.addEventListener("click", () => {
-      signOut(auth).then(() => {
-        localStorage.removeItem("loggedInUser");
-        location.reload();
-      });
+    // Go Back Button event listener
+    goBackButton.addEventListener("click", () => {
+      chatContainer.style.display = "none";
+      roomSelection.style.display = "block";
+      goBackButton.style.display = "none"; // Hide the Go Back button
     });
-    document.body.appendChild(logoutButton);
 
     onAuthStateChanged(auth, (user) => {
       if (user) {
         currentUsername = user.email.split("@")[0];
         showRoomSelection();
+        appendLogoutButton();
+      } else {
+        authContainer.style.display = "block";
+        roomSelection.style.display = "none";
+        chatContainer.style.display = "none";
+        logoutButton.remove();
       }
     });
 
