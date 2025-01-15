@@ -4,305 +4,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta charset="UTF-8">
   <title>Chat Rooms</title>
-
-  <style>
-    /* Dark Mode */
-    body.dark-theme {
-      background-color: #121212;
-      color: white;
-    }
-
-    .container.dark-theme {
-      background-color: #121212;
-    }
-
-    .login-register.dark-theme {
-      background-color: #1e1e1e;
-    }
-
-    .login-register h2.dark-theme {
-      color: #f0f0f0;
-    }
-
-    .messages.dark-theme {
-      background-color: #333;
-    }
-
-    .message.dark-theme {
-      background-color: #444;
-      color: white;
-    }
-
-    .sent.dark-theme {
-      background-color: #2a75d7;
-    }
-
-    .received.dark-theme {
-      background-color: #555;
-    }
-
-    .input-area.dark-theme {
-      background-color: rgba(50, 50, 50, 0.8);
-    }
-
-    .input-area input.dark-theme {
-      background-color: #333;
-      color: white;
-      border-color: #555;
-    }
-
-    .input-area button.dark-theme {
-      background-color: #2a75d7;
-      color: white;
-    }
-
-    .input-area input.dark-theme:focus {
-      border-color: #2a75d7;
-    }
-
-    /* General Styling */
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: white;
-    }
-
-    .container {
-      max-width: 420px;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      transition: background-color 0.3s ease;
-    }
-
-    /* Header */
-    .header {
-      position: fixed;
-      background-color: rgba(254, 254, 254, 0.8);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid #ddd;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      top: 0;
-      width: 100%;
-      padding: 12px 0;
-      z-index: 9;
-    }
-
-    #logout-button {
-      position: fixed;
-      top: 15px;
-      right: 10px;
-      background-color: lightblue;
-      color: black;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 5px;
-      cursor: pointer;
-      z-index: 1000;
-    }
-
-    #logout-button:hover {
-      background-color: #ff2a3e;
-    }
-
-    /* Login/Register Section */
-    .login-register {
-      padding: 30px;
-      text-align: center;
-    }
-
-    .login-register h2 {
-      font-size: 1.8rem;
-      color: #333;
-      margin-bottom: 20px;
-    }
-
-    .login-register input,
-    .login-register button {
-      width: 90%;
-      margin: 10px 0;
-      padding: 14px;
-      font-size: 16px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      outline: none;
-      transition: all 0.3s ease;
-    }
-
-    .login-register input:focus,
-    .login-register button:hover {
-      border-color: #ff7f50;
-    }
-
-    .login-register button {
-      background-color: #ff7f50;
-      color: white;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    .login-register button:active {
-      background-color: #e16f4a;
-    }
-
-    /* Room Selection Section */
-    #room-selection {
-      display: none;
-    }
-
-    /* Chat Section */
-    #chat {
-      display: none;
-      padding-bottom: 70px;
-      flex: 1;
-      overflow: hidden;
-    }
-
-    .messages {
-      padding: 20px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      transition: background-color 0.3s ease;
-    }
-
-    /* Message Styling */
-    .message {
-      padding: 14px 18px;
-      margin: 8px 0;
-      max-width: 75%;
-      border-radius: 20px;
-      line-height: 1.6;
-      word-wrap: break-word;
-      position: relative;
-      font-size: 0.95rem;
-      cursor: pointer;
-      user-select: none;
-      transition: all 0.3s ease;
-    }
-
-    .sent {
-      align-self: flex-end;
-      background-color: lightblue;
-      color: black;
-    }
-
-    .received {
-      align-self: flex-start;
-      background-color: #e0e0e0;
-      color: black;
-    }
-
-    .message-time {
-      font-size: 0.75rem;
-      color: darkgrey;
-      position: absolute;
-      bottom: -18px;
-    }
-
-    .sent .message-time {
-      right: 12px;
-    }
-
-    .received .message-time {
-      left: 12px;
-    }
-
-    /* Input Area */
-    .input-area {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      margin: auto;
-      display: flex;
-      background-color: rgba(254, 254, 254, 0.8);
-      backdrop-filter: blur(10px);
-      padding: 14px;
-      border-top: 1px solid #ddd;
-      z-index: 10;
-    }
-
-    .input-area input {
-      flex: 1;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 25px;
-      font-size: 16px;
-      outline: none;
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .input-area input:focus {
-      border-color: lightblue;
-      box-shadow: 0 0 5px rgba(255, 127, 50, 0.3);
-    }
-
-    .input-area button {
-      margin-left: 10px;
-      padding: 12px;
-      border: none;
-      background-color: lightblue;
-      color: black;
-      font-size: 18px;
-      border-radius: 50%;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    .input-area button:hover {
-      background-color: #ff7f50;
-    }
-
-    .input-area button:active {
-      background-color: #e16f4a;
-    }
-
-    /* User List */
-    #user-list .user {
-      padding: 5px;
-      cursor: pointer;
-    }
-
-    #user-list .user:hover {
-      background-color: #f1f1f1;
-    }
-
-    @media (max-width: 600px) {
-      .container {
-        width: 100%;
-        height: 100%;
-      }
-
-      .messages {
-        padding: 16px;
-        gap: 10px;
-      }
-
-      .message {
-        max-width: 90%;
-      }
-
-      .input-area input {
-        font-size: 14px;
-      }
-
-      .input-area button {
-        font-size: 16px;
-      }
-    }
-
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="container">
@@ -318,7 +20,7 @@
       </div>
     </div>
 
-    <div id="room-selection">
+    <div id="room-selection" style="display: none;">
       <div class="login-register">
         <h2>Join / Create</h2>
         <input type="text" id="room-name" placeholder="Enter room name" />
@@ -328,11 +30,10 @@
       </div>
     </div>
 
-    <div id="chat">
+    <div id="chat" style="display: none;">
       <div class="header">
         <h3>Users</h3>
         <div id="header"></div>
-        <button id="dark-mode-toggle">Toggle Dark Mode</button>
       </div>
 
       <div class="messages" id="message-list"></div>
@@ -341,15 +42,14 @@
         <input type="text" id="message-input" placeholder="Type your message..." />
         <button id="send-button">Go</button>
       </div>
-      <div id="user-list"></div>
     </div>
   </div>
+
   <script type="module">
     import { sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
     import { getDatabase, ref, push, onValue, set } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
-    import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-storage.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAC49cgzmUZjqRM1akkEJmIOLz_NKBCC5k",
@@ -365,11 +65,6 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth();
     const database = getDatabase();
-    const storage = getStorage();
-
-    let currentRoom = null;
-    let currentUsername = null;
-    let privateChatWith = null;
 
     const authContainer = document.getElementById("auth");
     const roomSelection = document.getElementById("room-selection");
@@ -385,8 +80,10 @@
     const sendButton = document.getElementById("send-button");
     const messageInput = document.getElementById("message-input");
     const userList = document.getElementById("user-list");
-    const typingIndicator = document.getElementById("typing-indicator");
-    const darkModeToggle = document.getElementById("dark-mode-toggle");
+
+    let currentRoom = null;
+    let currentUsername = null;
+    let privateChatWith = null;
 
     const savedUser = localStorage.getItem("loggedInUser");
     if (savedUser) {
@@ -408,63 +105,11 @@
 
     function showChat() {
       roomSelection.style.display = "none";
-      chatContainer.style.display = "flex";
+      chatContainer.style.display = "block";
+      const usersHeader = document.querySelector(".header h3");
+      usersHeader.textContent = currentRoom;
       loadMessages();
       loadUsers();
-      loadTypingStatus();
-    }
-
-    function loadMessages() {
-      const messagesRef = ref(database, `rooms/${currentRoom}/messages`);
-      messagesDiv.innerHTML = "";
-
-      onValue(messagesRef, (snapshot) => {
-        const messages = snapshot.val();
-        if (messages) {
-          messagesDiv.innerHTML = "";
-          for (let id in messages) {
-            const message = messages[id];
-            const messageDiv = document.createElement("div");
-            messageDiv.classList.add("message");
-            messageDiv.classList.add(message.username === currentUsername ? "sent" : "received");
-            messageDiv.id = `message-${id}`;
-            messageDiv.innerHTML = `
-              <strong>${message.username}:</strong> ${message.text}
-              <div style="font-size: 0.8em; color: gray;">${new Date(message.timestamp).toLocaleTimeString()}</div>
-            `;
-            messagesDiv.appendChild(messageDiv);
-          }
-          messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        }
-      });
-    }
-
-    function loadUsers() {
-      const usersRef = ref(database, `rooms/${currentRoom}/users`);
-      onValue(usersRef, (snapshot) => {
-        const users = snapshot.val();
-        if (users) {
-          userList.innerHTML = "";
-          for (let username in users) {
-            if (username !== currentUsername) {
-              const userDiv = document.createElement("div");
-              userDiv.classList.add("user");
-              userDiv.textContent = username;
-              userList.appendChild(userDiv);
-            }
-          }
-        }
-      });
-    }
-
-    function loadTypingStatus() {
-      const typingRef = ref(database, `rooms/${currentRoom}/typing`);
-      onValue(typingRef, (snapshot) => {
-        const typingUsers = snapshot.val();
-        if (typingUsers) {
-          typingIndicator.style.display = typingUsers.length > 0 ? "block" : "none";
-        }
-      });
     }
 
     loginButton.addEventListener("click", () => {
@@ -523,15 +168,97 @@
     joinRoomButton.addEventListener("click", () => joinOrCreateRoom("join"));
     createRoomButton.addEventListener("click", () => joinOrCreateRoom("create"));
 
+    function loadMessages() {
+      const messagesRef = ref(database, `rooms/${currentRoom}/messages`);
+      messagesDiv.innerHTML = "";
+
+      onValue(messagesRef, (snapshot) => {
+        const messages = snapshot.val();
+        if (messages) {
+          messagesDiv.innerHTML = "";
+          for (let id in messages) {
+            const message = messages[id];
+            const messageDiv = document.createElement("div");
+            messageDiv.classList.add("message");
+            messageDiv.classList.add(message.username === currentUsername ? "sent" : "received");
+            messageDiv.id = `message-${id}`;
+            messageDiv.innerHTML = `
+              <strong>${message.username}:</strong> ${message.text}
+              <div style="font-size: 0.8em; color: gray;">${new Date(message.timestamp).toLocaleTimeString()}</div>
+            `;
+            messagesDiv.appendChild(messageDiv);
+          }
+          messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+      });
+    }
+
+    function loadUsers() {
+      const usersRef = ref(database, `rooms/${currentRoom}/users`);
+      onValue(usersRef, (snapshot) => {
+        const users = snapshot.val();
+        if (users) {
+          userList.innerHTML = "";
+          for (let username in users) {
+            if (username !== currentUsername) {
+              const userDiv = document.createElement("div");
+              userDiv.classList.add("user");
+              userDiv.textContent = username;
+              userDiv.addEventListener("click", () => openPrivateChat(username));
+              userList.appendChild(userDiv);
+            }
+          }
+        }
+      });
+    }
+
+    function openPrivateChat(username) {
+      privateChatWith = username;
+      loadPrivateMessages();
+    }
+
+    function loadPrivateMessages() {
+      const privateMessagesRef = ref(database, `privateChats/${currentUsername}_${privateChatWith}`);
+      messagesDiv.innerHTML = "";
+
+      onValue(privateMessagesRef, (snapshot) => {
+        const messages = snapshot.val();
+        if (messages) {
+          messagesDiv.innerHTML = "";
+          for (let id in messages) {
+            const message = messages[id];
+            const messageDiv = document.createElement("div");
+            messageDiv.classList.add("message");
+            messageDiv.classList.add(message.username === currentUsername ? "sent" : "received");
+            messageDiv.id = `message-${id}`;
+            messageDiv.innerHTML = `
+              <strong>${message.username}:</strong> ${message.text}
+              <div style="font-size: 0.8em; color: gray;">${new Date(message.timestamp).toLocaleTimeString()}</div>
+            `;
+            messagesDiv.appendChild(messageDiv);
+          }
+          messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+      });
+    }
+
     sendButton.addEventListener("click", () => {
       const text = messageInput.value.trim();
       if (text) {
-        const messagesRef = ref(database, `rooms/${currentRoom}/messages`);
-        push(messagesRef, {
-          username: currentUsername,
-          text: text,
-          timestamp: Date.now(),
-        });
+        if (privateChatWith) {
+          const privateMessageRef = ref(database, `privateChats/${currentUsername}_${privateChatWith}`);
+          push(privateMessageRef, {
+            username: currentUsername,
+            text: text,
+            timestamp: Date.now(),
+          });
+        } else {
+          push(ref(database, `rooms/${currentRoom}/messages`), {
+            username: currentUsername,
+            text: text,
+            timestamp: Date.now(),
+          });
+        }
         messageInput.value = "";
       }
     });
@@ -546,16 +273,6 @@
       });
     });
     document.body.appendChild(logoutButton);
-
-    darkModeToggle.addEventListener("click", () => {
-      document.body.classList.toggle("dark-mode");
-      localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
-    });
-
-    // Apply saved theme on page load
-    if (localStorage.getItem("darkMode") === "true") {
-      document.body.classList.add("dark-mode");
-    }
 
     onAuthStateChanged(auth, (user) => {
       if (user) {
