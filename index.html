@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta charset="UTF-8">
+  <title>Chat Rooms</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <div id="auth">
+      <div class="login-register">
+        <h2>rooms</h2>
+        <input type="email" id="email" placeholder="Email" />
+        <input type="password" id="password" placeholder="Password" />
+        <button id="login">Login</button>
+        <button id="forgot-password">Forgot Password?</button>
+        <button id="register">Register</button>
+        <div id="auth-error"></div>
+      </div>
+    </div>
+
+    <div id="room-selection" style="display: none;">
+      <div class="login-register">
+        <h2>Join / Create</h2>
+        <input type="text" id="room-name" placeholder="Enter room name" />
+        <button id="join-room">Join Room</button>
+        <button id="create-room">Create Room</button>
+        <div id="room-error"></div>
+      </div>
+    </div>
+
+    <div id="chat" style="display: none;">
+      <div class="header">
+        <h3>Users</h3>
+        <div id="header"></div>
+      </div>
+
+      <div class="messages" id="message-list"></div>
+      <div id="typing-indicator" style="display: none;">Someone is typing...</div>
+      <div class="input-area">
+        <input type="text" id="message-input" placeholder="Type your message..." />
+        <button id="send-button">Go</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
+    import { getDatabase, ref, push, onValue, set } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAC49cgzmUZjqRM1akkEJmIOLz_NKBCC5k",
+      authDomain: "adiasta-686e4.firebaseapp.com",
+      databaseURL: "https://adiasta-686e4-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "adiasta-686e4",
+      storageBucket: "adiasta-686e4.appspot.com",
+      messagingSenderId: "822931467224",
+      appId: "1:822931467224:web:46f81b5779491efe6260ad",
+      measurementId: "G-68996BGLFE",
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+    const database = getDatabase();
+
+    const authContainer = document.getElementById("auth");
+    const roomSelection = document.getElementById("room-selection");
+    const chatContainer = document.getElementById("chat");
+    const loginButton = document.getElementById("login");
+    const registerButton = document.getElementById("register");
+    const joinRoomButton = document.getElementById("join-room");
+    const createRoomButton = document.getElementById("create-room");
+    const roomNameInput = document.getElementById("room-name");
+    const authError = document.getElementById("auth-error");
+    const roomError = document.getElementById("room-error");
+    const messagesDiv = document.getElementById("message-list");
+    const sendButton = document.getElementById("send-button");
+    const messageInput = document.getElementById("message-input");
+    const userList = document.getElementById("user-list");
+
+    let currentRoom = null;
+    let currentUsername = null;
+    let privateChatWith = null;
+
+    const savedUser = localStorage.getItem("loggedInUser");
+    if (savedUser) {
+      const { uid, username } = JSON.parse(savedUser);
+      currentUsername = username;
+      showRoomSelection();
+    }
+
+    function displayError(element, message) {
+      element.textContent = message;
+      element.style.color = "red";
+      setTimeout(() => (element.textContent = ""), 3000);
+    }
+
+    function showRoomSelection() {
+      authContainer.style.display = "none";
+      roomSelection.style.display = "block";
+    }
+
+    function showChat() {
+      roomSelection.style.display = "none";
+      chatContainer.style.display = "flex";
+      const usersHeader = document.querySelector(".header h3");
+      usersHeader.textContent = currentRoom;
+      loadMessages();
+      loadUsers();
+    }
+
+    loginButton.addEventListener("click", () => {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          currentUsername = user.email.split("@")[0];
+          localStorage.setItem(
+            "loggedInUser",
+            JSON.stringify({ uid: user.uid, username: currentUsername })
+          );
+          showRoomSelection();
+        })
+        .catch((error) => displayError(authError, error.message));
+    });
+
+    registerButton.addEventListener("click", () => {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          currentUsername = user.email.split("@")[0];
+          localStorage.setItem(
+            "loggedInUser",
+            JSON.stringify({ uid: user.uid, username: currentUsername })
+          );
+          showRoomSelection();
+        })
+        .catch((error) => displayError(authError, error.message));
+    });
+
+    function joinOrCreateRoom(action) {
+      const roomName = roomNameInput.value.trim();
+      if (roomName) {
+        currentRoom = roomName;
+        const roomRef = ref(database, `rooms/${roomName}`);
+        if (action === "create") {
+          set(roomRef, { createdAt: Date.now() }).then(() => showChat());
+        } else {
+          onValue(roomRef, (snapshot) => {
+            if (snapshot.exists()) {
+              showChat();
+            } else {
+              displayError(roomError, "Room does not exist. Try creating it.");
+            }
+          });
+        }
+      } else {
+        displayError(roomError, "Room name cannot be empty.");
+      }
+    }
+
+    joinRoomButton.addEventListener("click", () => joinOrCreateRoom("join"));
+    createRoomButton.addEventListener("click", () => joinOrCreateRoom("create"));
+
+    function loadMessages() {
+      const messagesRef = ref(database, `rooms/${currentRoom}/messages`);
+      messagesDiv.innerHTML = "";
+
+      onValue(messagesRef, (snapshot) => {
+        const messages = snapshot.val();
+        if (messages) {
+          messagesDiv.innerHTML = "";
+          for (let id in messages) {
+            const message = messages[id];
+            const messageDiv = document.createElement("div");
+            messageDiv.classList.add("message");
+            messageDiv.classList.add(message.username === currentUsername ? "sent" : "received");
+            messageDiv.id = `message-${id}`;
+            messageDiv.innerHTML = `
+              <strong>${message.username}:</strong> ${message.text}
+              <div style="font-size: 0.8em; color: gray;">${new Date(message.timestamp).toLocaleTimeString()}</div>
+            `;
+            messagesDiv.appendChild(messageDiv);
+          }
+          messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+      });
+    }
+
+    function loadUsers() {
+      const usersRef = ref(database, `rooms/${currentRoom}/users`);
+      onValue(usersRef, (snapshot) => {
+        const users = snapshot.val();
+        if (users) {
+          userList.innerHTML = "";
+          for (let username in users) {
+            if (username !== currentUsername) {
+              const userDiv = document.createElement("div");
+              userDiv.classList.add("user");
+              userDiv.textContent = username;
+              userDiv.addEventListener("click", () => openPrivateChat(username));
+              userList.appendChild(userDiv);
+            }
+          }
+        }
+      });
+    }
+
+    function openPrivateChat(username) {
+      privateChatWith = username;
+      loadPrivateMessages();
+    }
+
+    function loadPrivateMessages() {
+      const privateMessagesRef = ref(database, `privateChats/${currentUsername}_${privateChatWith}`);
+      messagesDiv.innerHTML = "";
+
+      onValue(privateMessagesRef, (snapshot) => {
+        const messages = snapshot.val();
+        if (messages) {
+          messagesDiv.innerHTML = "";
+          for (let id in messages) {
+            const message = messages[id];
+            const messageDiv = document.createElement("div");
+            messageDiv.classList.add("message");
+            messageDiv.classList.add(message.username === currentUsername ? "sent" : "received");
+            messageDiv.id = `message-${id}`;
+            messageDiv.innerHTML = `
+              <strong>${message.username}:</strong> ${message.text}
+              <div style="font-size: 0.8em; color: gray;">${new Date(message.timestamp).toLocaleTimeString()}</div>
+            `;
+            messagesDiv.appendChild(messageDiv);
+          }
+          messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+      });
+    }
+
+    sendButton.addEventListener("click", () => {
+      const text = messageInput.value.trim();
+      if (text) {
+        if (privateChatWith) {
+          const privateMessageRef = ref(database, `privateChats/${currentUsername}_${privateChatWith}`);
+          push(privateMessageRef, {
+            username: currentUsername,
+            text: text,
+            timestamp: Date.now(),
+          });
+        } else {
+          push(ref(database, `rooms/${currentRoom}/messages`), {
+            username: currentUsername,
+            text: text,
+            timestamp: Date.now(),
+          });
+        }
+        messageInput.value = "";
+      }
+    });
+
+    const logoutButton = document.createElement("button");
+    logoutButton.textContent = "Logout";
+    logoutButton.id = "logout-button";
+    logoutButton.addEventListener("click", () => {
+      signOut(auth).then(() => {
+        localStorage.removeItem("loggedInUser");
+        location.reload();
+      });
+    });
+    document.body.appendChild(logoutButton);
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        currentUsername = user.email.split("@")[0];
+        showRoomSelection();
+      }
+    });
+
+    messageInput.addEventListener("keypress", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        sendButton.click();
+      }
+    });
+  </script>
+</body>
+</html>
