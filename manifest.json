@@ -5,7 +5,7 @@
   "start_url": "/",
   "display": "standalone",
   "background_color": "transparent",
-  "theme_color": "#ffffff",  // This can be updated dynamically by the JavaScript
+  "theme_color": "transparent",
   "icons": [
     {
       "src": "icons/android-chrome-192x192.png",
@@ -17,7 +17,7 @@
       "sizes": "512x512",
       "type": "image/png"
     },
-    {
+    { 
       "src": "icons/apple-touch-icon.png",
       "sizes": "180x180",
       "type": "image/png"
