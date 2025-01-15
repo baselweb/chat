@@ -74,8 +74,8 @@
       document.querySelector('.container'),
       document.querySelector('.messages'),
       document.querySelector('.input-area'),
-      document.querySelector('.login-register'),
-      document.querySelector('.message')
+      ...document.querySelectorAll('.login-register'),
+      ...document.querySelectorAll('.message')
     ];
 
     elementsToUpdate.forEach(element => {
