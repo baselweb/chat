@@ -110,6 +110,7 @@
       usersHeader.textContent = currentRoom;
       loadMessages();
       loadUsers();
+      loadTypingIndicator();
     }
 
     loginButton.addEventListener("click", () => {
@@ -287,6 +288,34 @@
         sendButton.click();
       }
     });
+
+    let typingTimeout;
+
+    messageInput.addEventListener("input", () => {
+      const typingRef = ref(database, `rooms/${currentRoom}/typing/${currentUsername}`);
+      set(typingRef, true);
+      clearTimeout(typingTimeout);
+      typingTimeout = setTimeout(() => {
+        set(typingRef, false);
+      }, 2000);
+    });
+
+    function loadTypingIndicator() {
+      const typingRef = ref(database, `rooms/${currentRoom}/typing`);
+      onValue(typingRef, (snapshot) => {
+        const typingData = snapshot.val();
+        const typingUsers = Object.keys(typingData).filter((username) => typingData[username]);
+        if (typingUsers.length > 0) {
+          const typingText = typingUsers.length === 1
+            ? `${typingUsers[0]} is typing...`
+            : `${typingUsers.join(", ")} are typing...`;
+          document.getElementById("typing-indicator").textContent = typingText;
+          document.getElementById("typing-indicator").style.display = "block";
+        } else {
+          document.getElementById("typing-indicator").style.display = "none";
+        }
+      });
+    }
   </script>
 </body>
 </html>
