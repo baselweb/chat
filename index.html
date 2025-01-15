@@ -1,6 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <head>
+  <script>
+    // Apply the stored or default theme as soon as possible
+    document.addEventListener("DOMContentLoaded", () => {
+      function detectSystemTheme() {
+        return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      }
+
+      function applyTheme(theme) {
+        const elementsToUpdate = [
+          document.body,
+          document.querySelector('.header'),
+          document.querySelector('#typing-indicator'),
+          document.querySelector('#logout-button'),
+          document.querySelector('#go-back'),
+          document.querySelector('.container'),
+          document.querySelector('.messages'),
+          document.querySelector('.input-area'),
+          ...document.querySelectorAll('.login-register'),
+          ...document.querySelectorAll('.message')
+        ];
+
+        elementsToUpdate.forEach(element => {
+          if (element) {
+            if (theme === 'dark') {
+              element.classList.add('dark-theme');
+            } else {
+              element.classList.remove('dark-theme');
+            }
+          }
+        });
+
+        // Save the selected theme to localStorage
+        localStorage.setItem("theme", theme);
+      }
+
+      const savedTheme = localStorage.getItem("theme");
+      const theme = savedTheme || detectSystemTheme();
+      applyTheme(theme);
+    });
+  </script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-68996BGLFE"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
