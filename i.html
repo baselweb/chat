@@ -5,6 +5,76 @@
   <meta charset="UTF-8">
   <title>Chat Rooms</title>
   <link rel="stylesheet" href="styles.css">
+  <style>/* Dark Mode */
+body.dark-mode {
+  background-color: #121212;
+  color: white;
+}
+
+header,
+footer,
+button {
+  background-color: #333;
+  color: white;
+}
+
+input, textarea {
+  background-color: #333;
+  color: white;
+}
+
+/* Typing Indicator */
+#typing-indicator {
+  font-style: italic;
+  color: #888;
+  padding: 10px;
+}
+
+/* Message Styling */
+.message {
+  padding: 5px 10px;
+  margin: 5px;
+  border-radius: 5px;
+}
+
+.sent {
+  background-color: #d3f8e2;
+}
+
+.received {
+  background-color: #e5e5e5;
+}
+
+button {
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* User List */
+#user-list .user {
+  padding: 5px;
+  cursor: pointer;
+}
+
+#user-list .user:hover {
+  background-color: #f1f1f1;
+}
+
+/* Avatar styling */
+.avatar {
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
+}</style>
 </head>
 <body>
   <div class="container">
