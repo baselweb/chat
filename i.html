@@ -13,7 +13,7 @@
       height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
       background-color: #f9f9f9;
     }
 
@@ -72,17 +72,20 @@
       display: none;
       flex-direction: column;
       height: 100%;
+      overflow: hidden;
     }
 
     .header {
       background-color: #f0f0f0;
       padding: 15px;
       text-align: center;
+      flex: 0 1 50px; /* Ensure the header takes up minimal space */
     }
 
     .header h3 {
       margin: 0;
       font-size: 1.5em;
+      color: #333;
     }
 
     .messages {
@@ -90,7 +93,6 @@
       padding: 15px;
       overflow-y: auto;
       background-color: #fff;
-      margin-bottom: 70px; /* Space for input area */
     }
 
     .message {
@@ -145,20 +147,6 @@
       background-color: #45a049;
     }
 
-    /* User List in Chat */
-    .user-list {
-      padding: 10px;
-      background-color: #f0f0f0;
-      margin: 10px 0;
-      border-radius: 5px;
-    }
-
-    .user-list .user {
-      padding: 5px;
-      cursor: pointer;
-      margin: 5px 0;
-    }
-
     /* Error Message */
     #room-error,
     #auth-error {
@@ -186,7 +174,6 @@
 </head>
 <body>
   <div class="container">
-    <!-- Auth Container (Login/Register) -->
     <div id="auth">
       <div class="login-register">
         <h2>Login to Chat</h2>
@@ -213,8 +200,7 @@
     <!-- Chat Room -->
     <div id="chat" style="display: none;">
       <div class="header">
-        <h3>Users</h3>
-        <div id="header"></div>
+        <h3 id="room-name-header">Room Name</h3>
       </div>
       <div class="messages" id="message-list"></div>
       <div id="typing-indicator" style="display: none;">Someone is typing...</div>
@@ -263,6 +249,7 @@
     const sendButton = document.getElementById("send-button");
     const messageInput = document.getElementById("message-input");
     const logoutButton = document.getElementById("logout-button");
+    const roomNameHeader = document.getElementById("room-name-header");
 
     let currentRoom = null;
     let currentUsername = null;
@@ -288,6 +275,7 @@
     function showChat() {
       roomSelection.style.display = "none";
       chatContainer.style.display = "flex";
+      roomNameHeader.textContent = currentRoom;
       loadMessages();
     }
 
@@ -354,6 +342,7 @@
       onValue(messagesRef, (snapshot) => {
         const messages = snapshot.val();
         if (messages) {
+          messagesDiv.innerHTML = "";
           for (let id in messages) {
             const message = messages[id];
             const messageDiv = document.createElement("div");
@@ -403,7 +392,6 @@
         sendButton.click();
       }
     });
-
   </script>
 </body>
 </html>
