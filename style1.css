@@ -124,7 +124,6 @@ body {
   overflow-y: auto;
   padding: 20px;
   padding-top: 50px;
-  background-color: white;
   display: flex;
   flex-direction: column;
   gap: 12px;
