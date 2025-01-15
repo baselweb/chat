@@ -4,8 +4,8 @@
   "description": "A simple chat room app",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#2196F3",
+  "background_color": "transparent",
+  "theme_color": "transparent", 
   "icons": [
     {
       "src": "icons/icon-192x192.png",
