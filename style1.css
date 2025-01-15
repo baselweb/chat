@@ -1,60 +1,21 @@
-.header {
-  position: fixed;
-  background-color: rgba(254, 254, 254, 0.8);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid #ddd;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  right: 0;
-  left: 0;
-  top: 0;
-  overflow-y: auto;
-  z-index: 9;
-}
-
-#typing-indicator {
-  color: #333;
-  padding: 7px;
-  font-size: 0.9em;
-  background-color: #f9f9f9;
-}
-
-#logout-button {
-  position: fixed;
-  top: 15px;
-  right: 10px;
-  background-color: lightblue;
-  color: #333;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  z-index: 1000;
-}
-
-#logout-button:hover {
-  background-color: #ff2a3e;
-}
-
+/* General Styling */
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
-  background: none;
   padding: 0;
-  height: 100hv;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #f9f9f9;
 }
 
 .container {
-  height: 100%;
   width: 100%;
   max-width: 420px;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
   background: none;
 }
 
@@ -70,17 +31,7 @@ body {
   margin-bottom: 20px;
 }
 
-.login-register button {
-  width: 90%;
-  margin: 10px 0;
-  padding: 12px;
-  font-size: 16px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  outline: none;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
+.login-register button,
 .login-register input {
   width: 90%;
   margin: 10px 0;
@@ -108,28 +59,53 @@ body {
 .login-register button:active {
   background-color: blue;
 }
-#chat {
-  background-image: url('data:image/svg+xml,%3Csvg xmlns=%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 width=%22100%25%22 height=%22100%25%22 viewBox=%220 0 100 100%22 preserveAspectRatio=%22none%22%3E%3Cdefs%3E%3ClinearGradient id=%22a%22 x1=%220%22 x2=%221%22 y1=%220%22 y2=%221%22%3E%3Cstop offset=%220%25%22 stop-color=%22%23ffb7b7%22/%3E%3Cstop offset=%22100%25%22 stop-color=%22%23fff6e6%22/%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect width=%22100%25%22 height=%22100%25%22 fill=%22url(%23a)%22/%3E%3Cpath d=%22M0 0 L100 100 L0 100 Z%22 fill=%22rgba(255, 255, 255, 0.4)%22/%3E%3C/svg%3E');
-  background-size: cover;
-  background-position: center;
-  display: flex;
+
+/* Header */
+.header {
   position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(254, 254, 254, 0.8);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid #ddd;
+  z-index: 10;
+  padding: 10px;
+  text-align: center;
+}
+
+#logout-button {
+  position: fixed;
+  top: 15px;
+  right: 10px;
+  background-color: lightblue;
+  color: #333;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+#logout-button:hover {
+  background-color: #ff2a3e;
+}
+
+/* Chat Container */
+#chat {
+  display: flex;
   flex-direction: column;
-  flex: 1;
   height: 100%;
-  padding-bottom: 70px;
+  padding-top: 60px; /* To avoid overlap with the header */
+  background-color: white;
   overflow: hidden;
 }
 
+/* Messages */
 .messages {
   flex: 1;
   overflow-y: auto;
-  bottom: 0;
-  top: 0:
- right:0;
-  left:0;
   padding: 20px;
-  padding-top: 100px;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -176,12 +152,12 @@ body {
   left: 12px;
 }
 
+/* Input Area */
 .input-area {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  margin: auto;
   display: flex;
   background-color: white;
   padding: 14px;
@@ -224,59 +200,7 @@ body {
   background-color: lightblue;
 }
 
-body.dark-theme {
-  background-color: #121212;
-  color: white;
-}
-
-.container.dark-theme {
-  background-color: #121212;
-}
-
-.login-register.dark-theme {
-  background-color: #1e1e1e;
-}
-
-.login-register h2.dark-theme {
-  color: #f0f0f0;
-}
-
-.messages.dark-theme {
-  background-color: #333;
-}
-
-.message.dark-theme {
-  background-color: #444;
-  color: white;
-}
-
-.sent.dark-theme {
-  background-color: #2a75d7;
-}
-
-.received.dark-theme {
-  background-color: #555;
-}
-
-.input-area.dark-theme {
-  background-color: rgba(50, 50, 50, 0.8);
-}
-
-.input-area input.dark-theme {
-  background-color: #333;
-  color: white;
-  border-color: #555;
-}
-
-.input-area button.dark-theme {
-  background-color: #2a75d7;
-  color: white;
-}
-
-.input-area input.dark-theme:focus {
-  border-color: #2a75d7;
-}
-
+/* Mobile Styling */
 @media (max-width: 600px) {
   .container {
     width: 100%;
