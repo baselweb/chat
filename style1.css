@@ -124,11 +124,13 @@ body {
 .messages {
   flex: 1;
   overflow-y: auto;
+  bottom: 0;
+  top: 0:
   padding: 20px;
-  padding-top: 50px;
+  padding-top: 100px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
 }
 
 .message {
