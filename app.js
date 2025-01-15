@@ -1,10 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // Detects the user's system theme preference (light or dark)
   function detectSystemTheme() {
     return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
   }
 
+  // Applies the selected theme to the website
   function applyTheme(theme) {
-    // Apply the theme class to various elements
     const elementsToUpdate = [
       document.body,
       document.querySelector('.header'),
@@ -28,34 +29,29 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // Update the theme-color meta tag dynamically
     const themeColorMetaTag = document.querySelector('meta[name="theme-color"]');
     if (themeColorMetaTag) {
       if (theme === 'dark') {
-        themeColorMetaTag.setAttribute('content', '#121212');  // Dark theme color
+        themeColorMetaTag.setAttribute('content', '#121212');
       } else {
-        themeColorMetaTag.setAttribute('content', '#ffffff');  // Light theme color
+        themeColorMetaTag.setAttribute('content', '#ffffff');
       }
     }
 
-    // Save the selected theme to localStorage
     localStorage.setItem("theme", theme);
   }
 
   function initializeTheme() {
-    // Get theme from localStorage or default to system theme
     const savedTheme = localStorage.getItem("theme");
     const theme = savedTheme || detectSystemTheme();
     applyTheme(theme);
   }
 
-  // Detect system theme changes
   window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
     const theme = e.matches ? "dark" : "light";
     applyTheme(theme);
   });
 
-  // Initialize the theme when the page loads
   initializeTheme();
 });
 
@@ -110,7 +106,6 @@ logoutButton.addEventListener("click", () => {
   });
 });
 
-// Append the logout button only when a user is logged in
 function appendLogoutButton() {
   document.body.appendChild(logoutButton);
 }
@@ -141,7 +136,6 @@ function showChat() {
   loadMessages();
   loadUsers();
   loadTypingIndicator();
-  autoScrollToBottom(); // Ensure auto-scrolling when entering a room
   goBackButton.style.display = "inline-block"; // Show Go Back button
 }
 
@@ -238,15 +232,13 @@ function autoScrollToBottom() {
 function loadUsers() {
   const usersRef = ref(database, `rooms/${currentRoom}/users`);
   onValue(usersRef, (snapshot) => {
+    userList.innerHTML = "";
     const users = snapshot.val();
     if (users) {
-      userList.innerHTML = "";
-      for (let username in users) {
-        if (username !== currentUsername) {
-          const userDiv = document.createElement("div");
-          userDiv.textContent = username;
-          userList.appendChild(userDiv);
-        }
+      for (let user in users) {
+        const userDiv = document.createElement("div");
+        userDiv.textContent = user;
+        userList.appendChild(userDiv);
       }
     }
   });
@@ -284,7 +276,7 @@ sendButton.addEventListener("click", () => {
       timestamp: Date.now(),
     }).then(() => {
       messageInput.value = "";
-      loadMessages();
+      loadMessages(); // Reload messages
     });
   }
 });
@@ -292,5 +284,5 @@ sendButton.addEventListener("click", () => {
 goBackButton.addEventListener("click", () => {
   currentRoom = null;
   showRoomSelection();
-  goBackButton.style.display = "none";
+  goBackButton.style.display = "none"; // Hide Go Back button
 });
