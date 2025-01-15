@@ -1,1 +1,228 @@
-/* General Styling */ body {   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;   margin: 0;   padding: 0;   height: 100vh;   display: flex;   justify-content: center;   align-items: center;   background-color: #f0f4f8; /* Light gray background for the body */ }  .container {   width: 100%;   max-width: 420px;   height: 100%;   display: flex;   flex-direction: column;   background: none; }  /* Login / Register Page */ .login-register {   color: #333;   padding: 30px;   text-align: center;   background: #ffecb3; /* Soft pastel yellow for the background */   border-radius: 10px;   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); }  .login-register h2 {   font-size: 1.8rem;   color: #333;   margin-bottom: 20px; }  .login-register button, .login-register input {   width: 90%;   margin: 10px 0;   padding: 12px;   font-size: 16px;   border: 1px solid #ddd;   border-radius: 5px;   outline: none;   transition: border-color 0.3s ease, box-shadow 0.3s ease; }  .login-register input:focus, .login-register button:hover {   border-color: #ffd54f; /* Warm yellow color on hover/focus */   box-shadow: 0 0 5px rgba(255, 127, 50, 0.3); }  .login-register button {   background-color: #ffb300; /* Bright yellow for buttons */   color: white;   cursor: pointer;   font-weight: normal; }  .login-register button:active {   background-color: #ffa000; }  /* Header */ .header {   position: fixed;   top: 0;   left: 0;   right: 0;   background-color: rgba(255, 255, 255, 0.9); /* White with some transparency */   backdrop-filter: blur(10px);   border-bottom: 1px solid #ddd;   z-index: 10;   padding: 15px;   text-align: center;   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); }  /* Logout Button */ #logout-button {   position: fixed;   top: 15px;   right: 10px;   background-color: #ff7043; /* Coral color for logout */   color: white;   border: none;   padding: 10px 15px;   border-radius: 5px;   cursor: pointer;   z-index: 1000; }  #logout-button:hover {   background-color: #e64a19; /* Darker coral on hover */ }  /* Chat Container */ #chat {   display: flex;   flex-direction: column;   height: 100%;   padding-top: 70px; /* To avoid overlap with the header */   background-color: #f5f5f5; /* Light gray background for chat */   overflow: hidden;   border-radius: 10px; }  /* Chat Messages */ .messages {   flex: 1;   overflow-y: auto;   padding: 20px;   display: flex;   flex-direction: column;   gap: 12px; }  .message {   padding: 14px 18px;   margin: 8px 0;   max-width: 75%;   border-radius: 20px;   line-height: 1.6;   word-wrap: break-word;   position: relative;   font-size: 0.95rem;   cursor: pointer;   user-select: none;   transition: all 0.3s ease; }  .sent {   align-self: flex-end;   background-color: #42a5f5; /* Blue background for sent messages */   color: white; }  .received {   align-self: flex-start;   background-color: #c5e1a5; /* Light green background for received messages */   color: black; }  .message-time {   font-size: 0.50rem;   color: darkgrey;   position: absolute;   bottom: -18px; }  .sent .message-time {   right: 12px; }  .received .message-time {   left: 12px; }  /* Input Area */ .input-area {   position: fixed;   bottom: 0;   left: 0;   right: 0;   display: flex;   background-color: #ffffff;   padding: 14px;   border-top: 1px solid #ddd;   z-index: 10;   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); }  .input-area input {   flex: 1;   padding: 12px;   border: 1px solid #ddd;   border-radius: 25px;   font-size: 16px;   outline: none;   transition: border-color 0.3s ease, box-shadow 0.3s ease; }  .input-area input:focus {   border-color: #42a5f5; /* Focus border color */   box-shadow: 0 0 5px rgba(66, 165, 245, 0.3); }  .input-area button {   margin-left: 10px;   padding: 12px;   border: none;   background-color: #42a5f5; /* Blue for the send button */   color: white;   font-size: 18px;   border-radius: 50%;   cursor: pointer;   transition: background-color 0.3s ease; }  .input-area button:hover {   background-color: #1e88e5; /* Darker blue on hover */ }  .input-area button:active {   background-color: #1e3d58; /* Even darker blue on click */ }  /* Mobile Styling */ @media (max-width: 600px) {   .container {     width: 100%;     height: 100%;   }    .messages {     padding: 16px;     gap: 10px;   }    .message {     max-width: 90%;   }    .input-area input {     font-size: 14px;   }    .input-area button {     font-size: 16px;   } } 
+/* General Styling */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f9f9f9;
+}
+
+.container {
+  width: 100%;
+  max-width: 420px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: none;
+}
+
+.login-register {
+  color: #333;
+  padding: 30px;
+  text-align: center;
+}
+
+.login-register h2 {
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.login-register button,
+.login-register input {
+  width: 90%;
+  margin: 10px 0;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-register input:focus,
+.login-register button:hover {
+  border-color: lightblue;
+  box-shadow: 0 0 5px rgba(255, 127, 50, 0.3);
+}
+
+.login-register button {
+  background-color: lightblue;
+  color: #333;
+  cursor: pointer;
+  font-weight: normal;
+}
+
+.login-register button:active {
+  background-color: blue;
+}
+
+/* Header */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(254, 254, 254, 0.8);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid #ddd;
+  z-index: 10;
+  padding: 8px; /* Reduced padding to make the header shorter */
+  text-align: center;
+  font-size: 1.5rem; /* Adjusted font size for better balance */
+}
+
+#logout-button {
+  position: fixed;
+  top: 15px;
+  right: 10px;
+  background-color: lightblue;
+  color: #333;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+#logout-button:hover {
+  background-color: #ff2a3e;
+}
+
+/* Chat Container */
+#chat {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-top: 60px; /* To avoid overlap with the header */
+  background-color: white;
+  overflow: hidden;
+  margin-top: 50px; /* Added margin to ensure no content is hidden under the header */
+}
+
+/* Messages */
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.message {
+  padding: 14px 18px;
+  margin: 8px 0;
+  max-width: 75%;
+  border-radius: 20px;
+  line-height: 1.6;
+  word-wrap: break-word;
+  position: relative;
+  font-size: 0.95rem;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.3s ease;
+}
+
+.sent {
+  align-self: flex-end;
+  background-color: lightblue;
+  color: black;
+}
+
+.received {
+  align-self: flex-start;
+  background-color: #e0e0e0;
+  color: black;
+}
+
+.message-time {
+  font-size: 0.50rem;
+  color: darkgrey;
+  position: absolute;
+  bottom: -18px;
+}
+
+.sent .message-time {
+  right: 12px;
+}
+
+.received .message-time {
+  left: 12px;
+}
+
+/* Input Area */
+.input-area {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  background-color: white;
+  padding: 14px;
+  border-top: 1px solid #ddd;
+  z-index: 10;
+}
+
+.input-area input {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 25px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-area input:focus {
+  border-color: lightblue;
+  box-shadow: 0 0 5px rgba(255, 127, 50, 0.3);
+}
+
+.input-area button {
+  margin-left: 10px;
+  padding: 12px;
+  border: none;
+  background-color: lightblue;
+  color: black;
+  font-size: 18px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.input-area button:hover {
+  background-color: lightblue;
+}
+
+.input-area button:active {
+  background-color: lightblue;
+}
+
+/* Mobile Styling */
+@media (max-width: 600px) {
+  .container {
+    width: 100%;
+    height: 100%;
+  }
+
+  .messages {
+    padding: 16px;
+    gap: 10px;
+  }
+
+  .message {
+    max-width: 90%;
+  }
+
+  .input-area input {
+    font-size: 14px;
+  }
+
+  .input-area button {
+    font-size: 16px;
+  }
+}
