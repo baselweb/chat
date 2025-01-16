@@ -3,14 +3,14 @@ body {
   margin: 0;
   padding: 0;
   background-color: #f9f9f9;
-  height: 100hv;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .container {
-  height: 100hv;
+  height: 100vh;
   width: 100%;
   max-width: 420px;
   display: flex;
