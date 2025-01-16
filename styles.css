@@ -214,6 +214,13 @@ body {
   left: 12px;
 }
 
+
+
+body.dark-theme {
+  background-color: #121212;
+  color: #ffffff;
+}
+
 .input-area {
   position: fixed;
   bottom: 0;
@@ -222,59 +229,23 @@ body {
   display: flex;
   align-items: center;
   background-color: inherit;
-     background-color: rgba(249, 249, 249, 0.6); /* White background with transparency */
-
+  background-color: rgba(249, 249, 249, 0.6); /* White background with transparency */
   backdrop-filter: blur(40px);
   padding: 14px;
   z-index: 10;
-    padding-bottom: 25px;
-  height: 80px; /* Ensure the height is the same as header */
-  box-sizing: border-box; /* Include padding and border in the height */
+  height: 80px; /* Height for the input area */
+  box-sizing: border-box;
 }
 
 .input-area input {
-  
-  flex-grow: 1; /* Allow the input to take up remaining space */
-  height: 35px; /* Set a fixed height for the input */
-  padding: 0 12px; /* Horizontal padding to add some space inside the input */
+  flex-grow: 1; /* Input takes up remaining space */
+  height: 40px; /* Fixed height for input */
+  padding: 0 40px 0 12px; /* Padding on the right for the icon */
   border: 1px solid #ddd;
   border-radius: 25px;
   font-size: 16px;
   outline: none;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  margin-right: 10px; /* Space between input and button */
-}
-
-.input-area button {
-  width: 35px; /* Make width and height equal */
-  height: 35px; /* Make width and height equal */
-  border: none;
-  background-color: lightblue;
-  color: black;
-  font-size: 22px;
-  border-radius: 50%; /* Perfect circle */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.input-area button:hover {
-  background-color: #ff7f50;
-}
-
-.input-area button:active {
-  background-color: #e16f4a;
-}
-
-.input-area button i {
-  font-size: 18px; /* Adjust icon size if needed */
-}
-
-body.dark-theme {
-  background-color: #121212;
-  color: #ffffff;
 }
 
 .container.dark-theme {
@@ -420,3 +391,50 @@ body.dark-theme .header h3 {
     font-size: 16px;
   }
 } 
+
+
+
+
+
+
+.input-container {
+  position: relative;
+  width: 100%;
+  display: flex;
+  margin-bottom: 25px;
+  align-items: center; /* Vertically center the elements */
+}
+
+
+#send-button {
+  position: absolute;
+  right: 5px; /* Position the button on the right inside the input container */
+  top: 50%;
+  transform: translateY(-50%); /* Vertically center the button */
+  background-color: lightblue; /* Set button background */
+  color: black;
+  font-size: 22px;
+  border: none;
+  border-radius: 50%; /* Circular button */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 35px; /* Same size as the input height */
+  height: 35px; /* Same size as the input height */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
