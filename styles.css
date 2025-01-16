@@ -30,15 +30,24 @@
   background-color: lightblue;
   color: black;
   border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
+  width: 35px; /* Make width and height equal */
+  height: 35px; /* Make width and height equal */
+  border-radius: 50%; /* Perfect circle */
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
   z-index: 1000;
+}
+
+#logout-button i {
+  font-size: 22px; /* Adjust icon size */
 }
 
 #logout-button:hover {
   background-color: #ff2a3e;
 }
+
 
 #go-back {
   position: fixed;
@@ -47,15 +56,24 @@
   background-color: lightblue;
   color: black;
   border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
+  width: 35px; /* Make width and height equal */
+  height: 35px; /* Make width and height equal */
+  border-radius: 50%; /* Perfect circle */
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
   z-index: 1000;
+}
+
+#go-back i {
+  font-size: 22px; /* Adjust icon size */
 }
 
 #go-back:hover {
   background-color: #ff2a3e;
 }
+
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -197,8 +215,7 @@ body {
   flex: 1;
   padding-left: 12px;
   padding-right: 12px;
-  padding-top: 12px;
-  padding-bottom: 12px;
+  height:35px;
   border: 1px solid #ddd;
   margin-bottom: 20px;
   border-radius: 25px;
@@ -220,18 +237,28 @@ body {
   background-color: lightblue;
   color: black;
   font-size: 18px;
-  border-radius: 50%;
+  border-radius: 50%; /* Perfect circle */
+  width: 35px; /* Make width and height equal */
+  height: 35px; /* Make width and height equal */
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
+.input-area button i {
+  font-size: 24px; /* Adjust icon size */
+}
+
 .input-area button:hover {
-  background-color: lightblue;
+  background-color: #ff7f50;
 }
 
 .input-area button:active {
-  background-color: lightblue;
+  background-color: #e16f4a;
 }
+
 
 body.dark-theme {
   background-color: #121212;
