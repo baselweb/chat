@@ -5,7 +5,7 @@
   transform: translateY(-50%);
   background-color: lightblue;
   color: black;
-  font-size: 22px;
+  font-size: 4px;
   border: none;
   border-radius: 50%;
   display: flex;
@@ -93,7 +93,7 @@ body {
 }
 
 .input-area button {
-  font-size: 18px;
+  font-size: 4px;
   background-color: inherit;
   border: none;
   color: inherit;
