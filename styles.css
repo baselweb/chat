@@ -1,18 +1,26 @@
 .header {
   position: fixed;
-  background-color: inherit;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px; /* Set the header height */
+  background-color: white;
   backdrop-filter: blur(10px);
   border-bottom: 1px solid #ddd;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  right: 0;
-  left: 0;
-  top: 0;
-  overflow-y: auto;
-  background-color: white;
   z-index: 9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  overflow-y: auto;
+  box-sizing: border-box; /* Ensure padding and border are within the height */
 }
+
+.header, .input-area {
+  height: 60px; /* Set the same height for both header and input area */
+  box-sizing: border-box; /* Include padding and border in the height */
+}
+
 
 #typing-indicator {
   color: gray;
@@ -202,14 +210,15 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
-  margin: auto;
   display: flex;
-  align-items: center; /* Align items vertically in the center */
+  align-items: center;
   background-color: inherit;
   backdrop-filter: blur(10px);
   padding: 14px;
   border-top: 1px solid #ddd;
   z-index: 10;
+  height: 80px; /* Ensure the height is the same as header */
+  box-sizing: border-box; /* Include padding and border in the height */
 }
 
 .input-area input {
@@ -222,11 +231,6 @@ body {
   outline: none;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
   margin-right: 10px; /* Space between input and button */
-}
-
-.input-area input:focus {
-  border-color: lightblue;
-  box-shadow: 0 0 5px rgba(255, 127, 50, 0.3);
 }
 
 .input-area button {
@@ -255,7 +259,6 @@ body {
 .input-area button i {
   font-size: 18px; /* Adjust icon size if needed */
 }
-
 
 body.dark-theme {
   background-color: #121212;
@@ -385,4 +388,4 @@ body.dark-theme {
   .input-area button {
     font-size: 16px;
   }
-}
+} 
