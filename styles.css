@@ -35,8 +35,8 @@
   position: fixed;
   top: 15px;
   right: 10px;
-  background-color: none;
-  color: black;
+   background: red;
+  color: black; /* Default color for light theme */
   border: none;
   width: 35px; /* Make width and height equal */
   height: 35px; /* Make width and height equal */
@@ -53,7 +53,7 @@
 }
 
 #logout-button:hover {
-  background-color: #ff2a3e;
+  background-color: orange; /* Still no background */
 }
 
 
@@ -61,17 +61,17 @@
   position: fixed;
   top: 15px;
   left: 10px;
-  color: black;
+  color: black; /* Default color for light theme */
   border: none;
   width: 35px; /* Make width and height equal */
   height: 35px; /* Make width and height equal */
   border-radius: 50%; /* Perfect circle */
   display: flex;
-  background: none;
   justify-content: center;
   align-items: center;
   cursor: pointer;
   z-index: 1000;
+  background: none;
 }
 
 #go-back i {
@@ -79,6 +79,8 @@
 }
 
 #go-back:hover {
+  background-color: orange; /* No background on hover */
+
 }
 
 
@@ -286,12 +288,12 @@ body.dark-theme {
 #logout-button.dark-theme,
 #go-back.dark-theme {
   background-color: none;
-  color: #fff;
+  color: #fff; /* Light icon color for dark theme */
 }
 
 #logout-button.dark-theme:hover,
 #go-back.dark-theme:hover {
-  background-color: #ff2a3e;
+  background-color: orange; /* No background on hover */
 }
 
 .login-register.dark-theme h2 {
