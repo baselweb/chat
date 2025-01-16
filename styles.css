@@ -30,8 +30,8 @@
   background-color: lightblue;
   color: black;
   border: none;
-  width: 40px; /* Make width and height equal */
-  height: 40px; /* Make width and height equal */
+  width: 35px; /* Make width and height equal */
+  height: 35px; /* Make width and height equal */
   border-radius: 50%; /* Perfect circle */
   display: flex;
   justify-content: center;
@@ -41,7 +41,7 @@
 }
 
 #logout-button i {
-  font-size: 22px; /* Adjust icon size */
+  font-size: 18px; /* Adjust icon size */
 }
 
 #logout-button:hover {
@@ -56,8 +56,8 @@
   background-color: lightblue;
   color: black;
   border: none;
-  width: 40px; /* Make width and height equal */
-  height: 40px; /* Make width and height equal */
+  width: 35px; /* Make width and height equal */
+  height: 35px; /* Make width and height equal */
   border-radius: 50%; /* Perfect circle */
   display: flex;
   justify-content: center;
@@ -67,7 +67,7 @@
 }
 
 #go-back i {
-  font-size: 22px; /* Adjust icon size */
+  font-size: 18px; 
 }
 
 #go-back:hover {
@@ -214,7 +214,7 @@ body {
 
 .input-area input {
   flex-grow: 1; /* Allow the input to take up remaining space */
-  height: 40px; /* Set a fixed height for the input */
+  height: 35px; /* Set a fixed height for the input */
   padding: 0 12px; /* Horizontal padding to add some space inside the input */
   border: 1px solid #ddd;
   border-radius: 25px;
@@ -230,8 +230,8 @@ body {
 }
 
 .input-area button {
-  width: 40px; /* Make width and height equal */
-  height: 40px; /* Make width and height equal */
+  width: 35px; /* Make width and height equal */
+  height: 35px; /* Make width and height equal */
   border: none;
   background-color: lightblue;
   color: black;
@@ -253,7 +253,7 @@ body {
 }
 
 .input-area button i {
-  font-size: 24px; /* Adjust icon size if needed */
+  font-size: 18px; /* Adjust icon size if needed */
 }
 
 
@@ -332,6 +332,7 @@ body.dark-theme {
 .message.dark-theme .message-time {
   color: #888;
 }
+
 
 .input-area.dark-theme {
   background-color: #1f1f1f;
