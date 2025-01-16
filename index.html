@@ -423,6 +423,16 @@ function autoScrollToBottom() {
         }
       });
     }
+
+function autoScrollToBottom() {
+  setTimeout(() => {
+    const messagesDiv = document.getElementById("message-list");
+    if (messagesDiv) {
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+  }, 100); // Delay the scroll slightly to allow DOM updates
+}
+
     
   </script>
 </body>
