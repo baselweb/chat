@@ -6,8 +6,7 @@
 
   background-color: rgba(255, 255, 255, 0.3); /* White background with transparency */
   backdrop-filter: blur(40px); /* Moderate blur effect */
-
-  border-bottom: 1px solid #ddd;
+  border-bottom: 0.3px solid #ddd;
   z-index: 9;
   display: flex;
   justify-content: center;
@@ -36,7 +35,7 @@
   position: fixed;
   top: 15px;
   right: 10px;
-  background-color: lightblue;
+  background-color: none;
   color: black;
   border: none;
   width: 35px; /* Make width and height equal */
@@ -62,13 +61,13 @@
   position: fixed;
   top: 15px;
   left: 10px;
-  background-color: lightblue;
   color: black;
   border: none;
   width: 35px; /* Make width and height equal */
   height: 35px; /* Make width and height equal */
   border-radius: 50%; /* Perfect circle */
   display: flex;
+  background: none;
   justify-content: center;
   align-items: center;
   cursor: pointer;
@@ -80,7 +79,6 @@
 }
 
 #go-back:hover {
-  background-color: #ff2a3e;
 }
 
 
@@ -218,7 +216,6 @@ body {
 
   backdrop-filter: blur(40px);
   padding: 14px;
-  border-top: 1px solid #ddd;
   z-index: 10;
     padding-bottom: 25px;
   height: 80px; /* Ensure the height is the same as header */
@@ -274,9 +271,10 @@ body.dark-theme {
 }
 
 .header.dark-theme {
-  background-color: rgba(0, 0, 0, 0.3); /* Dark background with transparency */
-  backdrop-filter: blur(40px); /* Apply stronger blur effect to header */
-  border-bottom: 1px solid #444; /* Match the dark theme border */
+    border-bottom: 0.3px solid #444; /* Darker border for the header */
+
+  background-color: rgba(18, 18, 18, 0.6); /* Dark background with transparency */
+  backdrop-filter: blur(40px); /* Apply blur effect to header */
 }
 
 
@@ -287,7 +285,7 @@ body.dark-theme {
 
 #logout-button.dark-theme,
 #go-back.dark-theme {
-  background-color: #333;
+  background-color: none;
   color: #fff;
 }
 
@@ -344,9 +342,8 @@ body.dark-theme {
 }
 
 .input-area.dark-theme {
-  background-color: rgba(0, 0, 0, 0.3); /* Black with 30% opacity */
-  border-top: 1px solid #444;
-  backdrop-filter: blur(40px); /* Keeping the strong blur effect */
+  background-color: rgba(18, 18, 18, 0.6); /* Dark background with transparency */
+  backdrop-filter: blur(40px); /* Strong blur effect for input area */
 }
 
 
