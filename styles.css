@@ -1,3 +1,26 @@
+#send-button {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: lightblue;
+  color: black;
+  font-size: 22px;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 33px; /* Explicit fixed size */
+  height: 33px; /* Explicit fixed size */
+  min-width: 33px; /* Prevents shrinking */
+  min-height: 33px; /* Prevents shrinking */
+  aspect-ratio: 1; /* Maintains a 1:1 ratio */
+  box-sizing: border-box; /* Accounts for padding/borders */
+}
+
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
