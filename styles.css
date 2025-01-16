@@ -43,8 +43,8 @@
   position: fixed;
   top: 15px;
   right: 10px;
-  width: 35px; /* Make width and height equal */
-  height: 35px; /* Make width and height equal */
+  width: 33px; /* Make width and height equal */
+  height: 33px; /* Make width and height equal */
   border-radius: 50%; /* Perfect circle */
   display: flex;
   justify-content: center;
@@ -71,8 +71,8 @@
   left: 10px;
   color: black; /* Default color for light theme */
   border: none;
-  width: 35px; /* Make width and height equal */
-  height: 35px; /* Make width and height equal */
+  width: 33px; /* Make width and height equal */
+  height: 33px; /* Make width and height equal */
   border-radius: 50%; /* Perfect circle */
   display: flex;
   justify-content: center;
@@ -240,7 +240,7 @@ body.dark-theme {
 .input-area input {
   flex-grow: 1; /* Input takes up remaining space */
   height: 40px; /* Fixed height for input */
-  padding: 0 40px 0 12px; /* Padding on the right for the icon */
+  padding: 0 50px 0 12px; /* Padding on the right for the icon */
   border: 1px solid #ddd;
   border-radius: 25px;
   font-size: 16px;
@@ -408,7 +408,7 @@ body.dark-theme .header h3 {
 
 #send-button {
   position: absolute;
-  right: 5px; /* Position the button on the right inside the input container */
+  right: 6px; /* Position the button on the right inside the input container */
   top: 50%;
   transform: translateY(-50%); /* Vertically center the button */
   background-color: lightblue; /* Set button background */
@@ -421,8 +421,8 @@ body.dark-theme .header h3 {
   align-items: center;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  width: 35px; /* Same size as the input height */
-  height: 35px; /* Same size as the input height */
+  width: 33px; /* Same size as the input height */
+  height: 33px; /* Same size as the input height */
 }
 
 
