@@ -88,22 +88,19 @@
       }
     });
 
-    // Update the theme-color meta tag dynamically
     const themeColorMetaTag = document.querySelector('meta[name="theme-color"]');
     if (themeColorMetaTag) {
       if (theme === 'dark') {
-        themeColorMetaTag.setAttribute('content', '#121212');  // Dark theme color
+        themeColorMetaTag.setAttribute('content', '#121212');  
       } else {
-        themeColorMetaTag.setAttribute('content', '#ffffff');  // Light theme color
+        themeColorMetaTag.setAttribute('content', '#ffffff');
       }
     }
 
-    // Save the selected theme to localStorage
     localStorage.setItem("theme", theme);
   }
 
   function initializeTheme() {
-    // Get theme from localStorage or default to system theme
     const savedTheme = localStorage.getItem("theme");
     const theme = savedTheme || detectSystemTheme();
     applyTheme(theme);
@@ -115,13 +112,8 @@
     applyTheme(theme);
   });
 
-  // Initialize the theme when the page loads
   initializeTheme();
 });
-
-
-
-    
     import { sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
@@ -197,16 +189,15 @@
     }
 
     function showChat() {
-  roomSelection.style.display = "none";
-  chatContainer.style.display = "flex";
-  const usersHeader = document.querySelector(".header h3");
-  usersHeader.textContent = currentRoom;
-  loadMessages();
-  loadUsers();
-  loadTypingIndicator();
-  autoScrollToBottom(); // Ensure auto-scrolling when entering a room
-  goBackButton.style.display = "inline-block"; // Show Go Back button
-}
+      roomSelection.style.display = "none";
+      chatContainer.style.display = "flex";
+      const usersHeader = document.querySelector(".header h3");
+      usersHeader.textContent = currentRoom;
+      loadMessages();
+      loadUsers();
+      loadTypingIndicator();
+      goBackButton.style.display = "inline-block"; // Show Go Back button
+    }
 
     loginButton.addEventListener("click", () => {
       const email = document.getElementById("email").value;
@@ -267,37 +258,30 @@
     createRoomButton.addEventListener("click", () => joinOrCreateRoom("create"));
 
     function loadMessages() {
-  const messagesRef = ref(database, `rooms/${currentRoom}/messages`);
-  messagesDiv.innerHTML = "";
-
-  onValue(messagesRef, (snapshot) => {
-    const messages = snapshot.val();
-    if (messages) {
+      const messagesRef = ref(database, `rooms/${currentRoom}/messages`);
       messagesDiv.innerHTML = "";
-      for (let id in messages) {
-        const message = messages[id];
-        const messageDiv = document.createElement("div");
-        messageDiv.classList.add("message");
-        messageDiv.classList.add(message.username === currentUsername ? "sent" : "received");
-        messageDiv.id = `message-${id}`;
-        messageDiv.innerHTML = `
-          <strong>${message.username}:</strong> ${message.text}
-          <div style="font-size: 0.8em; color: gray;">${new Date(message.timestamp).toLocaleTimeString()}</div>
-        `;
-        messagesDiv.appendChild(messageDiv);
-      }
-      autoScrollToBottom(); // Ensure auto-scrolling
-    }
-  });
-}
 
-function autoScrollToBottom() {
-  const messagesDiv = document.getElementById("message-list");
-  if (messagesDiv) {
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
-  }
-}
-    
+      onValue(messagesRef, (snapshot) => {
+        const messages = snapshot.val();
+        if (messages) {
+          messagesDiv.innerHTML = "";
+          for (let id in messages) {
+            const message = messages[id];
+            const messageDiv = document.createElement("div");
+            messageDiv.classList.add("message");
+            messageDiv.classList.add(message.username === currentUsername ? "sent" : "received");
+            messageDiv.id = `message-${id}`;
+            messageDiv.innerHTML = `
+              <strong>${message.username}:</strong> ${message.text}
+              <div style="font-size: 0.8em; color: gray;">${new Date(message.timestamp).toLocaleTimeString()}</div>
+            `;
+            messagesDiv.appendChild(messageDiv);
+          }
+          messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+      });
+    }
+
     function loadUsers() {
       const usersRef = ref(database, `rooms/${currentRoom}/users`);
       onValue(usersRef, (snapshot) => {
@@ -348,26 +332,25 @@ function autoScrollToBottom() {
     }
 
     sendButton.addEventListener("click", () => {
-  const text = messageInput.value.trim();
-  if (text) {
-    if (privateChatWith) {
-      const privateMessageRef = ref(database, `privateChats/${currentUsername}_${privateChatWith}`);
-      push(privateMessageRef, {
-        username: currentUsername,
-        text: text,
-        timestamp: Date.now(),
-      });
-    } else {
-      push(ref(database, `rooms/${currentRoom}/messages`), {
-        username: currentUsername,
-        text: text,
-        timestamp: Date.now(),
-      });
-    }
-    messageInput.value = "";
-    autoScrollToBottom(); // Ensure auto-scrolling
-  }
-});
+      const text = messageInput.value.trim();
+      if (text) {
+        if (privateChatWith) {
+          const privateMessageRef = ref(database, `privateChats/${currentUsername}_${privateChatWith}`);
+          push(privateMessageRef, {
+            username: currentUsername,
+            text: text,
+            timestamp: Date.now(),
+          });
+        } else {
+          push(ref(database, `rooms/${currentRoom}/messages`), {
+            username: currentUsername,
+            text: text,
+            timestamp: Date.now(),
+          });
+        }
+        messageInput.value = "";
+      }
+    });
 
     // Go Back Button event listener
     goBackButton.addEventListener("click", () => {
@@ -423,16 +406,6 @@ function autoScrollToBottom() {
         }
       });
     }
-
-function autoScrollToBottom() {
-  setTimeout(() => {
-    const messagesDiv = document.getElementById("message-list");
-    if (messagesDiv) {
-      messagesDiv.scrollTop = messagesDiv.scrollHeight;
-    }
-  }, 100); // Delay the scroll slightly to allow DOM updates
-}
-
     
   </script>
 </body>
