@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
 
-  background-color: rgba(255, 255, 255, 0.3); /* White background with transparency */
+  background-color: rgba(249, 249, 249, 0.6); /* White background with transparency */
   backdrop-filter: blur(40px); /* Moderate blur effect */
   border-bottom: 0.3px solid #ddd;
   z-index: 9;
@@ -212,7 +212,7 @@ body {
   display: flex;
   align-items: center;
   background-color: inherit;
-    background-color: rgba(255, 255, 255, 0.3); /* White background with transparency */
+     background-color: rgba(249, 249, 249, 0.6); /* White background with transparency */
 
   backdrop-filter: blur(40px);
   padding: 14px;
@@ -355,7 +355,7 @@ body.dark-theme {
 
 .input-area.dark-theme input:focus {
   border-color: #ff7f50;
-  box-shadow: 0 0 5px rgba(255, 127, 50, 0.3);
+  box-shadow: 0 0 5px rgba(255, 127, 50, 0.6);
 }
 
 .input-area.dark-theme button {
