@@ -31,13 +31,18 @@
   z-index: 100;
 }
 
+
+.header h3 {
+  font-size: 1.1rem; /* Make the font size smaller */
+  color: #333; /* Adjust text color if needed */
+  margin: 0; /* Remove any default margin */
+}
+
+
 #logout-button {
   position: fixed;
   top: 15px;
   right: 10px;
-   background: red;
-  color: black; /* Default color for light theme */
-  border: none;
   width: 35px; /* Make width and height equal */
   height: 35px; /* Make width and height equal */
   border-radius: 50%; /* Perfect circle */
@@ -46,6 +51,9 @@
   align-items: center;
   cursor: pointer;
   z-index: 1000;
+  transition: all 0.3s ease; /* Smooth transition */
+  border: none;
+  background: none;
 }
 
 #logout-button i {
@@ -353,6 +361,22 @@ body.dark-theme {
   background-color: #333;
   color: #ffffff;
   border: 1px solid #444;
+}
+
+
+
+
+
+
+body.dark-theme #logout-button{
+  background-color: none;
+  color: #fff; /* Light icon color for dark theme */
+}
+
+
+
+body.dark-theme .header h3 {
+  color: #ffffff; /* Light text color for dark theme */
 }
 
 .input-area.dark-theme input:focus {
