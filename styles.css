@@ -353,3 +353,7 @@ body.dark-theme #logout-button {
 body.dark-theme .header h3 {
   color: #ffffff;
 }
+
+body.dark-theme #logout-button, #go-back {
+  color: white;
+}
