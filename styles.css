@@ -217,11 +217,13 @@ body {
   padding: 14px;
   border-top: 1px solid #ddd;
   z-index: 10;
+    padding-bottom: 25px;
   height: 80px; /* Ensure the height is the same as header */
   box-sizing: border-box; /* Include padding and border in the height */
 }
 
 .input-area input {
+  
   flex-grow: 1; /* Allow the input to take up remaining space */
   height: 35px; /* Set a fixed height for the input */
   padding: 0 12px; /* Horizontal padding to add some space inside the input */
