@@ -2,7 +2,7 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #f9f9f9;
+  background-color: white;
   height: 100%;
   display: flex;
   justify-content: center;
@@ -24,7 +24,7 @@
   top: 0;
   left: 0;
   right: 0;
-  background-color: rgba(249, 249, 249, 0.6);
+  background-color: rgba(256, 256, 256, 0.6);
   backdrop-filter: blur(40px);
   border-bottom: 0.3px solid #ddd;
   z-index: 9;
@@ -50,7 +50,7 @@
   right: 0;
   display: flex;
   align-items: center;
-  background-color: rgba(249, 249, 249, 0.6);
+  background-color: rgba(256, 256, 256, 0.6);
   backdrop-filter: blur(40px);
   padding: 14px;
   z-index: 10;
@@ -62,7 +62,8 @@
   flex-grow: 1;
   height: 40px;
   padding: 0 50px 0 12px;
-  border: 1px solid #ddd;
+  border: none;
+  background-color: #F0F0F0;
   border-radius: 25px;
   font-size: 16px;
   outline: none;
@@ -131,7 +132,7 @@
   flex: 1;
   overflow-y: auto;
   padding: 20px;
-  background-color: #f9f9f9;
+  background-color: white;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -154,13 +155,13 @@
 
 .sent {
   align-self: flex-end;
-  background-color: lightblue;
+  background-color: #F0F0F0;
   color: black;
 }
 
 .received {
   align-self: flex-start;
-  background-color: #e0e0e0;
+  background-color: #C8C8C8;
   color: black;
 }
 
@@ -229,8 +230,8 @@
   right: 6px;
   top: 50%;
   transform: translateY(-50%);
-  background-color: lightblue;
-  color: black;
+  background-color: #202020;
+  color: white;
   font-size: 18px;
   border: none;
   border-radius: 100%;
@@ -323,17 +324,11 @@ body.dark-theme {
 .input-area.dark-theme input {
   background-color: #333;
   color: #ffffff;
-  border: 1px solid #444;
-}
-
-.input-area.dark-theme input:focus {
-  border-color: #ff7f50;
-  box-shadow: 0 0 5px rgba(255, 127, 50, 0.6);
 }
 
 .input-area.dark-theme button {
-  background-color: #444;
-  color: #fff;
+  background-color: yellow;
+  color: black;
 }
 
 .input-area.dark-theme button:hover {
@@ -362,4 +357,3 @@ body.dark-theme #logout-button {
   background-color: none;
   color: #fff;
 }
-
