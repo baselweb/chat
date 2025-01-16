@@ -354,6 +354,10 @@ body.dark-theme .header h3 {
   color: #ffffff;
 }
 
-body.dark-theme #logout-button, #go-back {
+#logout-button.dark-theme {
   color: white;
+}
+
+#go-back.dark-theme {
+color: white;
 }
