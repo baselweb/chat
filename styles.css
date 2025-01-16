@@ -10,7 +10,7 @@ body {
 }
 
 .container {
-  height: 100%;
+  height: 100hv;
   width: 100%;
   max-width: 420px;
   display: flex;
