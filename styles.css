@@ -1,31 +1,11 @@
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f9f9f9;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.container {
-  height: 100vh;
-  width: 100%;
-  max-width: 420px;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  transition: background-color 0.3s ease;
-}
-
 .header {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  background-color: rgba(249, 249, 249, 0.6);
-  backdrop-filter: blur(40px);
+
+  background-color: rgba(249, 249, 249, 0.6); /* White background with transparency */
+  backdrop-filter: blur(40px); /* Moderate blur effect */
   border-bottom: 0.3px solid #ddd;
   z-index: 9;
   display: flex;
@@ -33,49 +13,14 @@ body {
   align-items: center;
   text-align: center;
   overflow-y: auto;
-  box-sizing: border-box;
-  height: 60px;
+  box-sizing: border-box; /* Ensure padding and border are within the height */
 }
 
-.header h3 {
-  font-size: 1.1rem;
-  color: #333;
-  margin: 0;
+.header, .input-area {
+  height: 60px; /* Set the same height for both header and input area */
+  box-sizing: border-box; /* Include padding and border in the height */
 }
 
-.input-area {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
-  background-color: rgba(249, 249, 249, 0.6);
-  backdrop-filter: blur(40px);
-  padding: 14px;
-  z-index: 10;
-  height: 80px;
-  box-sizing: border-box;
-}
-
-.input-area input {
-  flex-grow: 1;
-  height: 40px;
-  padding: 0 50px 0 12px;
-  border: 1px solid #ddd;
-  border-radius: 25px;
-  font-size: 16px;
-  outline: none;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.input-area button {
-  font-size: 18px;
-  background-color: inherit;
-  border: none;
-  color: inherit;
-  cursor: pointer;
-}
 
 #typing-indicator {
   color: gray;
@@ -86,36 +31,125 @@ body {
   z-index: 100;
 }
 
-#logout-button, #go-back {
+
+.header h3 {
+  font-size: 1.1rem; /* Make the font size smaller */
+  color: #333; /* Adjust text color if needed */
+  margin: 0; /* Remove any default margin */
+}
+
+
+#logout-button {
   position: fixed;
   top: 15px;
-  width: 33px;
-  height: 33px;
-  border-radius: 50%;
+  right: 10px;
+  width: 33px; /* Make width and height equal */
+  height: 33px; /* Make width and height equal */
+  border-radius: 50%; /* Perfect circle */
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
   z-index: 1000;
-  transition: all 0.3s ease;
+  transition: all 0.3s ease; /* Smooth transition */
   border: none;
   background: none;
 }
 
-#logout-button i, #go-back i {
-  font-size: 18px;
+#logout-button i {
+  font-size: 18px; /* Adjust icon size */
 }
 
-#logout-button:hover, #go-back:hover {
-  background-color: orange;
+#logout-button:hover {
+  background-color: orange; /* Still no background */
 }
+
 
 #go-back {
+  position: fixed;
+  top: 15px;
   left: 10px;
+  color: black; /* Default color for light theme */
+  border: none;
+  width: 33px; /* Make width and height equal */
+  height: 33px; /* Make width and height equal */
+  border-radius: 50%; /* Perfect circle */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  z-index: 1000;
+  background: none;
 }
 
-#logout-button {
-  right: 10px;
+#go-back i {
+  font-size: 18px; 
+}
+
+#go-back:hover {
+  background-color: orange; /* No background on hover */
+
+}
+
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f9f9f9;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  height: 100%;
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: background-color 0.3s ease;
+}
+
+.login-register {
+  padding: 30px;
+  text-align: center;
+}
+
+.login-register h2 {
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.login-register input,
+.login-register button {
+  width: 90%;
+  margin: 10px 0;
+  padding: 14px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.login-register input:focus,
+.login-register button:hover {
+  border-color: #ff7f50;
+}
+
+.login-register button {
+  background-color: #ff7f50;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.login-register button:active {
+  background-color: #e16f4a;
 }
 
 #chat {
@@ -180,108 +214,80 @@ body {
   left: 12px;
 }
 
-.login-register {
-  padding: 30px;
-  text-align: center;
-}
 
-.login-register h2 {
-  font-size: 1.8rem;
-  color: #333;
-  margin-bottom: 20px;
-}
-
-.login-register input, .login-register button {
-  width: 90%;
-  margin: 10px 0;
-  padding: 14px;
-  font-size: 16px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  outline: none;
-  transition: all 0.3s ease;
-}
-
-.login-register input:focus, .login-register button:hover {
-  border-color: #ff7f50;
-}
-
-.login-register button {
-  background-color: #ff7f50;
-  color: white;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.login-register button:active {
-  background-color: #e16f4a;
-}
-
-.input-container {
-  position: relative;
-  width: 100%;
-  display: flex;
-  margin-bottom: 25px;
-  align-items: center;
-}
-
-#send-button {
-  position: absolute;
-  right: 6px;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: lightblue;
-  color: black;
-  font-size: 22px;
-  border: none;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  width: 33px;
-  height: 33px;
-}
 
 body.dark-theme {
   background-color: #121212;
   color: #ffffff;
 }
 
-.container.dark-theme {}
+.input-area {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  background-color: inherit;
+  background-color: rgba(249, 249, 249, 0.6); /* White background with transparency */
+  backdrop-filter: blur(40px);
+  padding: 14px;
+  z-index: 10;
+  height: 80px; /* Height for the input area */
+  box-sizing: border-box;
+}
+
+.input-area input {
+  flex-grow: 1; /* Input takes up remaining space */
+  height: 40px; /* Fixed height for input */
+  padding: 0 50px 0 12px; /* Padding on the right for the icon */
+  border: 1px solid #ddd;
+  border-radius: 25px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.container.dark-theme {
+}
 
 .header.dark-theme {
-  border-bottom: 0.3px solid #444;
-  background-color: rgba(18, 18, 18, 0.6);
-  backdrop-filter: blur(40px);
+    border-bottom: 0.3px solid #444; /* Darker border for the header */
+
+  background-color: rgba(18, 18, 18, 0.6); /* Dark background with transparency */
+  backdrop-filter: blur(40px); /* Apply blur effect to header */
 }
+
 
 #typing-indicator.dark-theme {
   background-color: #1f1f1f;
   color: #b0b0b0;
 }
 
-#logout-button.dark-theme, #go-back.dark-theme {
+#logout-button.dark-theme,
+#go-back.dark-theme {
   background-color: none;
-  color: #fff;
+  color: #fff; /* Light icon color for dark theme */
 }
 
-#logout-button.dark-theme:hover, #go-back.dark-theme:hover {
-  background-color: orange;
+#logout-button.dark-theme:hover,
+#go-back.dark-theme:hover {
+  background-color: orange; /* No background on hover */
 }
 
 .login-register.dark-theme h2 {
   color: #ffffff;
 }
 
-.login-register.dark-theme input, .login-register.dark-theme button {
+.login-register.dark-theme input,
+.login-register.dark-theme button {
   background-color: #1f1f1f;
   color: #ffffff;
   border: 1px solid #444;
 }
 
-.login-register.dark-theme input:focus, .login-register.dark-theme button:hover {
+.login-register.dark-theme input:focus,
+.login-register.dark-theme button:hover {
   border-color: #ff7f50;
 }
 
@@ -317,14 +323,31 @@ body.dark-theme {
 }
 
 .input-area.dark-theme {
-  background-color: rgba(18, 18, 18, 0.6);
-  backdrop-filter: blur(40px);
+  background-color: rgba(18, 18, 18, 0.6); /* Dark background with transparency */
+  backdrop-filter: blur(40px); /* Strong blur effect for input area */
 }
+
 
 .input-area.dark-theme input {
   background-color: #333;
   color: #ffffff;
   border: 1px solid #444;
+}
+
+
+
+
+
+
+body.dark-theme #logout-button{
+  background-color: none;
+  color: #fff; /* Light icon color for dark theme */
+}
+
+
+
+body.dark-theme .header h3 {
+  color: #ffffff; /* Light text color for dark theme */
 }
 
 .input-area.dark-theme input:focus {
@@ -345,11 +368,73 @@ body.dark-theme {
   background-color: #666;
 }
 
-body.dark-theme #logout-button {
-  background-color: none;
-  color: #fff;
+@media (max-width: 600px) {
+  .container {
+    width: 100%;
+    height: 100%;
+  }
+
+  .messages {
+    padding: 16px;
+    gap: 10px;
+  }
+
+  .message {
+    max-width: 90%;
+  }
+
+  .input-area input {
+    font-size: 14px;
+  }
+
+  .input-area button {
+    font-size: 16px;
+  }
+} 
+
+
+
+
+
+
+.input-container {
+  position: relative;
+  width: 100%;
+  display: flex;
+  margin-bottom: 25px;
+  align-items: center; /* Vertically center the elements */
 }
 
-body.dark-theme .header h3 {
-  color: #ffffff;
+
+#send-button {
+  position: absolute;
+  right: 6px; /* Position the button on the right inside the input container */
+  top: 50%;
+  transform: translateY(-50%); /* Vertically center the button */
+  background-color: lightblue; /* Set button background */
+  color: black;
+  font-size: 22px;
+  border: none;
+  border-radius: 50%; /* Circular button */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 33px; /* Same size as the input height */
+  height: 33px; /* Same size as the input height */
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
