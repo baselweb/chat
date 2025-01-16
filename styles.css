@@ -30,8 +30,8 @@
   background-color: lightblue;
   color: black;
   border: none;
-  width: 40px; /* Make width and height equal */
-  height: 40px; /* Make width and height equal */
+  width: 35px; /* Make width and height equal */
+  height: 35px; /* Make width and height equal */
   border-radius: 50%; /* Perfect circle */
   display: flex;
   justify-content: center;
@@ -56,8 +56,8 @@
   background-color: lightblue;
   color: black;
   border: none;
-  width: 40px; /* Make width and height equal */
-  height: 40px; /* Make width and height equal */
+  width: 35px; /* Make width and height equal */
+  height: 35px; /* Make width and height equal */
   border-radius: 50%; /* Perfect circle */
   display: flex;
   justify-content: center;
@@ -204,6 +204,7 @@ body {
   right: 0;
   margin: auto;
   display: flex;
+  align-items: center; /* Align items vertically in the center */
   background-color: inherit;
   backdrop-filter: blur(10px);
   padding: 14px;
@@ -212,16 +213,15 @@ body {
 }
 
 .input-area input {
-  flex: 1;
-  padding-left: 12px;
-  padding-right: 12px;
-  height:40px;
+  flex-grow: 1; /* Allow the input to take up remaining space */
+  height: 40px; /* Set a fixed height for the input */
+  padding: 0 12px; /* Horizontal padding to add some space inside the input */
   border: 1px solid #ddd;
-  margin-bottom: 20px;
   border-radius: 25px;
   font-size: 16px;
   outline: none;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  margin-right: 10px; /* Space between input and button */
 }
 
 .input-area input:focus {
@@ -230,25 +230,18 @@ body {
 }
 
 .input-area button {
-  margin-left: 10px;
-  margin-bottom: 20px;
-  padding: 12px;
+  width: 40px; /* Make width and height equal */
+  height: 40px; /* Make width and height equal */
   border: none;
   background-color: lightblue;
   color: black;
-  font-size: 18px;
+  font-size: 22px;
   border-radius: 50%; /* Perfect circle */
-  width: 40px; /* Make width and height equal */
-  height: 40px; /* Make width and height equal */
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
   transition: background-color 0.3s ease;
-}
-
-.input-area button i {
-  font-size: 24px; /* Adjust icon size */
 }
 
 .input-area button:hover {
@@ -257,6 +250,10 @@ body {
 
 .input-area button:active {
   background-color: #e16f4a;
+}
+
+.input-area button i {
+  font-size: 24px; /* Adjust icon size if needed */
 }
 
 
