@@ -1,25 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-68996BGLFE"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-68996BGLFE');
-</script>
-  <link rel="manifest" href="manifest.json">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <meta charset="UTF-8">
-  <title>Chat Rooms</title>
-  <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-68996BGLFE"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-68996BGLFE');
+    </script>
+    <link rel="manifest" href="manifest.json">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta charset="UTF-8">
+    <title>Chat Rooms</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="container">
     <div id="auth">
       <div class="login-register">
-        <h2>rooms</h2>
+        <h2>Rooms</h2>
         <input type="email" id="email" placeholder="Email" />
         <input type="password" id="password" placeholder="Password" />
         <button id="login">Login</button>
@@ -43,10 +44,12 @@
       <div class="header">
         <h3>Users</h3>
         <div id="header">
-<button id="go-back" style="display: none;">
-  <i class="fas fa-arrow-left"></i>
-</button>
-          <button id="logout-button">Logout</button>
+          <button id="go-back" style="display: none;">
+            <i class="fas fa-arrow-left"></i>
+          </button>
+          <button id="logout-button">
+            <i class="fas fa-sign-out-alt"></i> <!-- Logout icon from Font Awesome -->
+          </button>
         </div>
       </div>
 
@@ -54,69 +57,71 @@
       <div id="typing-indicator" style="display: none;">Someone is typing...</div>
       <div class="input-area">
         <input type="text" id="message-input" placeholder="Type your message..." />
-        <button id="send-button">Go</button>
+        <button id="send-button">
+          <i class="fas fa-arrow-up"></i> <!-- Arrow up icon -->
+        </button>
       </div>
     </div>
   </div>
 
   <script type="module">
-
-   document.addEventListener("DOMContentLoaded", () => {
-  function detectSystemTheme() {
-    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-  }
-
-  function applyTheme(theme) {
-    // Apply the theme class to various elements
-    const elementsToUpdate = [
-      document.body,
-      document.querySelector('.header'),
-      document.querySelector('#typing-indicator'),
-      document.querySelector('#logout-button'),
-      document.querySelector('#go-back'),
-      document.querySelector('.container'),
-      document.querySelector('.messages'),
-      document.querySelector('.input-area'),
-      ...document.querySelectorAll('.login-register'),
-      ...document.querySelectorAll('.message')
-    ];
-
-    elementsToUpdate.forEach(element => {
-      if (element) {
-        if (theme === 'dark') {
-          element.classList.add('dark-theme');
-        } else {
-          element.classList.remove('dark-theme');
-        }
+    document.addEventListener("DOMContentLoaded", () => {
+      function detectSystemTheme() {
+        return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
       }
+
+      function applyTheme(theme) {
+        const elementsToUpdate = [
+          document.body,
+          document.querySelector('.header'),
+          document.querySelector('#typing-indicator'),
+          document.querySelector('#logout-button'),
+          document.querySelector('#go-back'),
+          document.querySelector('.container'),
+          document.querySelector('.messages'),
+          document.querySelector('.input-area'),
+          ...document.querySelectorAll('.login-register'),
+          ...document.querySelectorAll('.message')
+        ];
+
+        elementsToUpdate.forEach(element => {
+          if (element) {
+            if (theme === 'dark') {
+              element.classList.add('dark-theme');
+            } else {
+              element.classList.remove('dark-theme');
+            }
+          }
+        });
+
+        // Update the theme-color meta tag dynamically
+        const themeColorMetaTag = document.querySelector('meta[name="theme-color"]');
+        if (themeColorMetaTag) {
+          if (theme === 'dark') {
+            themeColorMetaTag.setAttribute('content', '#121212');
+          } else {
+            themeColorMetaTag.setAttribute('content', '#ffffff');
+          }
+        }
+
+        // Save the selected theme to localStorage
+        localStorage.setItem("theme", theme);
+      }
+
+      function initializeTheme() {
+        const savedTheme = localStorage.getItem("theme");
+        const theme = savedTheme || detectSystemTheme();
+        applyTheme(theme);
+      }
+
+      window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
+        const theme = e.matches ? "dark" : "light";
+        applyTheme(theme);
+      });
+
+      initializeTheme();
     });
 
-    const themeColorMetaTag = document.querySelector('meta[name="theme-color"]');
-    if (themeColorMetaTag) {
-      if (theme === 'dark') {
-        themeColorMetaTag.setAttribute('content', '#121212');  
-      } else {
-        themeColorMetaTag.setAttribute('content', '#ffffff');
-      }
-    }
-
-    localStorage.setItem("theme", theme);
-  }
-
-  function initializeTheme() {
-    const savedTheme = localStorage.getItem("theme");
-    const theme = savedTheme || detectSystemTheme();
-    applyTheme(theme);
-  }
-
-  // Detect system theme changes
-  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
-    const theme = e.matches ? "dark" : "light";
-    applyTheme(theme);
-  });
-
-  initializeTheme();
-});
     import { sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
@@ -168,10 +173,12 @@
       });
     });
 
-    // Append the logout button only when a user is logged in
-    function appendLogoutButton() {
-      document.body.appendChild(logoutButton);
-    }
+function appendLogoutButton() {
+  // Set the logout button's inner HTML to display the icon
+  logoutButton.innerHTML = `<i class="fas fa-sign-out-alt"></i>`;  // Logout icon from Font Awesome
+  document.body.appendChild(logoutButton);
+}
+
 
     if (savedUser) {
       const { uid, username } = JSON.parse(savedUser);
@@ -199,7 +206,7 @@
       loadMessages();
       loadUsers();
       loadTypingIndicator();
-      goBackButton.style.display = "inline-block"; // Show Go Back button
+      goBackButton.style.display = "inline-block";
     }
 
     loginButton.addEventListener("click", () => {
@@ -355,11 +362,10 @@
       }
     });
 
-    // Go Back Button event listener
     goBackButton.addEventListener("click", () => {
       chatContainer.style.display = "none";
       roomSelection.style.display = "block";
-      goBackButton.style.display = "none"; // Hide the Go Back button
+      goBackButton.style.display = "none"; 
     });
 
     onAuthStateChanged(auth, (user) => {
@@ -383,7 +389,6 @@
     });
 
     let typingTimeout;
-
     messageInput.addEventListener("input", () => {
       const typingRef = ref(database, `rooms/${currentRoom}/typing/${currentUsername}`);
       set(typingRef, true);
@@ -409,7 +414,6 @@
         }
       });
     }
-    
   </script>
 </body>
 </html>
