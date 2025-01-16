@@ -359,3 +359,9 @@ body.dark-theme #logout-button {
   color: #fff;
 }
 
+#go-back.dark-theme {
+  left: 10px;
+  background-color: none;
+  color: #fff;
+}
+
