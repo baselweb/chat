@@ -1,4 +1,4 @@
-body {
+  body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
   padding: 0;
@@ -359,8 +359,7 @@ body.dark-theme #logout-button {
   color: #fff;
 }
 
-#go-back.dark-theme {
-  left: 10px;
+#logout-button.dark-theme, #go-back.dark-theme {
   background-color: none;
   color: #fff;
 }
