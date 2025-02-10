@@ -8,7 +8,6 @@
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined">
     <link rel="stylesheet" href="styles.css">
-
     <script src="statusBar.js"></script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-68996BGLFE"></script>
     <script>
@@ -453,65 +452,84 @@ function scrollToBottom() {
          }
          
          
-         function addLongPressMessageOptions() {
-  const messages = document.querySelectorAll('.message');
-  
-  messages.forEach(message => {
-    let pressTimer;
-    let isLongPress = false;
-    let clickCount = 0;
-    let clickTimer;
-
-    // Touch events for mobile long press
-    message.addEventListener('touchstart', (e) => {
-      pressTimer = setTimeout(() => {
-        isLongPress = true;
-        showMessageOptions(message);
-      }, 500); // 500ms long press
-    });
-
-    message.addEventListener('touchend', () => {
-      clearTimeout(pressTimer);
-    });
-
-    message.addEventListener('touchmove', () => {
-      clearTimeout(pressTimer);
-    });
-
-    // Mouse events for desktop long press
-    message.addEventListener('mousedown', (e) => {
-      pressTimer = setTimeout(() => {
-        isLongPress = true;
-        showMessageOptions(message);
-      }, 500);
-    });
-
-    message.addEventListener('mouseup', () => {
-      clearTimeout(pressTimer);
-    });
-
-    message.addEventListener('mouseleave', () => {
-      clearTimeout(pressTimer);
-    });
-
-    // Triple-click support
-    message.addEventListener('click', () => {
-      clickCount++;
+  function addLongPressMessageOptions(messageElement, messageId) {
+          let pressTimer;
+          let clickCount = 0;
+          let clickTimer;
       
-      // Clear previous timer if exists
-      clearTimeout(clickTimer);
+          const showOptions = () => {
+              const overlay = document.createElement("div");
+              overlay.classList.add("message-options-overlay");
+              overlay.style.cssText = "position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 1000;";
       
-      // Set a new timer
-      clickTimer = setTimeout(() => {
-        // If 3 clicks within 300ms, show options
-        if (clickCount === 3) {
-          showMessageOptions(message);
-        }
-        // Reset click count
-        clickCount = 0;
-      }, 300);
-    });
-  });
+              const optionsContainer = document.createElement("div");
+              optionsContainer.style.cssText = "background: white; padding: 20px; border-radius: 10px; text-align: center; max-width: 300px; width: 90%;";
+      
+              const copyButton = document.createElement("button");
+              copyButton.textContent = "Copy Message";
+              copyButton.classList.add("menu-item");
+              copyButton.addEventListener("click", () => {
+                  navigator.clipboard.writeText(messageElement.textContent);
+                  document.body.removeChild(overlay);
+              });
+              optionsContainer.appendChild(copyButton);
+      
+              if (messageElement.classList.contains("sent")) {
+                  const deleteButton = document.createElement("button");
+                  deleteButton.textContent = "Delete Message";
+                  deleteButton.classList.add("menu-item");
+                  deleteButton.style.backgroundColor = "#ff4444";
+                  deleteButton.style.color = "white";
+                  deleteButton.addEventListener("click", () => {
+                      const messageRef = ref(database, `rooms/${currentRoom}/messages/${messageId}`);
+                      remove(messageRef);
+                      document.body.removeChild(overlay);
+                  });
+                  optionsContainer.appendChild(deleteButton);
+              }
+      
+              const cancelButton = document.createElement("button");
+              cancelButton.textContent = "Cancel";
+              cancelButton.classList.add("menu-item");
+              cancelButton.addEventListener("click", () => {
+                  document.body.removeChild(overlay);
+              });
+              optionsContainer.appendChild(cancelButton);
+      
+              overlay.appendChild(optionsContainer);
+              document.body.appendChild(overlay);
+      
+              overlay.addEventListener("click", (e) => {
+                  if (e.target === overlay) {
+                      document.body.removeChild(overlay);
+                  }
+              });
+          };
+      
+          messageElement.addEventListener("touchstart", () => {
+              pressTimer = setTimeout(() => showOptions(), 500);
+          });
+          messageElement.addEventListener("touchend", () => clearTimeout(pressTimer));
+          messageElement.addEventListener("touchmove", () => clearTimeout(pressTimer));
+      
+          messageElement.addEventListener("mousedown", () => {
+              pressTimer = setTimeout(() => showOptions(), 500);
+          });
+          messageElement.addEventListener("mouseup", () => clearTimeout(pressTimer));
+          messageElement.addEventListener("mouseleave", () => clearTimeout(pressTimer));
+      
+          messageElement.addEventListener("click", () => {
+              clickCount++;
+              clearTimeout(clickTimer);
+              clickTimer = setTimeout(() => {
+                  if (clickCount === 3) {
+                      showOptions();
+                  }
+                  clickCount = 0;
+              }, 300);
+          });
+      }
+      
 
   function showMessageOptions(message) {
     // Create overlay
