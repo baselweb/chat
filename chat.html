@@ -8,6 +8,7 @@
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined">
     <link rel="stylesheet" href="styles.css">
+
     <script src="statusBar.js"></script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-68996BGLFE"></script>
     <script>
@@ -21,12 +22,43 @@
     <div class="container">
         <div id="auth">
             <div class="login-register">
+                <!--
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="200" height="200">
+                    <defs>
+                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#3b82f6" />
+                            <stop offset="100%" stop-color="#fbbf24" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M512,512 m-350,0 a350,350 0 1,1 700,0 a350,350 0 1,1 -700,0 m50,0 a300,300 0 1,0 600,0 a300,300 0 1,0 -600,0 m50,0 a250,250 0 1,1 500,0 a250,250 0 1,1 -500,0"
+                        fill="none"
+                        stroke="url(#gradient)"
+                        stroke-width="40"
+                        stroke-linecap="round"
+                        stroke-dasharray="0, 2200"
+                    />
+                    <style>
+                        path {
+                            animation: draw 0s forwards;
+                        }
+                        @keyframes draw {
+                            0% {
+                                stroke-dasharray: 0, 2200;
+                            }
+                            100% {
+                                stroke-dasharray: 2200, 0;
+                            }
+                        }
+                    </style>
+                </svg>
+   -->
                 <h2>
                     rooms
                     <a href="https://adiasta.com/legal" target="_blank" aria-label="Legal Information" id="legal-button">
                         <span class="material-symbols-outlined">help</span>
                     </a>
                 </h2>
+
                 <input type="email" id="email" placeholder="Email">
                 <input type="password" id="password" placeholder="Password">
                 <button type="button" id="toggle-password" aria-label="Show Password">
@@ -38,6 +70,7 @@
                 <button id="forgot-password">Forgot Password?</button>
             </div>
         </div>
+
         <div id="room-selection" style="display: none;">
             <div class="login-register">
                 <h2>Join / Create</h2>
@@ -47,6 +80,7 @@
                 <div id="room-error"></div>
             </div>
         </div>
+
         <div id="chat" style="display: none;">
             <div class="header">
                 <h3>Users</h3>
@@ -60,13 +94,18 @@
                     </button>
                 </div>
             </div>
+
             <div class="messages" id="message-list"></div>
+
             <div class="input-area">
                 <div class="input-container">
                     <input type="text" id="message-input" placeholder="Message">
                     <button id="send-button" aria-label="Send message">
                         <span class="material-symbols-outlined">send</span>
                     </button>
+                  <!--  <button id="voice-message-button" aria-label="Record Voice" title="Record Voice Message">
+                        <span class="material-symbols-outlined">mic</span>
+                    </button> -->
                 </div>
             </div>
         </div>
@@ -452,84 +491,65 @@ function scrollToBottom() {
          }
          
          
-  function addLongPressMessageOptions(messageElement, messageId) {
-          let pressTimer;
-          let clickCount = 0;
-          let clickTimer;
+         function addLongPressMessageOptions() {
+  const messages = document.querySelectorAll('.message');
+  
+  messages.forEach(message => {
+    let pressTimer;
+    let isLongPress = false;
+    let clickCount = 0;
+    let clickTimer;
+
+    // Touch events for mobile long press
+    message.addEventListener('touchstart', (e) => {
+      pressTimer = setTimeout(() => {
+        isLongPress = true;
+        showMessageOptions(message);
+      }, 500); // 500ms long press
+    });
+
+    message.addEventListener('touchend', () => {
+      clearTimeout(pressTimer);
+    });
+
+    message.addEventListener('touchmove', () => {
+      clearTimeout(pressTimer);
+    });
+
+    // Mouse events for desktop long press
+    message.addEventListener('mousedown', (e) => {
+      pressTimer = setTimeout(() => {
+        isLongPress = true;
+        showMessageOptions(message);
+      }, 500);
+    });
+
+    message.addEventListener('mouseup', () => {
+      clearTimeout(pressTimer);
+    });
+
+    message.addEventListener('mouseleave', () => {
+      clearTimeout(pressTimer);
+    });
+
+    // Triple-click support
+    message.addEventListener('click', () => {
+      clickCount++;
       
-          const showOptions = () => {
-              const overlay = document.createElement("div");
-              overlay.classList.add("message-options-overlay");
-              overlay.style.cssText = "position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 1000;";
+      // Clear previous timer if exists
+      clearTimeout(clickTimer);
       
-              const optionsContainer = document.createElement("div");
-              optionsContainer.style.cssText = "background: white; padding: 20px; border-radius: 10px; text-align: center; max-width: 300px; width: 90%;";
-      
-              const copyButton = document.createElement("button");
-              copyButton.textContent = "Copy Message";
-              copyButton.classList.add("menu-item");
-              copyButton.addEventListener("click", () => {
-                  navigator.clipboard.writeText(messageElement.textContent);
-                  document.body.removeChild(overlay);
-              });
-              optionsContainer.appendChild(copyButton);
-      
-              if (messageElement.classList.contains("sent")) {
-                  const deleteButton = document.createElement("button");
-                  deleteButton.textContent = "Delete Message";
-                  deleteButton.classList.add("menu-item");
-                  deleteButton.style.backgroundColor = "#ff4444";
-                  deleteButton.style.color = "white";
-                  deleteButton.addEventListener("click", () => {
-                      const messageRef = ref(database, `rooms/${currentRoom}/messages/${messageId}`);
-                      remove(messageRef);
-                      document.body.removeChild(overlay);
-                  });
-                  optionsContainer.appendChild(deleteButton);
-              }
-      
-              const cancelButton = document.createElement("button");
-              cancelButton.textContent = "Cancel";
-              cancelButton.classList.add("menu-item");
-              cancelButton.addEventListener("click", () => {
-                  document.body.removeChild(overlay);
-              });
-              optionsContainer.appendChild(cancelButton);
-      
-              overlay.appendChild(optionsContainer);
-              document.body.appendChild(overlay);
-      
-              overlay.addEventListener("click", (e) => {
-                  if (e.target === overlay) {
-                      document.body.removeChild(overlay);
-                  }
-              });
-          };
-      
-          messageElement.addEventListener("touchstart", () => {
-              pressTimer = setTimeout(() => showOptions(), 500);
-          });
-          messageElement.addEventListener("touchend", () => clearTimeout(pressTimer));
-          messageElement.addEventListener("touchmove", () => clearTimeout(pressTimer));
-      
-          messageElement.addEventListener("mousedown", () => {
-              pressTimer = setTimeout(() => showOptions(), 500);
-          });
-          messageElement.addEventListener("mouseup", () => clearTimeout(pressTimer));
-          messageElement.addEventListener("mouseleave", () => clearTimeout(pressTimer));
-      
-          messageElement.addEventListener("click", () => {
-              clickCount++;
-              clearTimeout(clickTimer);
-              clickTimer = setTimeout(() => {
-                  if (clickCount === 3) {
-                      showOptions();
-                  }
-                  clickCount = 0;
-              }, 300);
-          });
-      }
-      
+      // Set a new timer
+      clickTimer = setTimeout(() => {
+        // If 3 clicks within 300ms, show options
+        if (clickCount === 3) {
+          showMessageOptions(message);
+        }
+        // Reset click count
+        clickCount = 0;
+      }, 300);
+    });
+  });
 
   function showMessageOptions(message) {
     // Create overlay
@@ -559,6 +579,7 @@ function scrollToBottom() {
       width: 90%;
     `;
 
+    // Copy message option
     const copyButton = document.createElement('button');
     copyButton.textContent = 'Copy Message';
     copyButton.style.cssText = `
@@ -576,6 +597,7 @@ function scrollToBottom() {
       removeOverlay();
     });
 
+    // Delete message option (only for own messages)
     const messageText = message.querySelector('span');
     if (messageText) {
       const deleteButton = document.createElement('button');
@@ -632,6 +654,54 @@ function scrollToBottom() {
     });
   }
 }
+const voiceMessageButton = document.getElementById('voice-message-button');
+const voiceIcon = voiceMessageButton.querySelector('.material-symbols-outlined');
+let mediaRecorder;
+let audioChunks = [];
+
+voiceMessageButton.addEventListener('click', async () => {
+  if (!mediaRecorder || mediaRecorder.state !== 'recording') {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorder = new MediaRecorder(stream);
+
+      audioChunks = [];
+      mediaRecorder.addEventListener('dataavailable', (event) => {
+        audioChunks.push(event.data);
+      });
+
+      mediaRecorder.addEventListener('stop', () => {
+        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+        const audioUrl = URL.createObjectURL(audioBlob);
+        
+        const storageReference = storageRef(storage, `voice_messages/${currentRoom}/${Date.now()}.webm`);
+        uploadBytes(storageReference, audioBlob).then((snapshot) => {
+          getDownloadURL(snapshot.ref).then((downloadURL) => {
+            push(ref(database, `rooms/${currentRoom}/messages`), {
+              username: currentUsername,
+              audioURL: downloadURL,
+              timestamp: Date.now(),
+            });
+          });
+        });
+
+        stream.getTracks().forEach(track => track.stop());
+        voiceIcon.textContent = 'mic';
+        voiceMessageButton.classList.remove('recording');
+      });
+
+      mediaRecorder.start();
+      voiceIcon.textContent = 'stop';
+      voiceMessageButton.classList.add('recording');
+    } catch (error) {
+      console.error('Error accessing microphone', error);
+      alert('Microphone access denied or not available');
+    }
+  } else {
+    mediaRecorder.stop();
+  }
+});
+
          document.getElementById("forgot-password").addEventListener("click", async () => {
     const email = document.getElementById("email").value;
 
