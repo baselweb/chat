@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined">
+    <script src="statusBar.js"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-68996BGLFE"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-68996BGLFE');
+    </script>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agree to Proceed</title>
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+    <style>
+        /* Base Styles */
+        body {
+            font-family: 'Russo One', sans-serif;
+            font-weight: 400;
+            margin: 0;
+            padding: 0;
+            background-color: #e8f7f0; /* Soft pastel background */
+            color: #4a4a4a; /* Dark grey text */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-height: 100%;
+            text-align: center;
+            background: url('https://www.svgrepo.com/show/50344/abstract-background.svg') no-repeat center center fixed;
+            background-size: cover;
+            transition: background-color 0.3s ease;
+        }
+
+        .content {
+            padding: 30px 20px;
+            border-radius: 12px;
+            width: 80%;
+            max-width: 450px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-size: 26px;
+            margin-bottom: 15px;
+            color: #5c6bc0; /* Soft blue */
+            font-weight: bold;
+        }
+
+        p {
+            font-size: 16px;
+            margin: 0;
+            color: #6b6b6b; /* Soft grey */
+        }
+
+        a {
+            color: #5c6bc0; /* Soft blue */
+            text-decoration: none;
+        }
+
+        .terms {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #888;
+        }
+
+        .terms a {
+            color: #5c6bc0; /* Soft blue */
+            text-decoration: underline;
+        }
+
+        .agree-btn, .disagree-btn {
+            font-family: 'Russo One', sans-serif;
+            margin-top: 25px;
+            padding: 15px 30px;
+            border-radius: 50px;  /* Rounded edges */
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            border: none; /* Removed border */
+        }
+
+        .agree-btn {
+            background-color: #81c784; /* Soft green */
+            color: #fff;
+        }
+
+        .agree-btn:hover {
+            background-color: #66bb6a; /* Slightly darker green */
+        }
+
+        .disagree-btn {
+            background-color: #ffb74d; /* Soft orange */
+            color: #fff;
+            margin-top: 10px;
+        }
+
+        .disagree-btn:hover {
+            background-color: #ffa726; /* Slightly darker orange */
+        }
+
+        /* Dark Theme */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #333; /* Darker background */
+                background-image: url('https://www.svgrepo.com/show/50344/abstract-background-dark.svg');
+            }
+
+            .content {
+                color: #f0f0f5;
+            }
+
+            h1 {
+                color: #b3e5fc; /* Light blue */
+            }
+
+            p {
+                color: #ccc;
+            }
+
+            .terms {
+                color: #aaa;
+            }
+
+            .agree-btn {
+                background-color: #81c784; /* Soft green */
+            }
+
+            .agree-btn:hover {
+                background-color: #66bb6a; /* Slightly darker green */
+            }
+
+            .disagree-btn {
+                background-color: #ffb74d; /* Soft orange */
+            }
+
+            .disagree-btn:hover {
+                background-color: #ffa726; /* Slightly darker orange */
+            }
+        }
+
+        /* Mobile Optimizations */
+        @media (max-width: 480px) {
+            .content {
+                padding: 20px 15px;
+                width: 90%;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            .agree-btn, .disagree-btn {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="content" id="content">
+        <h1>Agree to Proceed</h1>
+        <p>Before accessing the chat service, please agree to our <a href="https://adiasta.com/legal" target="_blank">terms and privacy policy</a>.</p>
+        <div class="terms">
+            <p>By clicking "Agree", you acknowledge that you have read and agree to the terms and conditions.</p>
+        </div>
+        <button class="agree-btn" id="agreeBtn">Agree</button>
+        <button class="disagree-btn" id="disagreeBtn">Disagree</button>
+    </div>
+
+    <script>
+        // Check if the user has already agreed
+        if (localStorage.getItem('hasAgreed') === 'true') {
+            // If user already agreed, redirect them automatically
+            window.location.href = 'https://adiasta.com/chat';
+        }
+
+        // Handle the 'Agree' button click
+        document.getElementById('agreeBtn').addEventListener('click', function() {
+            // Save the user's agreement in localStorage
+            localStorage.setItem('hasAgreed', 'true');
+            // Redirect to the chat service
+            window.location.href = 'https://adiasta.com/chat';
+        });
+
+        // Handle the 'Disagree' button click
+        document.getElementById('disagreeBtn').addEventListener('click', function() {
+            // Redirect to DuckDuckGo
+            window.location.href = 'https://duckduckgo.com/';
+        });
+    </script>
+</body>
+</html>

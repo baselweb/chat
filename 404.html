@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 - Page Not Found</title>
+  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+  <style>
+    /* Base Styles */
+    body {
+      font-family: 'Russo One', sans-serif;
+      text-align: center;
+      padding: 50px;
+      background-color: #f2f2f2; /* Light background */
+      color: #333; /* Dark text */
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    h1 {
+      font-size: 100px;
+      color: #ff4d4d; /* Red for 404 */
+    }
+
+    p {
+      font-size: 24px;
+      color: #666; /* Grey text */
+    }
+
+    /* Dark Theme Styles */
+    body.dark-mode {
+      background-color: #333; /* Dark background */
+      color: #f0f0f0; /* Light text */
+    }
+
+    body.dark-mode h1 {
+      color: #ff7043; /* Soft orange for 404 in dark mode */
+    }
+
+    body.dark-mode p {
+      color: #ccc; /* Light grey text */
+    }
+
+  </style>
+</head>
+<body>
+  <h1>404</h1>
+  <p>Oops! Page Not Found.</p>
+
+  <script>
+    // Check the saved theme in localStorage
+    const currentTheme = localStorage.getItem('theme');
+    const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+    // If the user has set a theme preference, use it; otherwise, use system preference
+    if (currentTheme === 'dark' || (currentTheme === null && prefersDarkScheme)) {
+      document.body.classList.add('dark-mode');
+    }
+
+    // Listen for system theme changes and apply the theme accordingly
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener('change', (e) => {
+      if (e.matches) {
+        document.body.classList.add('dark-mode');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        document.body.classList.remove('dark-mode');
+        localStorage.setItem('theme', 'light');
+      }
+    });
+  </script>
+</body>
+</html>

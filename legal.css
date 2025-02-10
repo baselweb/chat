@@ -1,0 +1,131 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap');
+body {
+  font-family: 'Russo One', sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: all 0.3s ease;
+}
+
+/* Theme Variables */
+:root {
+  --light-background: #ffffff;
+  --light-text: #333;
+  --light-card-bg: #f9f9f9;
+  --light-link: #3498db;
+  --dark-background: #333;
+  --dark-text: #ecf0f1;
+  --dark-card-bg: #34495e;
+  --dark-link: #1abc9c;
+}
+
+/* Default Theme (Light Mode) */
+body {
+  --background-color: var(--light-background);
+  --text-color: var(--light-text);
+}
+
+.container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: none;
+}
+
+header h1 {
+  text-align: center;
+  font-size: 2.5em;
+  color: var(--text-color);
+  margin-bottom: 30px;
+  font-weight: 600;
+}
+
+.card {
+  background-color: var(--light-card-bg);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 2em;
+  color: var(--text-color);
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+
+p {
+  font-size: 1.1em;
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+
+ul {
+  list-style-type: disc;
+  margin-left: 20px;
+  margin-bottom: 20px;
+}
+
+ul li {
+  font-size: 1.1em;
+}
+
+a {
+  color: var(--light-link);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+footer {
+  text-align: center;
+  font-size: 0.9em;
+  color: #7f8c8d;
+  margin-top: 30px;
+  font-weight: 400;
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  body {
+    --background-color: var(--dark-background);
+    --text-color: var(--dark-text);
+  }
+
+  header h1 {
+    color: var(--text-color);
+  }
+
+  .card {
+    background-color: var(--dark-card-bg);
+  }
+
+  a {
+    color: var(--dark-link);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    width: 95%;
+  }
+
+  header h1 {
+    font-size: 2em;
+  }
+
+  .card {
+    padding: 15px;
+  }
+}

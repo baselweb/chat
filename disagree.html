@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Adiasta Universe Simulator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/p5.easycam@1.0.1/p5.easycam.min.js"></script>
+    <style>
+      /* Global dark theme */
+      html, body {
+        margin: 0;
+        padding: 0;
+        background: #0b0c10;
+        color: #c5c6c7;
+        font-family: Arial, sans-serif;
+        overflow: hidden;
+      }
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(ellipse at center, #1f2833 0%, #0b0c10 80%);
+        opacity: 0.8;
+        animation: moveBackground 60s linear infinite;
+        z-index: -2;
+      }
+         /*    @keyframes moveBackground {
+        from { transform: translate(0, 0); }
+        to { transform: translate(-50%, -50%); }
+      }
+
+      */
+      
+      /* Header with title and burger menu */
+      #ui-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: rgba(11, 12, 16, 0.9);
+        padding: 10px 20px;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      #ui-header h1 {
+        margin: 0;
+        font-size: 22px;
+        color: #66fcf1;
+      }
+      /* Burger menu icon */
+      .burger {
+        position: fixed;
+        right: 10px;
+        width: 25px;
+        height: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        cursor: pointer;
+      }
+      .burger div {
+        width: 100%;
+        height: 3px;
+        background: #66fcf1;
+      }
+      
+      /* Navigation menu (side drawer) */
+      #nav-menu {
+        position: fixed;
+        top: 45px;
+        left: -20px;
+        text-align: end;
+        width: 220px;
+        background: rgba(11, 12, 16, 0.95);
+        padding: 20px;
+        transform: translateX(-240px);
+        transition: transform 0.3s ease;
+        z-index: 999;
+      }
+      #nav-menu.active {
+        transform: translateX(0);
+      }
+      #nav-menu a {
+        display: block;
+        margin: 10px 0;
+        color: #66fcf1;
+        text-decoration: none;
+        font-size: 15px;
+      }
+      
+      /* Settings panel */
+      #settings-panel {
+        position: fixed;
+        top: 50px;
+        right: 20px;
+        width: 250px;
+        background: rgba(11, 12, 16, 0.95);
+        padding: 15px;
+        border-radius: 5px;
+        z-index: 1000;
+        display: none;
+      }
+      #settings-panel label {
+        display: block;
+        margin: 8px 0;
+        font-size: 14px;
+      }
+      #settings-panel input[type="range"],
+      #settings-panel input[type="number"] {
+        width: 100%;
+      }
+      #settings-panel input[type="checkbox"] {
+        margin-right: 5px;
+      }
+      
+      /* Footer with status info */
+      #ui-footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: rgba(11, 12, 16, 0.9);
+        padding: 8px 20px;
+        font-size: 14px;
+        color: #66fcf1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 1000;
+      }
+      #status{
+        position: fixed;
+        right: 10px;
+      }
+      /* p5.js canvas */
+      canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 10;
+        background: transparent;
+        touch-action: none;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <div id="ui-header">
+      <h1>Adiasta Universe Simulator</h1>
+      <div class="burger" id="burger-menu">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+    
+    <!-- Navigation Menu -->
+    <nav id="nav-menu">
+      <a href="#" id="nav-home">Home</a>
+      <a href="#" id="nav-settings">Settings</a>
+      <a href="#" id="nav-add">Add Object</a>
+      <a href="#" id="nav-clear">Clear Universe</a>
+      <a href="#" id="nav-pause">Pause Simulation</a>
+      <a href="#" id="nav-gravity">Toggle Gravity</a>
+      <a href="#" id="nav-reset">Reset Simulation</a>
+    </nav>
+    
+    <!-- Settings Panel -->
+    <div id="settings-panel">
+      <label>
+        Container Radius: <span id="containerRadiusVal">300</span>
+        <input type="range" id="containerRadius" min="200" max="600" value="300">
+      </label>
+      <label>
+        Restitution: <span id="restitutionVal">0.9</span>
+        <input type="range" id="restitution" min="0" max="1" step="0.01" value="0.9">
+      </label>
+      <label>
+        Damping: <span id="dampingVal">0.999</span>
+        <input type="range" id="damping" min="0.90" max="1" step="0.001" value="0.999">
+      </label>
+      <label>
+        Simulation Speed: <span id="simSpeedVal">1</span>
+        <input type="range" id="simSpeed" min="0.1" max="3" step="0.1" value="1">
+      </label>
+      <label>
+        Gravity Strength: <span id="gravityVal">0</span>
+        <input type="range" id="gravity" min="0" max="1" step="0.01" value="0">
+      </label>
+    </div>
+    
+    <!-- Footer -->
+    <div id="ui-footer">
+      <span>Adiasta Universe Simulator © 2025</span>
+      <span id="status">Running</span>
+    </div>
+    
+    <script>
+      /***********************
+       * SIMULATION VARIABLES
+       ***********************/
+      let containerRadius = 300;
+      let restitution = 0.9;
+      let damping = 0.999;
+      let simulationSpeed = 1;
+      let gravityStrength = 0; // 0 = no gravity; > 0 applies a central pull
+      let gravityEnabled = false;
+      let pauseSimulation = false;
+      let objects = [];
+      let numCubes = 7, numSpheres = 3, numTorus = 2;
+      let easycam;
+      
+      function setup() {
+        createCanvas(windowWidth, windowHeight, WEBGL);
+        perspective(PI / 3, width / height, 0.1, 5000);
+        easycam = new Dw.EasyCam(this._renderer, { distance: 1200 });
+        
+        resetSimulation();
+        
+        // --- UI Event Listeners ---
+        document.getElementById('burger-menu').addEventListener('click', function() {
+          document.getElementById('nav-menu').classList.toggle('active');
+        });
+        document.getElementById('nav-settings').addEventListener('click', function(e) {
+          e.preventDefault();
+          let panel = document.getElementById('settings-panel');
+          panel.style.display = (panel.style.display === 'none' || panel.style.display === '') ? 'block' : 'none';
+        });
+        document.getElementById('nav-add').addEventListener('click', function(e) {
+          e.preventDefault();
+          addRandomObject();
+        });
+        document.getElementById('nav-clear').addEventListener('click', function(e) {
+          e.preventDefault();
+          objects = [];
+        });
+        document.getElementById('nav-pause').addEventListener('click', function(e) {
+          e.preventDefault();
+          pauseSimulation = !pauseSimulation;
+          document.getElementById('status').textContent = pauseSimulation ? "Paused" : "Running";
+          this.textContent = pauseSimulation ? "Resume Simulation" : "Pause Simulation";
+        });
+        document.getElementById('nav-gravity').addEventListener('click', function(e) {
+          e.preventDefault();
+          gravityEnabled = !gravityEnabled;
+          this.textContent = gravityEnabled ? "Disable Gravity" : "Toggle Gravity";
+        });
+        document.getElementById('nav-reset').addEventListener('click', function(e) {
+          e.preventDefault();
+          resetSimulation();
+        });
+        
+        // Settings Panel Listeners
+        document.getElementById('containerRadius').addEventListener('input', function() {
+          containerRadius = Number(this.value);
+          document.getElementById('containerRadiusVal').textContent = containerRadius;
+        });
+        document.getElementById('restitution').addEventListener('input', function() {
+          restitution = Number(this.value);
+          document.getElementById('restitutionVal').textContent = restitution;
+        });
+        document.getElementById('damping').addEventListener('input', function() {
+          damping = Number(this.value);
+          document.getElementById('dampingVal').textContent = damping;
+        });
+        document.getElementById('simSpeed').addEventListener('input', function() {
+          simulationSpeed = Number(this.value);
+          document.getElementById('simSpeedVal').textContent = simulationSpeed;
+        });
+        document.getElementById('gravity').addEventListener('input', function() {
+          gravityStrength = Number(this.value);
+          document.getElementById('gravityVal').textContent = gravityStrength;
+        });
+      }
+      
+      // Reset simulation: recreate the objects
+      function resetSimulation() {
+        objects = [];
+        // Neon cubes
+        for (let i = 0; i < numCubes; i++) {
+          let s = random(30, 60);
+          objects.push(new BouncingObject("cube", s));
+        }
+        // Neon spheres
+        for (let i = 0; i < numSpheres; i++) {
+          let s = random(30, 60);
+          objects.push(new BouncingObject("sphere", s));
+        }
+        // Neon toruses
+        for (let i = 0; i < numTorus; i++) {
+          let s = random(30, 60);
+          objects.push(new BouncingObject("torus", s));
+        }
+      }
+      
+      // Add one random object (cube, sphere, or torus)
+      function addRandomObject() {
+        let types = ["cube", "sphere", "torus"];
+        let type = random(types);
+        let s = random(30, 60);
+        objects.push(new BouncingObject(type, s));
+      }
+      
+      function draw() {
+        clear(); // Clear p5.js canvas; background is handled by CSS
+        
+        // Set up p5.js lights
+        ambientLight(50);
+        pointLight(255, 255, 255, 0, 0, 400);
+        
+        // Draw the rotating container sphere
+        push();
+          rotateY(frameCount * 0.005);
+          rotateX(frameCount * 0.003);
+          noFill();
+          stroke(255, 100);
+          strokeWeight(2);
+          sphere(containerRadius);
+        pop();
+        
+        // If simulation is not paused, update objects and handle collisions
+        if (!pauseSimulation) {
+          for (let obj of objects) {
+            obj.update();
+          }
+          handleCollisions();
+        }
+        
+        // Display each object
+        for (let obj of objects) {
+          obj.display();
+        }
+      }
+      
+      // Collision detection among objects using bounding spheres
+      function handleCollisions() {
+        for (let i = 0; i < objects.length; i++) {
+          for (let j = i + 1; j < objects.length; j++) {
+            let obj1 = objects[i];
+            let obj2 = objects[j];
+            let diff = p5.Vector.sub(obj2.position, obj1.position);
+            let distance = diff.mag();
+            let minDist = obj1.boundRadius + obj2.boundRadius;
+            if (distance < minDist) {
+              let normal = diff.copy().normalize();
+              let relativeVelocity = p5.Vector.sub(obj2.velocity, obj1.velocity);
+              let speed = relativeVelocity.dot(normal);
+              if (speed < 0) {
+                let impulse = -speed * restitution;
+                let impulseVec = normal.copy().mult(impulse);
+                obj1.velocity.sub(impulseVec);
+                obj2.velocity.add(impulseVec);
+              }
+              let overlap = minDist - distance;
+              let correction = normal.copy().mult(overlap / 2);
+              obj1.position.sub(correction);
+              obj2.position.add(correction);
+            }
+          }
+        }
+      }
+      
+      // BouncingObject class: supports "cube", "sphere", and "torus"
+      class BouncingObject {
+        constructor(type, size) {
+          this.type = type;
+          this.size = size;
+          if (this.type === "cube") {
+            this.boundRadius = (this.size / 2) * sqrt(3);
+          } else if (this.type === "sphere") {
+            this.boundRadius = this.size / 2;
+          } else if (this.type === "torus") {
+            this.outerRadius = this.size / 2;
+            this.tubeRadius = this.size / 8;
+            this.boundRadius = this.outerRadius + this.tubeRadius;
+          } else {
+            this.boundRadius = this.size / 2;
+          }
+          // Random starting position fully inside the container
+          let pos = p5.Vector.random3D();
+          let mag = random(0, containerRadius - this.boundRadius);
+          pos.mult(mag);
+          this.position = pos;
+          // Random initial velocity
+          this.velocity = p5.Vector.random3D();
+          this.velocity.mult(random(1, 3));
+          // Random neon color
+          this.color = color(random(100,255), random(100,255), random(100,255));
+          this.rotation = createVector(random(TWO_PI), random(TWO_PI), random(TWO_PI));
+          this.rotationSpeed = createVector(random(-0.02, 0.02), random(-0.02, 0.02), random(-0.02, 0.02));
+        }
+        
+        update() {
+          // If gravity is enabled, apply a central pull
+          if (gravityEnabled && gravityStrength > 0) {
+            let gravityForce = p5.Vector.mult(this.position.copy().mult(-1).normalize(), gravityStrength);
+            this.velocity.add(gravityForce);
+          }
+          // Update position and rotation scaled by simulationSpeed
+          let dt = simulationSpeed;
+          this.position.add(p5.Vector.mult(this.velocity, dt));
+          this.rotation.add(p5.Vector.mult(this.rotationSpeed, dt));
+          
+          // Bounce off the container sphere
+          let d = this.position.mag();
+          if (d + this.boundRadius > containerRadius) {
+            let normal = this.position.copy().normalize();
+            this.position = normal.copy().mult(containerRadius - this.boundRadius);
+            let vDotN = this.velocity.dot(normal);
+            let reflected = p5.Vector.sub(this.velocity, p5.Vector.mult(normal, 2 * vDotN));
+            this.velocity = reflected.mult(restitution);
+          }
+          // Apply damping
+          this.velocity.mult(damping);
+        }
+        
+        display() {
+          push();
+            translate(this.position.x, this.position.y, this.position.z);
+            rotateX(this.rotation.x);
+            rotateY(this.rotation.y);
+            rotateZ(this.rotation.z);
+            noFill();
+            stroke(this.color);
+            strokeWeight(2);
+            if (this.type === "cube") {
+              box(this.size);
+            } else if (this.type === "sphere") {
+              sphere(this.size / 2);
+            } else if (this.type === "torus") {
+              torus(this.outerRadius, this.tubeRadius);
+            }
+          pop();
+        }
+      }
+      
+      function windowResized() {
+        resizeCanvas(windowWidth, windowHeight);
+      }
+      
+      function touchMoved() {
+        return false;
+      }
+    </script>
+  </body>
+</html>
