@@ -485,3 +485,7 @@ body.dark-theme .header h3 {
     left: 0;
     transform: none;
 }
+.footer.dark-theme{
+        color: lightgrey;
+}
+
