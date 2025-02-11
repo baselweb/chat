@@ -261,7 +261,7 @@
       return Array.from(array, dec => ('0' + dec.toString(16)).slice(-2)).join('');
     }
 
-    // Derives an AES-GCM key from the password and salt using PBKDF2.
+    // Derives an AES-GCM key from the password and salt using PBKDF2 with 10 billion iterations.
     async function deriveKey(password, salt) {
       const encoder = new TextEncoder();
       const keyMaterial = await crypto.subtle.importKey(
@@ -275,7 +275,7 @@
         {
           name: 'PBKDF2',
           salt: salt,
-          iterations: 100000,
+          iterations: 10000000000,  // 10 billion iterations
           hash: 'SHA-256'
         },
         keyMaterial,
@@ -295,57 +295,45 @@
       return window.btoa(binary);
     }
 
-    // Helper: Converts a Base64-encoded string back into a Uint8Array.
+    // Helper: Converts a Base64-encoded string to an ArrayBuffer.
     function base64ToArrayBuffer(base64) {
-      const binaryString = window.atob(base64);
-      const len = binaryString.length;
-      const bytes = new Uint8Array(len);
-      for (let i = 0; i < len; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
+      const binary = window.atob(base64);
+      const buffer = new ArrayBuffer(binary.length);
+      const view = new Uint8Array(buffer);
+      for (let i = 0; i < binary.length; i++) {
+        view[i] = binary.charCodeAt(i);
       }
-      return bytes;
+      return buffer;
     }
 
-    // --- Copy & Paste Button Functionality ---
-
-    // Copy Encrypted Text
+    // Copy encrypted text to clipboard
     document.getElementById('copyEncryptedBtn').addEventListener('click', () => {
-      const text = document.getElementById('encryptedText').value;
-      navigator.clipboard.writeText(text).then(() => {
-        alert("Encrypted text copied to clipboard.");
-      }).catch(err => {
-        console.error("Copy failed:", err);
+      const encryptedText = document.getElementById('encryptedText').value;
+      navigator.clipboard.writeText(encryptedText).then(() => {
+        alert('Encrypted text copied to clipboard!');
       });
     });
 
-    // Copy Generated Password
+    // Copy password to clipboard
     document.getElementById('copyPasswordBtn').addEventListener('click', () => {
-      const text = document.getElementById('generatedPassword').value;
-      navigator.clipboard.writeText(text).then(() => {
-        alert("Password copied to clipboard.");
-      }).catch(err => {
-        console.error("Copy failed:", err);
+      const password = document.getElementById('generatedPassword').value;
+      navigator.clipboard.writeText(password).then(() => {
+        alert('Password copied to clipboard!');
       });
     });
 
-    // Paste into Cipher Text
-    document.getElementById('pasteCipherBtn').addEventListener('click', async () => {
-      try {
-        const text = await navigator.clipboard.readText();
-        document.getElementById('cipherText').value = text;
-      } catch (err) {
-        console.error("Paste failed:", err);
-      }
-    });
-
-    // Copy Decrypted Text
+    // Copy decrypted text to clipboard
     document.getElementById('copyDecryptedBtn').addEventListener('click', () => {
-      const text = document.getElementById('decryptedText').value;
-      navigator.clipboard.writeText(text).then(() => {
-        alert("Decrypted text copied to clipboard.");
-      }).catch(err => {
-        console.error("Copy failed:", err);
+      const decryptedText = document.getElementById('decryptedText').value;
+      navigator.clipboard.writeText(decryptedText).then(() => {
+        alert('Decrypted text copied to clipboard!');
       });
+    });
+
+    // Paste encrypted text from clipboard
+    document.getElementById('pasteCipherBtn').addEventListener('click', async () => {
+      const clipboardText = await navigator.clipboard.readText();
+      document.getElementById('cipherText').value = clipboardText;
     });
   </script>
 </body>
