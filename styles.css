@@ -4,14 +4,6 @@
     padding: 5px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-.footer { 
-    position: fixed;
-    bottom: 20px;
-    width: 100%;
-    text-align: center;
-    left: 0;
-    transform: none;
-}
 #toggle-password {
     margin: 0;
     border: none;
@@ -482,4 +474,13 @@ body.dark-theme .header h3 {
 .message-options-overlay button:active {
     background-color: rgba(180, 180, 180, 0.9);
     opacity: 1;
+}
+.footer { 
+    font-family: 'Baloo', sans-serif;
+    position: fixed;
+    bottom: 20px;
+    width: 100%;
+    text-align: center;
+    left: 0;
+    transform: none;
 }
