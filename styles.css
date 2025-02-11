@@ -476,7 +476,7 @@ body.dark-theme .header h3 {
     opacity: 1;
 }
 .footer { 
-    color: #333;
+    color: none;
     font-family: 'Russo One', sans-serif;
     position: fixed;
     bottom: 20px;
@@ -484,8 +484,5 @@ body.dark-theme .header h3 {
     text-align: center;
     left: 0;
     transform: none;
-}
-.footer.dark-theme{
-   color: lightgrey;
 }
 
