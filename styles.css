@@ -142,8 +142,8 @@ background-color: rgba(232, 247, 240, 0.6);
     padding: 0 60px;
     padding-left: 20px;
     border: none;
-    background-color: #202020;
-        color: #ffffff;
+    background-color: #dcdcdc;
+    color: BLACK;
     border-radius: 25px;
     font-size: 16px;
     outline: none;
@@ -314,7 +314,7 @@ background-color: rgba(232, 247, 240, 0.6);
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background-color: #202020;
+background-color: rgba(51, 51, 51);
     color: #e8f7f0;
     font-size: 18px;
     border: none;
@@ -398,8 +398,9 @@ background-color: rgba(51, 51, 51, 0.6);
 }
 
 .input-area.dark-theme input {
-    background-color: #202020;
-    color: #ffffff;
+    background: none;
+    color: WHITE;
+    border: 1PX solid WHITE;
 }
 
 .input-area.dark-theme button {
