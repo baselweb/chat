@@ -475,14 +475,3 @@ body.dark-theme .header h3 {
     background-color: rgba(180, 180, 180, 0.9);
     opacity: 1;
 }
-.footer { 
-    color: none;
-    font-family: 'Russo One', sans-serif;
-    position: fixed;
-    bottom: 20px;
-    width: 100%;
-    text-align: center;
-    left: 0;
-    transform: none;
-}
-
