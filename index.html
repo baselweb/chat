@@ -142,6 +142,14 @@
                 background-color: #ffa726; /* Slightly darker orange */
             }
         }
+       .footer { 
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    width: max-content;
+}
 
         /* Mobile Optimizations */
         @media (max-width: 480px) {
@@ -159,6 +167,7 @@
                 font-size: 14px;
             }
         }
+        
     </style>
 </head>
 <body>
@@ -170,9 +179,9 @@
         </div>
         <button class="agree-btn" id="agreeBtn">Agree</button>
         <button class="disagree-btn" id="disagreeBtn">Disagree</button>
-    </div>
-        <div class="footer">
+      <p class="footer">
         &copy; 2025 Adiasta. All rights reserved.
+      </p>
     </div>
 
     <script>
