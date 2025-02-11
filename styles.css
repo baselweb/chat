@@ -476,7 +476,8 @@ body.dark-theme .header h3 {
     opacity: 1;
 }
 .footer { 
-    font-family: 'Baloo', sans-serif;
+        font-family: 'Russo One', sans-serif;
+
     position: fixed;
     bottom: 20px;
     width: 100%;
