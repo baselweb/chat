@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Super Hard Encryption/Decryption</title>
+  
+  <!-- Google Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <style>
+    /* Global Styles */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f2f5;
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    /* Card Container */
+    .container {
+      background: #fff;
+      padding: 25px;
+      width: 100%;
+      max-width: 500px;
+      box-sizing: border-box;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+      font-size: 1.5em;
+      margin-top: 0;
+    }
+
+    textarea,
+    input[type="text"],
+    button {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      border-radius: 4px;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    button {
+      background-color: #333;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #555;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #888;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    hr {
+      margin: 30px 0;
+      border: 0;
+      border-top: 1px solid #ccc;
+    }
+
+    /* Button Group for Copy/Paste Buttons */
+    .button-group {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: -5px;
+      margin-bottom: 10px;
+    }
+    
+    .icon-btn {
+      background-color: #333;
+      color: #fff;
+      border: none;
+      padding: 8px 12px;
+      font-size: 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      transition: background-color 0.3s ease;
+    }
+
+    .icon-btn:hover {
+      background-color: #555;
+    }
+
+    .icon-btn .material-icons {
+      font-size: 18px;
+      margin-right: 4px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+      h2 {
+        font-size: 1.2em;
+      }
+      textarea,
+      input[type="text"],
+      button {
+        padding: 10px;
+        font-size: 14px;
+      }
+      .container {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Encryption Section -->
+    <h2>Encrypt Your Text</h2>
+    <textarea id="plainText" rows="4" placeholder="Enter your text here..."></textarea>
+    <button id="encryptBtn"><span class="material-icons">lock</span> Encrypt</button>
+    <div>
+      <label for="encryptedText">Encrypted Text:</label>
+      <textarea id="encryptedText" rows="4" readonly></textarea>
+      <div class="button-group">
+        <button id="copyEncryptedBtn" class="icon-btn" title="Copy Encrypted Text">
+          <span class="material-icons">content_copy</span>Copy
+        </button>
+      </div>
+    </div>
+    <div>
+      <label for="generatedPassword">Generated Password:</label>
+      <input type="text" id="generatedPassword" readonly />
+      <div class="button-group">
+        <button id="copyPasswordBtn" class="icon-btn" title="Copy Password">
+          <span class="material-icons">content_copy</span>Copy
+        </button>
+      </div>
+    </div>
+    
+    <hr />
+
+    <!-- Decryption Section -->
+    <h2>Decrypt Your Text</h2>
+    <div>
+      <label for="cipherText">Encrypted Text:</label>
+      <textarea id="cipherText" rows="4" placeholder="Paste encrypted text here..."></textarea>
+      <div class="button-group">
+        <button id="pasteCipherBtn" class="icon-btn" title="Paste from Clipboard">
+          <span class="material-icons">content_paste</span>Paste
+        </button>
+      </div>
+    </div>
+    <input type="text" id="decryptPassword" placeholder="Enter password..." />
+    <button id="decryptBtn"><span class="material-icons">lock_open</span> Decrypt</button>
+    <div>
+      <label for="decryptedText">Decrypted Text:</label>
+      <textarea id="decryptedText" rows="4" readonly></textarea>
+      <div class="button-group">
+        <button id="copyDecryptedBtn" class="icon-btn" title="Copy Decrypted Text">
+          <span class="material-icons">content_copy</span>Copy
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // When "Encrypt" is clicked, encrypt the plain text and display the encrypted text and generated password.
+    document.getElementById('encryptBtn').addEventListener('click', async () => {
+      const plainText = document.getElementById('plainText').value;
+      if (!plainText) {
+        alert("Please enter text to encrypt.");
+        return;
+      }
+      try {
+        const result = await encryptText(plainText);
+        document.getElementById('encryptedText').value = result.encrypted;
+        document.getElementById('generatedPassword').value = result.password;
+      } catch (err) {
+        console.error(err);
+        alert("Encryption failed.");
+      }
+    });
+
+    // When "Decrypt" is clicked, attempt to decrypt the provided cipher text using the given password.
+    document.getElementById('decryptBtn').addEventListener('click', async () => {
+      const cipherText = document.getElementById('cipherText').value;
+      const password = document.getElementById('decryptPassword').value;
+      if (!cipherText || !password) {
+        alert("Please enter both encrypted text and password.");
+        return;
+      }
+      try {
+        const decrypted = await decryptText(cipherText, password);
+        document.getElementById('decryptedText').value = decrypted;
+      } catch (err) {
+        console.error(err);
+        alert("Decryption failed. Check your password and encrypted text.");
+      }
+    });
+
+    // Encrypts the provided plain text using a randomly generated password.
+    async function encryptText(plainText) {
+      const password = generateRandomPassword();
+      const salt = crypto.getRandomValues(new Uint8Array(16));
+      const iv = crypto.getRandomValues(new Uint8Array(12));
+      const key = await deriveKey(password, salt);
+      const encodedText = new TextEncoder().encode(plainText);
+      const ciphertextBuffer = await crypto.subtle.encrypt(
+        { name: 'AES-GCM', iv: iv },
+        key,
+        encodedText
+      );
+      const ciphertext = new Uint8Array(ciphertextBuffer);
+      const combined = new Uint8Array(salt.length + iv.length + ciphertext.length);
+      combined.set(salt, 0);
+      combined.set(iv, salt.length);
+      combined.set(ciphertext, salt.length + iv.length);
+      const encryptedBase64 = arrayBufferToBase64(combined);
+      return { encrypted: encryptedBase64, password: password };
+    }
+
+    // Decrypts the Base64-encoded encrypted text using the provided password.
+    async function decryptText(encryptedBase64, password) {
+      const combined = base64ToArrayBuffer(encryptedBase64);
+      const salt = combined.slice(0, 16);
+      const iv = combined.slice(16, 16 + 12);
+      const ciphertext = combined.slice(16 + 12);
+      const key = await deriveKey(password, salt);
+      const decryptedBuffer = await crypto.subtle.decrypt(
+        { name: 'AES-GCM', iv: iv },
+        key,
+        ciphertext
+      );
+      return new TextDecoder().decode(decryptedBuffer);
+    }
+
+    // Generates a random password by creating 16 random bytes and converting them to a hex string.
+    function generateRandomPassword() {
+      const array = new Uint8Array(16);
+      crypto.getRandomValues(array);
+      return Array.from(array, dec => ('0' + dec.toString(16)).slice(-2)).join('');
+    }
+
+    // Derives an AES-GCM key from the password and salt using PBKDF2.
+    async function deriveKey(password, salt) {
+      const encoder = new TextEncoder();
+      const keyMaterial = await crypto.subtle.importKey(
+        'raw',
+        encoder.encode(password),
+        { name: 'PBKDF2' },
+        false,
+        ['deriveKey']
+      );
+      return crypto.subtle.deriveKey(
+        {
+          name: 'PBKDF2',
+          salt: salt,
+          iterations: 100000,
+          hash: 'SHA-256'
+        },
+        keyMaterial,
+        { name: 'AES-GCM', length: 256 },
+        false,
+        ['encrypt', 'decrypt']
+      );
+    }
+
+    // Helper: Converts an ArrayBuffer/Uint8Array to a Base64-encoded string.
+    function arrayBufferToBase64(buffer) {
+      let binary = '';
+      const bytes = new Uint8Array(buffer);
+      for (let i = 0; i < bytes.byteLength; i++) {
+        binary += String.fromCharCode(bytes[i]);
+      }
+      return window.btoa(binary);
+    }
+
+    // Helper: Converts a Base64-encoded string back into a Uint8Array.
+    function base64ToArrayBuffer(base64) {
+      const binaryString = window.atob(base64);
+      const len = binaryString.length;
+      const bytes = new Uint8Array(len);
+      for (let i = 0; i < len; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      return bytes;
+    }
+
+    // --- Copy & Paste Button Functionality ---
+
+    // Copy Encrypted Text
+    document.getElementById('copyEncryptedBtn').addEventListener('click', () => {
+      const text = document.getElementById('encryptedText').value;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Encrypted text copied to clipboard.");
+      }).catch(err => {
+        console.error("Copy failed:", err);
+      });
+    });
+
+    // Copy Generated Password
+    document.getElementById('copyPasswordBtn').addEventListener('click', () => {
+      const text = document.getElementById('generatedPassword').value;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Password copied to clipboard.");
+      }).catch(err => {
+        console.error("Copy failed:", err);
+      });
+    });
+
+    // Paste into Cipher Text
+    document.getElementById('pasteCipherBtn').addEventListener('click', async () => {
+      try {
+        const text = await navigator.clipboard.readText();
+        document.getElementById('cipherText').value = text;
+      } catch (err) {
+        console.error("Paste failed:", err);
+      }
+    });
+
+    // Copy Decrypted Text
+    document.getElementById('copyDecryptedBtn').addEventListener('click', () => {
+      const text = document.getElementById('decryptedText').value;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Decrypted text copied to clipboard.");
+      }).catch(err => {
+        console.error("Copy failed:", err);
+      });
+    });
+  </script>
+</body>
+</html>
