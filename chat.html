@@ -141,7 +141,7 @@
       border: none;
       background: none;
       border: 1px solid #333;
-      color: BLACK;
+      color: black;
       border-radius: 25px;
       font-size: 16px;
       outline: none;
@@ -391,18 +391,18 @@
     }
     .input-area.dark-theme input {
       background: none;
-      color: WHITE;
-      border: 1px solid WHITE;
+      color: white;
+      border: 1px solid white;
     }
     .input-area.dark-theme button {
-      background: NONE;
+      background: none;
       color: black;
     }
     .input-area.dark-theme button:hover {
       background-color: #555;
     }
     .input-area.dark-theme #send-button {
-      COLOR: WHITE;
+      color: white;
     }
     .input-area.dark-theme button:active {
       background-color: #666;
@@ -665,6 +665,7 @@
     </div>
   </div>
   <script type="module">
+    // Theme detection and application
     document.addEventListener("DOMContentLoaded", () => {
       function detectSystemTheme() {
         return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
@@ -693,11 +694,7 @@
         });
         const themeColorMetaTag = document.querySelector('meta[name="theme-color"]');
         if (themeColorMetaTag) {
-          if (theme === 'dark') {
-            themeColorMetaTag.setAttribute('content', '#121212');
-          } else {
-            themeColorMetaTag.setAttribute('content', '#ffffff');
-          }
+          themeColorMetaTag.setAttribute('content', theme === 'dark' ? '#121212' : '#ffffff');
         }
         updateStatusBar(theme);
         localStorage.setItem("theme", theme);
@@ -708,11 +705,12 @@
         applyTheme(theme);
       }
       window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
-        const theme = e.matches ? "dark" : "light";
-        applyTheme(theme);
+        applyTheme(e.matches ? "dark" : "light");
       });
       initializeTheme();
     });
+
+    // Firebase imports and configuration
     import { sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
@@ -730,6 +728,8 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth();
     const database = getDatabase();
+
+    // DOM elements and variables
     const authContainer = document.getElementById("auth");
     const roomSelection = document.getElementById("room-selection");
     const chatContainer = document.getElementById("chat");
@@ -744,7 +744,6 @@
     const messagesDiv = document.getElementById("message-list");
     const sendButton = document.getElementById("send-button");
     const messageInput = document.getElementById("message-input");
-    const userList = document.getElementById("user-list");
     const goBackButton = document.getElementById("go-back");
     let currentRoom = null;
     let currentUsername = null;
@@ -778,15 +777,14 @@
       roomSelection.style.display = "block";
     }
     let lastMessageSender = null;
-    let messagesListenerRegistered = false; // Added to prevent duplicate listeners
+    let messagesListenerRegistered = false; // Prevent duplicate listeners
     function loadMessages() {
       if (messagesListenerRegistered) return;
       const messagesRef = ref(database, `rooms/${currentRoom}/messages`);
-      messagesDiv.innerHTML = "";
       onValue(messagesRef, (snapshot) => {
         const messages = snapshot.val();
+        messagesDiv.innerHTML = "";
         if (messages) {
-          messagesDiv.innerHTML = "";
           for (let id in messages) {
             const message = messages[id];
             const messageDiv = document.createElement("div");
@@ -810,9 +808,6 @@
             addLongPressMessageOptions(messageDiv);
           }
           window.scrollTo(0, document.body.scrollHeight);
-          if (lastMessageSender === currentUsername) {
-            window.scrollTo(0, document.body.scrollHeight);
-          }
         }
       });
       messagesListenerRegistered = true;
@@ -820,18 +815,7 @@
     function loadUsers() {
       const usersRef = ref(database, `rooms/${currentRoom}/users`);
       onValue(usersRef, (snapshot) => {
-        const users = snapshot.val();
-        if (users) {
-          userList.innerHTML = "";
-          for (let username in users) {
-            if (username !== currentUsername) {
-              const userDiv = document.createElement("div");
-              userDiv.classList.add("user");
-              userDiv.textContent = username;
-              userList.appendChild(userDiv);
-            }
-          }
-        }
+        // (If you have a user list container, update it here)
       });
     }
     sendButton.addEventListener("click", () => {
@@ -848,30 +832,6 @@
         .catch((error) => {
           alert("Failed to send message: " + error.message);
         });
-        // Removed duplicate call to loadMessages() because listener is already set
-        // loadMessages();
-      }
-    });
-    function scrollToBottom() {
-      const chatContainer = document.getElementById("chat-container");
-      chatContainer.scrollTop = chatContainer.scrollHeight;
-    }
-    goBackButton.addEventListener("click", () => {
-      chatContainer.style.display = "none";
-      roomSelection.style.display = "block";
-      goBackButton.style.display = "none";
-      messagesListenerRegistered = false; // Reset listener flag when leaving chat
-    });
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        currentUsername = user.email.split("@")[0];
-        showRoomSelection();
-        appendLogoutButton();
-      } else {
-        authContainer.style.display = "block";
-        roomSelection.style.display = "none";
-        chatContainer.style.display = "none";
-        logoutButton.remove();
       }
     });
     messageInput.addEventListener("keypress", (event) => {
@@ -907,28 +867,16 @@
       let pressTimer;
       let clickCount = 0;
       let clickTimer;
-      messageElement.addEventListener('touchstart', (e) => {
-        pressTimer = setTimeout(() => {
-          showMessageOptions(messageElement);
-        }, 500);
+      messageElement.addEventListener('touchstart', () => {
+        pressTimer = setTimeout(() => { showMessageOptions(messageElement); }, 500);
       });
-      messageElement.addEventListener('touchend', () => {
-        clearTimeout(pressTimer);
+      messageElement.addEventListener('touchend', () => { clearTimeout(pressTimer); });
+      messageElement.addEventListener('touchmove', () => { clearTimeout(pressTimer); });
+      messageElement.addEventListener('mousedown', () => {
+        pressTimer = setTimeout(() => { showMessageOptions(messageElement); }, 500);
       });
-      messageElement.addEventListener('touchmove', () => {
-        clearTimeout(pressTimer);
-      });
-      messageElement.addEventListener('mousedown', (e) => {
-        pressTimer = setTimeout(() => {
-          showMessageOptions(messageElement);
-        }, 500);
-      });
-      messageElement.addEventListener('mouseup', () => {
-        clearTimeout(pressTimer);
-      });
-      messageElement.addEventListener('mouseleave', () => {
-        clearTimeout(pressTimer);
-      });
+      messageElement.addEventListener('mouseup', () => { clearTimeout(pressTimer); });
+      messageElement.addEventListener('mouseleave', () => { clearTimeout(pressTimer); });
       messageElement.addEventListener('click', () => {
         clickCount++;
         clearTimeout(clickTimer);
@@ -949,10 +897,10 @@
         copyButton.textContent = 'Copy Message';
         copyButton.style.cssText = "display: block; width: 100%; padding: 10px; margin: 10px 0; background-color: #f0f0f0; border: none; border-radius: 5px;";
         copyButton.addEventListener('click', () => {
-          const messageToCopy = message.textContent;
-          navigator.clipboard.writeText(messageToCopy);
+          navigator.clipboard.writeText(message.textContent);
           removeOverlay();
         });
+        optionsContainer.appendChild(copyButton);
         const messageText = message.querySelector('span');
         if (messageText) {
           const deleteButton = document.createElement('button');
@@ -966,7 +914,6 @@
           });
           optionsContainer.appendChild(deleteButton);
         }
-        optionsContainer.appendChild(copyButton);
         const cancelButton = document.createElement('button');
         cancelButton.textContent = 'Cancel';
         cancelButton.style.cssText = "display: block; width: 100%; padding: 10px; margin: 10px 0; background-color: #e0e0e0; border: none; border-radius: 5px;";
@@ -978,9 +925,7 @@
           document.body.removeChild(overlay);
         }
         overlay.addEventListener('click', (e) => {
-          if (e.target === overlay) {
-            removeOverlay();
-          }
+          if (e.target === overlay) { removeOverlay(); }
         });
       }
     }
@@ -988,15 +933,12 @@
     const roomsRef = ref(database, 'rooms');
     onValue(roomsRef, snapshot => {
       roomsList = snapshot.val() || {};
-      const searchValue = document.getElementById('search-room').value;
-      updateSearchResults(searchValue);
+      updateSearchResults(document.getElementById('search-room').value);
     });
     let debounceTimeout;
     document.getElementById('search-room').addEventListener('input', function() {
       clearTimeout(debounceTimeout);
-      debounceTimeout = setTimeout(() => {
-        updateSearchResults(this.value);
-      }, 150);
+      debounceTimeout = setTimeout(() => { updateSearchResults(this.value); }, 150);
     });
     function updateSearchResults(query) {
       const resultsDiv = document.getElementById('search-results');
@@ -1022,6 +964,81 @@
         resultsDiv.appendChild(noResultDiv);
       }
     }
+    // Join or create room function
+    async function hashString(str) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(str);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+      return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+    async function joinOrCreateRoom(action) {
+      const roomName = roomNameInput.value.trim();
+      const roomPassword = roomPasswordInput.value;
+      if (!roomName) {
+        displayError(roomError, "Room name cannot be empty.");
+        return;
+      }
+      currentRoom = roomName;
+      const roomRef = ref(database, `rooms/${roomName}`);
+      if (action === "create") {
+        let roomData = { createdAt: Date.now() };
+        if (roomPassword) {
+          roomData.password = await hashString(roomPassword);
+        }
+        set(roomRef, roomData)
+          .then(() => { showChat(); })
+          .catch((error) => { displayError(roomError, error.message); });
+      } else {
+        onValue(roomRef, async (snapshot) => {
+          if (snapshot.exists()) {
+            const roomData = snapshot.val();
+            if (roomData.password) {
+              if (!roomPassword) {
+                displayError(roomError, "This room is password protected. Please enter the password.");
+                return;
+              }
+              const hashedInput = await hashString(roomPassword);
+              if (hashedInput !== roomData.password) {
+                displayError(roomError, "Incorrect room password.");
+                return;
+              }
+            }
+            showChat();
+          } else {
+            displayError(roomError, "Room does not exist. Try creating it.");
+          }
+        }, { onlyOnce: true });
+      }
+    }
+    joinRoomButton.addEventListener("click", () => { joinOrCreateRoom("join"); });
+    createRoomButton.addEventListener("click", () => { joinOrCreateRoom("create"); });
+    function showChat() {
+      roomSelection.style.display = "none";
+      chatContainer.style.display = "flex";
+      document.querySelector(".header h3").textContent = currentRoom;
+      loadMessages();
+      loadUsers();
+      loadTypingIndicator();
+      goBackButton.style.display = "inline-block";
+    }
+    goBackButton.addEventListener("click", () => {
+      chatContainer.style.display = "none";
+      roomSelection.style.display = "block";
+      goBackButton.style.display = "none";
+      messagesListenerRegistered = false;
+    });
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        currentUsername = user.email.split("@")[0];
+        showRoomSelection();
+        appendLogoutButton();
+      } else {
+        authContainer.style.display = "block";
+        roomSelection.style.display = "none";
+        chatContainer.style.display = "none";
+        logoutButton.remove();
+      }
+    });
   </script>
   <script>
     document.getElementById('encryptBtn').addEventListener('click', async () => {
