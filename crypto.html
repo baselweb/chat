@@ -2,29 +2,471 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Super Hard Encryption/Decryption</title>
-  
-  <!-- Google Material Icons -->
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chat Rooms &amp; Encryption</title>
+  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" />
   <style>
-    /* Global Styles */
+    /* Chat and Global Styles */
+    #chat-menu {
+      background-color: #fff;
+      border-radius: 4px;
+      padding: 5px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    #toggle-password {
+      margin: 0;
+      border: none;
+      padding: 0;
+      background: none;
+      color: #ff7f50;
+      width: 40px;
+      height: 40px;
+      top: 8px;
+      left: 8px;
+      position: fixed;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+    }
+    #toggle-password:hover {
+      text-decoration: none;
+    }
+    #legal-button {
+      margin: 0;
+      border: none;
+      padding: 0;
+      background: none;
+      color: #ff7f50;
+      width: 40px;
+      height: 40px;
+      top: 8px;
+      right: 8px;
+      position: fixed;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+    }
+    #legal-button:hover {
+      text-decoration: none;
+    }
+    #voice-message-button.recording {
+      background-color: #ff7f50;
+      color: white;
+    }
+    .menu-item {
+      padding: 10px;
+      width: 100%;
+      background: none;
+      border: none;
+      text-align: left;
+      cursor: pointer;
+    }
+    .menu-item:hover {
+      background-color: #f0f0f0;
+    }
     body {
+      font-family: 'Baloo', sans-serif;
+      font-weight: 400;
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f0f2f5;
-      color: #333;
-      min-height: 100vh;
+      background-color: #e8f7f0;
+      height: 100%;
+      width: 100%;
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 20px;
     }
-
-    /* Card Container */
     .container {
+      background-color: #e8f7f0;
+      height: 100%;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background-color: rgba(232, 247, 240, 0.6);
+      backdrop-filter: blur(40px);
+      border-bottom: 0.3px solid #ddd;
+      z-index: 9;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      text-align: center;
+      overflow-y: auto;
+      box-sizing: border-box;
+      height: 60px;
+    }
+    #forgot-password {
+      background: none;
+      border: none;
+      color: #ff7f50;
+    }
+    .header h3 {
+      font-size: 1.1rem;
+      color: #333;
+      margin: 0;
+      margin-top: 3px;
+      font-weight: 600;
+      padding-top: 10px;
+    }
+    .input-area {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      background-color: rgba(232, 247, 240, 0.6);
+      backdrop-filter: blur(40px);
+      padding: 14px;
+      z-index: 10;
+      height: 90px;
+      box-sizing: border-box;
+    }
+    .input-area input {
+      flex-grow: 1;
+      height: 50px;
+      padding: 0 60px;
+      padding-left: 20px;
+      border: none;
+      background: none;
+      border: 1px solid #333;
+      color: BLACK;
+      border-radius: 25px;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .input-area button {
+      background-color: inherit;
+      border: none;
+      color: inherit;
+      cursor: pointer;
+    }
+    #typing-indicator {
+      color: gray;
+      top: 35px;
+      position: fixed;
+      left: 50%;
+      bottom: 20px;
+      transform: translateX(-50%);
+      font-size: 0.9em;
+      display: none;
+    }
+    #logout-button, #go-back {
+      position: fixed;
+      top: 15px;
+      width: 33px;
+      height: 33px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      z-index: 1000;
+      transition: all 0.3s ease;
+      border: none;
+      color: #333;
+      background: none;
+    }
+    #logout-button i, #go-back i {
+      font-size: 18px;
+    }
+    #go-back {
+      left: 10px;
+    }
+    #logout-button {
+      right: 10px;
+    }
+    #chat {
+      background-color: inherit;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      width: 100%;
+      height: calc(100% - 60px);
+      padding-bottom: 78px;
+      padding-top: 60px;
+      overflow: hidden;
+    }
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      width: 100%;
+    }
+    .message {
+      padding: 14px 18px;
+      margin: 8px 0;
+      max-width: 75%;
+      border-radius: 20px;
+      line-height: 1.6;
+      word-wrap: break-word;
+      position: relative;
+      font-size: 0.95rem;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.3s ease;
+    }
+    .sent {
+      align-self: flex-end;
+      margin-right: 36px;
+      background-color: #dcdcdc;
+      color: black;
+    }
+    .received {
+      align-self: flex-start;
+      background-color: #C8C8C8;
+      color: black;
+    }
+    .message-time {
+      font-size: 0.75rem;
+      color: darkgrey;
+      position: relative;
+      margin-top: 8px;
+    }
+    .sent .message-time {
+      right: 12px;
+    }
+    .received .message-time {
+      left: 12px;
+    }
+    .login-register {
+      font-family: 'Russo One', sans-serif;
+      padding: 30px;
+      text-align: center;
+    }
+    .login-register h2 {
+      font-size: 1.8rem;
+      font-family: 'Russo One', sans-serif;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    .login-register input, .login-register button {
+      display: block;
+      font-family: 'Russo One', sans-serif;
+      width: 80%;
+      background-color: #e8f7f0;
+      max-width: 420px;
+      margin: 10px auto;
+      padding: 14px;
+      font-size: 16px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+    .login-register button {
+      background-color: #ff7f50;
+      color: white;
+      font-family: 'Russo One', sans-serif;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .login-register button:active {
+      background-color: #e16f4a;
+    }
+    .input-container {
+      position: relative;
+      width: 100%;
+      display: flex;
+      margin-bottom: 25px;
+      align-items: center;
+    }
+    #send-button, #voice-message-button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      color: #333;
+      font-size: 18px;
+      border: none;
+      border-radius: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      width: 40px;
+      height: 40px;
+    }
+    #send-button {
+      right: 6px;
+    }
+    #voice-message-button {
+      left: 6px;
+    }
+    #search-room {
+      width: 80%;
+      max-width: 400px;
+      margin: 10px auto;
+      padding: 10px;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+      display: block;
+      text-align: center;
+    }
+    #search-results {
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-top: none;
+      border-radius: 0 0 5px 5px;
+      max-height: 150px;
+      overflow-y: auto;
+      width: 80%;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    #search-results div {
+      padding: 10px;
+      cursor: pointer;
+      text-align: center;
+    }
+    #search-results div:hover {
+      background-color: #f0f0f0;
+    }
+    /* Dark Mode */
+    body.dark-theme {
+      background-color: #333;
+      color: #ffffff;
+    }
+    .container.dark-theme {
+      background-color: #333;
+    }
+    .header.dark-theme {
+      border-bottom: 0.3px solid #444;
+      background-color: rgba(51, 51, 51, 0.6);
+      backdrop-filter: blur(40px);
+    }
+    #typing-indicator.dark-theme {
+      color: #b0b0b0;
+    }
+    #logout-button.dark-theme, #go-back.dark-theme {
+      background-color: none;
+      color: #fff;
+    }
+    #logout-button.dark-theme:hover, #go-back.dark-theme:hover {
+      background-color: orange;
+    }
+    .login-register.dark-theme h2 {
+      color: #ffffff;
+    }
+    .login-register.dark-theme input, .login-register.dark-theme button {
+      background-color: #1f1f1f;
+      color: #ffffff;
+      border: 1px solid #444;
+    }
+    .login-register.dark-theme input:focus, .login-register.dark-theme button:hover {
+      border-color: #ff7f50;
+    }
+    .login-register.dark-theme button {
+      background-color: #ff7f50;
+      color: #ffffff;
+    }
+    .login-register.dark-theme button:active {
+      background-color: #e16f4a;
+    }
+    #chat.dark-theme {
+      background-color: #121212;
+    }
+    .input-area.dark-theme {
+      background-color: rgba(51, 51, 51, 0.6);
+      backdrop-filter: blur(40px);
+    }
+    .input-area.dark-theme input {
+      background: none;
+      color: WHITE;
+      border: 1px solid WHITE;
+    }
+    .input-area.dark-theme button {
+      background: NONE;
+      color: black;
+    }
+    .input-area.dark-theme button:hover {
+      background-color: #555;
+    }
+    .input-area.dark-theme #send-button {
+      COLOR: WHITE;
+    }
+    .input-area.dark-theme button:active {
+      background-color: #666;
+    }
+    body.dark-theme #logout-button {
+      background-color: none;
+      color: #fff;
+    }
+    body.dark-theme .header h3 {
+      color: #ffffff;
+    }
+    .message-options-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .message-options-overlay > div {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      max-width: 300px;
+      width: 90%;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+      color: #333;
+      mix-blend-mode: normal;
+    }
+    .message-options-overlay button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 20px;
+      transition: background-color 0.3s ease;
+      background-color: rgba(240, 240, 240, 0.9);
+      color: black;
+      font-weight: bold;
+    }
+    .message-options-overlay button:hover {
+      background-color: rgba(200, 200, 200, 0.9);
+      opacity: 0.9;
+    }
+    .message-options-overlay button:active {
+      background-color: rgba(180, 180, 180, 0.9);
+      opacity: 1;
+    }
+    /* Encryption Styles */
+    #encryption-section {
+      display: none;
+      width: 100%;
+      min-height: 100vh;
+      justify-content: center;
+      align-items: center;
+    }
+    #encryption-section .encryption-container {
       background: #fff;
       padding: 25px;
       width: 100%;
@@ -33,17 +475,15 @@
       border-radius: 8px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
-
-    h2 {
+    #encryption-section h2 {
       text-align: center;
       color: #333;
       font-size: 1.5em;
       margin-top: 0;
     }
-
-    textarea,
-    input[type="text"],
-    button {
+    #encryption-section textarea,
+    #encryption-section input[type="text"],
+    #encryption-section button {
       width: 100%;
       padding: 12px;
       margin: 10px 0;
@@ -52,48 +492,39 @@
       box-sizing: border-box;
       border-radius: 4px;
     }
-
-    textarea {
+    #encryption-section textarea {
       resize: vertical;
     }
-
-    button {
+    #encryption-section button {
       background-color: #333;
       color: white;
       border: none;
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
-
-    button:hover {
+    #encryption-section button:hover {
       background-color: #555;
     }
-
-    input[type="text"]:focus,
-    textarea:focus {
+    #encryption-section input[type="text"]:focus,
+    #encryption-section textarea:focus {
       outline: none;
       border-color: #888;
     }
-
-    label {
+    #encryption-section label {
       font-weight: bold;
     }
-
-    hr {
+    #encryption-section hr {
       margin: 30px 0;
       border: 0;
       border-top: 1px solid #ccc;
     }
-
-    /* Button Group for Copy/Paste Buttons */
-    .button-group {
+    #encryption-section .button-group {
       display: flex;
       justify-content: flex-end;
       margin-top: -5px;
       margin-bottom: 10px;
     }
-    
-    .icon-btn {
+    #encryption-section .icon-btn {
       background-color: #333;
       color: #fff;
       border: none;
@@ -105,86 +536,556 @@
       align-items: center;
       transition: background-color 0.3s ease;
     }
-
-    .icon-btn:hover {
+    #encryption-section .icon-btn:hover {
       background-color: #555;
     }
-
-    .icon-btn .material-icons {
+    #encryption-section .icon-btn .material-icons {
       font-size: 18px;
       margin-right: 4px;
     }
-
-    /* Responsive adjustments */
     @media (max-width: 600px) {
-      h2 {
+      #encryption-section h2 {
         font-size: 1.2em;
       }
-      textarea,
-      input[type="text"],
-      button {
+      #encryption-section textarea,
+      #encryption-section input[type="text"],
+      #encryption-section button {
         padding: 10px;
         font-size: 14px;
       }
-      .container {
+      #encryption-section .encryption-container {
         padding: 15px;
       }
     }
   </style>
+  <script src="statusBar.js"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-68996BGLFE"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-68996BGLFE');
+  </script>
 </head>
 <body>
-  <div class="container">
-    <!-- Encryption Section -->
-    <h2>Encrypt Your Text</h2>
-    <textarea id="plainText" rows="4" placeholder="Enter your text here..."></textarea>
-    <button id="encryptBtn"><span class="material-icons">lock</span> Encrypt</button>
-    <div>
-      <label for="encryptedText">Encrypted Text:</label>
-      <textarea id="encryptedText" rows="4" readonly></textarea>
-      <div class="button-group">
-        <button id="copyEncryptedBtn" class="icon-btn" title="Copy Encrypted Text">
-          <span class="material-icons">content_copy</span>Copy
-        </button>
+  <div class="container" id="chat-container">
+    <div id="auth">
+      <div class="login-register">
+        <h2>rooms <a href="https://adiasta.com/legal" target="_blank" aria-label="Legal Information" id="legal-button"><span class="material-symbols-outlined">help</span></a></h2>
+        <input type="email" id="email" placeholder="Email" />
+        <input type="password" id="password" placeholder="Password" />
+        <button type="button" id="toggle-password" aria-label="Show Password"><span class="material-symbols-outlined">visibility</span></button>
+        <div id="auth-error"></div>
+        <button id="login">Login</button>
+        <button id="register">Register</button>
+        <button id="forgot-password">Forgot Password?</button>
       </div>
     </div>
-    <div>
-      <label for="generatedPassword">Generated Password:</label>
-      <input type="text" id="generatedPassword" readonly />
-      <div class="button-group">
-        <button id="copyPasswordBtn" class="icon-btn" title="Copy Password">
-          <span class="material-icons">content_copy</span>Copy
-        </button>
+    <div id="room-selection" style="display: none;">
+      <div class="login-register">
+        <h2>Join / Create</h2>
+        <input type="text" id="search-room" placeholder="Search rooms" />
+        <div id="search-results"></div>
+        <input type="text" id="room-name" placeholder="Enter room name" />
+        <input type="password" id="room-password" placeholder="Room Password (optional)" />
+        <button id="join-room">Join Room</button>
+        <button id="create-room">Create Room</button>
+        <div id="room-error"></div>
       </div>
     </div>
-    
-    <hr />
-
-    <!-- Decryption Section -->
-    <h2>Decrypt Your Text</h2>
-    <div>
-      <label for="cipherText">Encrypted Text:</label>
-      <textarea id="cipherText" rows="4" placeholder="Paste encrypted text here..."></textarea>
-      <div class="button-group">
-        <button id="pasteCipherBtn" class="icon-btn" title="Paste from Clipboard">
-          <span class="material-icons">content_paste</span>Paste
-        </button>
+    <div id="chat" style="display: none;">
+      <div class="header">
+        <h3>Users</h3>
+        <div id="header">
+          <div id="typing-indicator" style="display: none;">Someone is typing...</div>
+          <button id="go-back" style="display: none;"><span class="material-symbols-outlined">arrow_back</span></button>
+          <button id="logout-button"><span class="material-symbols-outlined">logout</span></button>
+        </div>
       </div>
-    </div>
-    <input type="text" id="decryptPassword" placeholder="Enter password..." />
-    <button id="decryptBtn"><span class="material-icons">lock_open</span> Decrypt</button>
-    <div>
-      <label for="decryptedText">Decrypted Text:</label>
-      <textarea id="decryptedText" rows="4" readonly></textarea>
-      <div class="button-group">
-        <button id="copyDecryptedBtn" class="icon-btn" title="Copy Decrypted Text">
-          <span class="material-icons">content_copy</span>Copy
-        </button>
+      <div class="messages" id="message-list"></div>
+      <div class="input-area">
+        <div class="input-container">
+          <input type="text" id="message-input" placeholder="Message" />
+          <button id="send-button" aria-label="Send message"><span class="material-symbols-outlined">send</span></button>
+        </div>
       </div>
     </div>
   </div>
-
+  <div id="encryption-section">
+    <div class="encryption-container">
+      <h2>Encrypt Your Text</h2>
+      <textarea id="plainText" rows="4" placeholder="Enter your text here..."></textarea>
+      <button id="encryptBtn"><span class="material-icons">lock</span> Encrypt</button>
+      <div>
+        <label for="encryptedText">Encrypted Text:</label>
+        <textarea id="encryptedText" rows="4" readonly></textarea>
+        <div class="button-group">
+          <button id="copyEncryptedBtn" class="icon-btn" title="Copy Encrypted Text"><span class="material-icons">content_copy</span>Copy</button>
+        </div>
+      </div>
+      <div>
+        <label for="generatedPassword">Generated Password:</label>
+        <input type="text" id="generatedPassword" readonly />
+        <div class="button-group">
+          <button id="copyPasswordBtn" class="icon-btn" title="Copy Password"><span class="material-icons">content_copy</span>Copy</button>
+        </div>
+      </div>
+      <hr />
+      <h2>Decrypt Your Text</h2>
+      <div>
+        <label for="cipherText">Encrypted Text:</label>
+        <textarea id="cipherText" rows="4" placeholder="Paste encrypted text here..."></textarea>
+        <div class="button-group">
+          <button id="pasteCipherBtn" class="icon-btn" title="Paste from Clipboard"><span class="material-icons">content_paste</span>Paste</button>
+        </div>
+      </div>
+      <input type="text" id="decryptPassword" placeholder="Enter password..." />
+      <button id="decryptBtn"><span class="material-icons">lock_open</span> Decrypt</button>
+      <div>
+        <label for="decryptedText">Decrypted Text:</label>
+        <textarea id="decryptedText" rows="4" readonly></textarea>
+        <div class="button-group">
+          <button id="copyDecryptedBtn" class="icon-btn" title="Copy Decrypted Text"><span class="material-icons">content_copy</span>Copy</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="module">
+    document.addEventListener("DOMContentLoaded", () => {
+      function detectSystemTheme() {
+        return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      }
+      function applyTheme(theme) {
+        const elementsToUpdate = [
+          document.body,
+          document.querySelector('.header'),
+          document.querySelector('#typing-indicator'),
+          document.querySelector('#logout-button'),
+          document.querySelector('#go-back'),
+          document.querySelector('.container'),
+          document.querySelector('.messages'),
+          document.querySelector('.input-area'),
+          ...document.querySelectorAll('.login-register'),
+          ...document.querySelectorAll('.message')
+        ];
+        elementsToUpdate.forEach(element => {
+          if (element) {
+            if (theme === 'dark') {
+              element.classList.add('dark-theme');
+            } else {
+              element.classList.remove('dark-theme');
+            }
+          }
+        });
+        const themeColorMetaTag = document.querySelector('meta[name="theme-color"]');
+        if (themeColorMetaTag) {
+          if (theme === 'dark') {
+            themeColorMetaTag.setAttribute('content', '#121212');
+          } else {
+            themeColorMetaTag.setAttribute('content', '#ffffff');
+          }
+        }
+        updateStatusBar(theme);
+        localStorage.setItem("theme", theme);
+      }
+      function initializeTheme() {
+        const savedTheme = localStorage.getItem("theme");
+        const theme = savedTheme || detectSystemTheme();
+        applyTheme(theme);
+      }
+      window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
+        const theme = e.matches ? "dark" : "light";
+        applyTheme(theme);
+      });
+      initializeTheme();
+    });
+    import { sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
+    import { getDatabase, ref, push, onValue, set, remove } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyAC49cgzmUZjqRM1akkEJmIOLz_NKBCC5k",
+      authDomain: "adiasta-686e4.firebaseapp.com",
+      databaseURL: "https://adiasta-686e4-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "adiasta-686e4",
+      storageBucket: "adiasta-686e4.appspot.com",
+      messagingSenderId: "822931467224",
+      appId: "1:822931467224:web:46f81b5779491efe6260ad",
+      measurementId: "G-68996BGLFE"
+    };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+    const database = getDatabase();
+    const authContainer = document.getElementById("auth");
+    const roomSelection = document.getElementById("room-selection");
+    const chatContainer = document.getElementById("chat");
+    const loginButton = document.getElementById("login");
+    const registerButton = document.getElementById("register");
+    const joinRoomButton = document.getElementById("join-room");
+    const createRoomButton = document.getElementById("create-room");
+    const roomNameInput = document.getElementById("room-name");
+    const roomPasswordInput = document.getElementById("room-password");
+    const authError = document.getElementById("auth-error");
+    const roomError = document.getElementById("room-error");
+    const messagesDiv = document.getElementById("message-list");
+    const sendButton = document.getElementById("send-button");
+    const messageInput = document.getElementById("message-input");
+    const userList = document.getElementById("user-list");
+    const goBackButton = document.getElementById("go-back");
+    let currentRoom = null;
+    let currentUsername = null;
+    const savedUser = localStorage.getItem("loggedInUser");
+    const logoutButton = document.createElement("button");
+    logoutButton.textContent = "Logout";
+    logoutButton.id = "logout-button";
+    logoutButton.addEventListener("click", () => {
+      signOut(auth).then(() => {
+        localStorage.removeItem("loggedInUser");
+        location.reload();
+      });
+    });
+    function appendLogoutButton() {
+      logoutButton.innerHTML = `<i class="fas fa-sign-out-alt"></i>`;
+      document.body.appendChild(logoutButton);
+    }
+    if (savedUser) {
+      const { uid, username } = JSON.parse(savedUser);
+      currentUsername = username;
+      showRoomSelection();
+      appendLogoutButton();
+    }
+    function displayError(element, message) {
+      element.textContent = message;
+      element.style.color = "red";
+      setTimeout(() => (element.textContent = ""), 3000);
+    }
+    function showRoomSelection() {
+      authContainer.style.display = "none";
+      roomSelection.style.display = "block";
+    }
+    let lastMessageSender = null;
+    function showChat() {
+      roomSelection.style.display = "none";
+      chatContainer.style.display = "flex";
+      const usersHeader = document.querySelector(".header h3");
+      usersHeader.textContent = currentRoom;
+      loadMessages();
+      loadUsers();
+      loadTypingIndicator();
+      const typingRef = ref(database, `rooms/${currentRoom}/typing`);
+      onValue(typingRef, (snapshot) => {
+        const typingData = snapshot.val();
+        const typingUsers = Object.keys(typingData || {}).filter((username) => typingData[username] && username !== currentUsername);
+        if (typingUsers.length === 0 && lastMessageSender === currentUsername) {
+          window.scrollTo(0, document.body.scrollHeight);
+        }
+      });
+      goBackButton.style.display = "inline-block";
+    }
+    loginButton.addEventListener("click", () => {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          currentUsername = user.email.split("@")[0];
+          localStorage.setItem("loggedInUser", JSON.stringify({ uid: user.uid, username: currentUsername }));
+          showRoomSelection();
+          appendLogoutButton();
+        })
+        .catch((error) => displayError(authError, error.message));
+    });
+    registerButton.addEventListener("click", () => {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          currentUsername = user.email.split("@")[0];
+          localStorage.setItem("loggedInUser", JSON.stringify({ uid: user.uid, username: currentUsername }));
+          showRoomSelection();
+          appendLogoutButton();
+        })
+        .catch((error) => displayError(authError, error.message));
+    });
+    async function hashString(str) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(str);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      return hashHex;
+    }
+    async function joinOrCreateRoom(action) {
+      const roomName = roomNameInput.value.trim();
+      const roomPassword = roomPasswordInput.value;
+      if (!roomName) {
+        displayError(roomError, "Room name cannot be empty.");
+        return;
+      }
+      currentRoom = roomName;
+      const roomRef = ref(database, `rooms/${roomName}`);
+      if (action === "create") {
+        let roomData = { createdAt: Date.now() };
+        if (roomPassword) {
+          const hashedPassword = await hashString(roomPassword);
+          roomData.password = hashedPassword;
+        }
+        set(roomRef, roomData)
+          .then(() => showChat())
+          .catch((error) => displayError(roomError, error.message));
+      } else {
+        onValue(roomRef, async (snapshot) => {
+          if (snapshot.exists()) {
+            const roomData = snapshot.val();
+            if (roomData.password) {
+              if (!roomPassword) {
+                displayError(roomError, "This room is password protected. Please enter the password.");
+                return;
+              }
+              const hashedInput = await hashString(roomPassword);
+              if (hashedInput !== roomData.password) {
+                displayError(roomError, "Incorrect room password.");
+                return;
+              }
+            }
+            showChat();
+          } else {
+            displayError(roomError, "Room does not exist. Try creating it.");
+          }
+        }, { onlyOnce: true });
+      }
+    }
+    joinRoomButton.addEventListener("click", () => joinOrCreateRoom("join"));
+    createRoomButton.addEventListener("click", () => joinOrCreateRoom("create"));
+    function loadMessages() {
+      const messagesRef = ref(database, `rooms/${currentRoom}/messages`);
+      messagesDiv.innerHTML = "";
+      onValue(messagesRef, (snapshot) => {
+        const messages = snapshot.val();
+        if (messages) {
+          for (let id in messages) {
+            const message = messages[id];
+            const messageDiv = document.createElement("div");
+            messageDiv.classList.add("message");
+            messageDiv.classList.add(message.username === currentUsername ? "sent" : "received");
+            messageDiv.id = `message-${id}`;
+            const userName = document.createElement("strong");
+            userName.textContent = `${message.username}: `;
+            const messageText = document.createElement("span");
+            if (message.text) {
+              messageText.textContent = message.text;
+            }
+            const timestampDiv = document.createElement("div");
+            timestampDiv.style.fontSize = "0.8em";
+            timestampDiv.style.color = "gray";
+            timestampDiv.textContent = new Date(message.timestamp).toLocaleTimeString();
+            messageDiv.appendChild(userName);
+            messageDiv.appendChild(messageText);
+            messageDiv.appendChild(timestampDiv);
+            messagesDiv.appendChild(messageDiv);
+            addLongPressMessageOptions(messageDiv);
+          }
+          window.scrollTo(0, document.body.scrollHeight);
+          if (lastMessageSender === currentUsername) {
+            window.scrollTo(0, document.body.scrollHeight);
+          }
+        }
+      });
+    }
+    function loadUsers() {
+      const usersRef = ref(database, `rooms/${currentRoom}/users`);
+      onValue(usersRef, (snapshot) => {
+        const users = snapshot.val();
+        if (users) {
+          userList.innerHTML = "";
+          for (let username in users) {
+            if (username !== currentUsername) {
+              const userDiv = document.createElement("div");
+              userDiv.classList.add("user");
+              userDiv.textContent = username;
+              userList.appendChild(userDiv);
+            }
+          }
+        }
+      });
+    }
+    sendButton.addEventListener("click", () => {
+      const text = messageInput.value.trim();
+      if (text) {
+        push(ref(database, `rooms/${currentRoom}/messages`), {
+          username: currentUsername,
+          text: text,
+          timestamp: Date.now()
+        });
+        messageInput.value = "";
+        loadMessages();
+      }
+    });
+    function scrollToBottom() {
+      const chatContainer = document.getElementById("chat-container");
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+    goBackButton.addEventListener("click", () => {
+      chatContainer.style.display = "none";
+      roomSelection.style.display = "block";
+      goBackButton.style.display = "none";
+    });
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        currentUsername = user.email.split("@")[0];
+        showRoomSelection();
+        appendLogoutButton();
+      } else {
+        authContainer.style.display = "block";
+        roomSelection.style.display = "none";
+        chatContainer.style.display = "none";
+        logoutButton.remove();
+      }
+    });
+    messageInput.addEventListener("keypress", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        sendButton.click();
+      }
+    });
+    let typingTimeout;
+    messageInput.addEventListener("input", () => {
+      const typingRef = ref(database, `rooms/${currentRoom}/typing/${currentUsername}`);
+      set(typingRef, true);
+      clearTimeout(typingTimeout);
+      typingTimeout = setTimeout(() => {
+        set(typingRef, false);
+      }, 2000);
+    });
+    function loadTypingIndicator() {
+      const typingRef = ref(database, `rooms/${currentRoom}/typing`);
+      onValue(typingRef, (snapshot) => {
+        const typingData = snapshot.val();
+        const typingUsers = Object.keys(typingData || {}).filter((username) => typingData[username] && username !== currentUsername);
+        if (typingUsers.length > 0) {
+          const typingText = typingUsers.length === 1 ? `${typingUsers[0]} is typing...` : `${typingUsers.join(", ")} are typing...`;
+          document.getElementById("typing-indicator").textContent = typingText;
+          document.getElementById("typing-indicator").style.display = "block";
+        } else {
+          document.getElementById("typing-indicator").style.display = "none";
+        }
+      });
+    }
+    function addLongPressMessageOptions(messageElement) {
+      let pressTimer;
+      let clickCount = 0;
+      let clickTimer;
+      messageElement.addEventListener('touchstart', (e) => {
+        pressTimer = setTimeout(() => {
+          showMessageOptions(messageElement);
+        }, 500);
+      });
+      messageElement.addEventListener('touchend', () => {
+        clearTimeout(pressTimer);
+      });
+      messageElement.addEventListener('touchmove', () => {
+        clearTimeout(pressTimer);
+      });
+      messageElement.addEventListener('mousedown', (e) => {
+        pressTimer = setTimeout(() => {
+          showMessageOptions(messageElement);
+        }, 500);
+      });
+      messageElement.addEventListener('mouseup', () => {
+        clearTimeout(pressTimer);
+      });
+      messageElement.addEventListener('mouseleave', () => {
+        clearTimeout(pressTimer);
+      });
+      messageElement.addEventListener('click', () => {
+        clickCount++;
+        clearTimeout(clickTimer);
+        clickTimer = setTimeout(() => {
+          if (clickCount === 3) {
+            showMessageOptions(messageElement);
+          }
+          clickCount = 0;
+        }, 300);
+      });
+      function showMessageOptions(message) {
+        const overlay = document.createElement('div');
+        overlay.classList.add('message-options-overlay');
+        overlay.style.cssText = "position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 1000;";
+        const optionsContainer = document.createElement('div');
+        optionsContainer.style.cssText = "background: white; padding: 20px; border-radius: 10px; text-align: center; max-width: 300px; width: 90%;";
+        const copyButton = document.createElement('button');
+        copyButton.textContent = 'Copy Message';
+        copyButton.style.cssText = "display: block; width: 100%; padding: 10px; margin: 10px 0; background-color: #f0f0f0; border: none; border-radius: 5px;";
+        copyButton.addEventListener('click', () => {
+          const messageToCopy = message.textContent;
+          navigator.clipboard.writeText(messageToCopy);
+          removeOverlay();
+        });
+        const messageText = message.querySelector('span');
+        if (messageText) {
+          const deleteButton = document.createElement('button');
+          deleteButton.textContent = 'Delete Message';
+          deleteButton.style.cssText = "display: block; width: 100%; padding: 10px; margin: 10px 0; background-color: #ff4444; color: white; border: none; border-radius: 5px;";
+          deleteButton.addEventListener('click', () => {
+            const messageId = message.id.replace('message-', '');
+            const messageRef = ref(database, `rooms/${currentRoom}/messages/${messageId}`);
+            remove(messageRef);
+            removeOverlay();
+          });
+          optionsContainer.appendChild(deleteButton);
+        }
+        const cancelButton = document.createElement('button');
+        cancelButton.textContent = 'Cancel';
+        cancelButton.style.cssText = "display: block; width: 100%; padding: 10px; margin: 10px 0; background-color: #e0e0e0; border: none; border-radius: 5px;";
+        cancelButton.addEventListener('click', removeOverlay);
+        optionsContainer.appendChild(copyButton);
+        optionsContainer.appendChild(cancelButton);
+        overlay.appendChild(optionsContainer);
+        document.body.appendChild(overlay);
+        function removeOverlay() {
+          document.body.removeChild(overlay);
+        }
+        overlay.addEventListener('click', (e) => {
+          if (e.target === overlay) {
+            removeOverlay();
+          }
+        });
+      }
+    }
+    let roomsList = {};
+    const roomsRef = ref(database, 'rooms');
+    onValue(roomsRef, snapshot => {
+      roomsList = snapshot.val() || {};
+      const searchValue = document.getElementById('search-room').value;
+      updateSearchResults(searchValue);
+    });
+    let debounceTimeout;
+    document.getElementById('search-room').addEventListener('input', function() {
+      clearTimeout(debounceTimeout);
+      debounceTimeout = setTimeout(() => {
+        updateSearchResults(this.value);
+      }, 150);
+    });
+    function updateSearchResults(query) {
+      const resultsDiv = document.getElementById('search-results');
+      resultsDiv.innerHTML = '';
+      if(query.trim() === '') return;
+      const queryLower = query.toLowerCase();
+      for(let room in roomsList){
+        if(room.toLowerCase().includes(queryLower)){
+          const roomDiv = document.createElement('div');
+          roomDiv.textContent = room;
+          roomDiv.addEventListener('click', () => {
+            roomNameInput.value = room;
+            resultsDiv.innerHTML = '';
+          });
+          resultsDiv.appendChild(roomDiv);
+        }
+      }
+    }
+  </script>
   <script>
-    // When "Encrypt" is clicked, encrypt the plain text and display the encrypted text and generated password.
     document.getElementById('encryptBtn').addEventListener('click', async () => {
       const plainText = document.getElementById('plainText').value;
       if (!plainText) {
@@ -196,12 +1097,9 @@
         document.getElementById('encryptedText').value = result.encrypted;
         document.getElementById('generatedPassword').value = result.password;
       } catch (err) {
-        console.error(err);
         alert("Encryption failed.");
       }
     });
-
-    // When "Decrypt" is clicked, attempt to decrypt the provided cipher text using the given password.
     document.getElementById('decryptBtn').addEventListener('click', async () => {
       const cipherText = document.getElementById('cipherText').value;
       const password = document.getElementById('decryptPassword').value;
@@ -213,23 +1111,16 @@
         const decrypted = await decryptText(cipherText, password);
         document.getElementById('decryptedText').value = decrypted;
       } catch (err) {
-        console.error(err);
         alert("Decryption failed. Check your password and encrypted text.");
       }
     });
-
-    // Encrypts the provided plain text using a randomly generated password.
     async function encryptText(plainText) {
       const password = generateRandomPassword();
       const salt = crypto.getRandomValues(new Uint8Array(16));
       const iv = crypto.getRandomValues(new Uint8Array(12));
       const key = await deriveKey(password, salt);
       const encodedText = new TextEncoder().encode(plainText);
-      const ciphertextBuffer = await crypto.subtle.encrypt(
-        { name: 'AES-GCM', iv: iv },
-        key,
-        encodedText
-      );
+      const ciphertextBuffer = await crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv }, key, encodedText);
       const ciphertext = new Uint8Array(ciphertextBuffer);
       const combined = new Uint8Array(salt.length + iv.length + ciphertext.length);
       combined.set(salt, 0);
@@ -238,54 +1129,25 @@
       const encryptedBase64 = arrayBufferToBase64(combined);
       return { encrypted: encryptedBase64, password: password };
     }
-
-    // Decrypts the Base64-encoded encrypted text using the provided password.
     async function decryptText(encryptedBase64, password) {
       const combined = base64ToArrayBuffer(encryptedBase64);
       const salt = combined.slice(0, 16);
       const iv = combined.slice(16, 16 + 12);
       const ciphertext = combined.slice(16 + 12);
       const key = await deriveKey(password, salt);
-      const decryptedBuffer = await crypto.subtle.decrypt(
-        { name: 'AES-GCM', iv: iv },
-        key,
-        ciphertext
-      );
+      const decryptedBuffer = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: iv }, key, ciphertext);
       return new TextDecoder().decode(decryptedBuffer);
     }
-
-    // Generates a random password by creating 16 random bytes and converting them to a hex string.
     function generateRandomPassword() {
       const array = new Uint8Array(16);
       crypto.getRandomValues(array);
       return Array.from(array, dec => ('0' + dec.toString(16)).slice(-2)).join('');
     }
-
-    // Derives an AES-GCM key from the password and salt using PBKDF2 with 10 billion iterations.
     async function deriveKey(password, salt) {
       const encoder = new TextEncoder();
-      const keyMaterial = await crypto.subtle.importKey(
-        'raw',
-        encoder.encode(password),
-        { name: 'PBKDF2' },
-        false,
-        ['deriveKey']
-      );
-      return crypto.subtle.deriveKey(
-        {
-          name: 'PBKDF2',
-          salt: salt,
-          iterations: 10000000000,  // 10 billion iterations
-          hash: 'SHA-256'
-        },
-        keyMaterial,
-        { name: 'AES-GCM', length: 256 },
-        false,
-        ['encrypt', 'decrypt']
-      );
+      const keyMaterial = await crypto.subtle.importKey('raw', encoder.encode(password), { name: 'PBKDF2' }, false, ['deriveKey']);
+      return crypto.subtle.deriveKey({ name: 'PBKDF2', salt: salt, iterations: 10000000000, hash: 'SHA-256' }, keyMaterial, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
     }
-
-    // Helper: Converts an ArrayBuffer/Uint8Array to a Base64-encoded string.
     function arrayBufferToBase64(buffer) {
       let binary = '';
       const bytes = new Uint8Array(buffer);
@@ -294,8 +1156,6 @@
       }
       return window.btoa(binary);
     }
-
-    // Helper: Converts a Base64-encoded string to an ArrayBuffer.
     function base64ToArrayBuffer(base64) {
       const binary = window.atob(base64);
       const buffer = new ArrayBuffer(binary.length);
@@ -305,32 +1165,24 @@
       }
       return buffer;
     }
-
-    // Copy encrypted text to clipboard
     document.getElementById('copyEncryptedBtn').addEventListener('click', () => {
       const encryptedText = document.getElementById('encryptedText').value;
       navigator.clipboard.writeText(encryptedText).then(() => {
         alert('Encrypted text copied to clipboard!');
       });
     });
-
-    // Copy password to clipboard
     document.getElementById('copyPasswordBtn').addEventListener('click', () => {
       const password = document.getElementById('generatedPassword').value;
       navigator.clipboard.writeText(password).then(() => {
         alert('Password copied to clipboard!');
       });
     });
-
-    // Copy decrypted text to clipboard
     document.getElementById('copyDecryptedBtn').addEventListener('click', () => {
       const decryptedText = document.getElementById('decryptedText').value;
       navigator.clipboard.writeText(decryptedText).then(() => {
         alert('Decrypted text copied to clipboard!');
       });
     });
-
-    // Paste encrypted text from clipboard
     document.getElementById('pasteCipherBtn').addEventListener('click', async () => {
       const clipboardText = await navigator.clipboard.readText();
       document.getElementById('cipherText').value = clipboardText;
