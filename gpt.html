@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GPU Stress Test</title>
+  <style>
+    /* Make the canvas fill the entire viewport */
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+      overflow: hidden;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="glCanvas"></canvas>
+  <script>
+    (function () {
+      // Get the canvas and set its size
+      const canvas = document.getElementById('glCanvas');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      // Initialize WebGL
+      const gl = canvas.getContext('webgl');
+      if (!gl) {
+        alert("Your browser does not support WebGL.");
+        return;
+      }
+
+      // Vertex shader (simple pass-through)
+      const vsSource = `
+        attribute vec4 aVertexPosition;
+        void main(void) {
+          gl_Position = aVertexPosition;
+        }
+      `;
+
+      // Fragment shader with heavy mathematical computations
+      const fsSource = `
+        precision highp float;
+        uniform vec2 uResolution;
+        uniform float uTime;
+        void main(void) {
+          // Normalize pixel coordinates (from 0 to 1)
+          vec2 st = gl_FragCoord.xy / uResolution;
+
+          // Map st to a coordinate space for fractal computation
+          vec2 c = vec2(-0.7, 0.27015);
+          vec2 z = vec2(st.x * 3.0 - 2.0, st.y * 3.0 - 1.5);
+          float iterations = 0.0;
+          float maxIter = 100.0 + 200.0 * abs(sin(uTime));
+
+          // Heavy loop: compute a fractal-like iterative function
+          for (float i = 0.0; i < 1000.0; i++) {
+            if (i >= maxIter) break;
+            float x = (z.x * z.x - z.y * z.y) + c.x;
+            float y = (2.0 * z.x * z.y) + c.y;
+            z = vec2(x, y);
+            if(dot(z, z) > 4.0) break;
+            iterations++;
+          }
+
+          // Base color determined by the iteration count
+          vec3 color = vec3(iterations / maxIter);
+
+          // Additional heavy math: multiple sine computations
+          for (int i = 0; i < 100; i++) {
+            color = sin(color * 10.0 + uTime);
+          }
+
+          gl_FragColor = vec4(color, 1.0);
+        }
+      `;
+
+      // Utility: compile a shader
+      function compileShader(source, type) {
+        const shader = gl.createShader(type);
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+          console.error("An error occurred compiling the shaders: " + gl.getShaderInfoLog(shader));
+          gl.deleteShader(shader);
+          return null;
+        }
+        return shader;
+      }
+
+      // Compile vertex and fragment shaders
+      const vertexShader = compileShader(vsSource, gl.VERTEX_SHADER);
+      const fragmentShader = compileShader(fsSource, gl.FRAGMENT_SHADER);
+
+      // Link shaders into a program
+      const shaderProgram = gl.createProgram();
+      gl.attachShader(shaderProgram, vertexShader);
+      gl.attachShader(shaderProgram, fragmentShader);
+      gl.linkProgram(shaderProgram);
+      if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
+        console.error("Unable to initialize the shader program: " + gl.getProgramInfoLog(shaderProgram));
+        return;
+      }
+      gl.useProgram(shaderProgram);
+
+      // Set up a full-screen quad
+      const vertices = new Float32Array([
+        -1, -1,
+         1, -1,
+        -1,  1,
+         1,  1,
+      ]);
+      const vertexBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+
+      const aVertexPosition = gl.getAttribLocation(shaderProgram, 'aVertexPosition');
+      gl.enableVertexAttribArray(aVertexPosition);
+      gl.vertexAttribPointer(aVertexPosition, 2, gl.FLOAT, false, 0, 0);
+
+      // Get uniform locations
+      const uResolution = gl.getUniformLocation(shaderProgram, 'uResolution');
+      const uTime = gl.getUniformLocation(shaderProgram, 'uTime');
+
+      // Animation loop to update the time uniform and draw continuously
+      const startTime = performance.now();
+      function render() {
+        const currentTime = performance.now();
+        const elapsedTime = (currentTime - startTime) / 1000.0;
+        gl.viewport(0, 0, canvas.width, canvas.height);
+        gl.uniform2f(uResolution, canvas.width, canvas.height);
+        gl.uniform1f(uTime, elapsedTime);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+        requestAnimationFrame(render);
+      }
+      render();
+
+      // Adjust canvas size on window resize
+      window.addEventListener('resize', function () {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      });
+    })();
+  </script>
+</body>
+</html>
