@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #282c36;
+            color: white;
+            text-align: center;
+            flex-direction: column;
+        }
+        #countdown {
+            font-size: 2rem;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Countdown</h1>
+    <div id="countdown">Loading...</div>
+
+    <script>
+        function updateCountdown() {
+            const now = new Date();
+            const year = now.getMonth() === 1 && now.getDate() > 1 ? now.getFullYear() : now.getFullYear();
+            const targetDate = new Date(year, 2, 1);
+            const timeDiff = targetDate - now;
+
+            const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+            document.getElementById("countdown").innerText = `${days} days, ${hours} hours, ${seconds} seconds`;
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    </script>
+</body>
+</html>
