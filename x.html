@@ -35,10 +35,11 @@
     .section { display: block; }
     .hidden { display: none; }
     textarea { width: 100%; min-height: 80px; padding: 10px; border-radius: 5px; font-family: 'Orbitron', sans-serif; resize: vertical; margin-bottom: 10px; }
-    button.action { width: 100%; padding: 15px; font-size: 1rem; border: none; border-radius: 5px; cursor: pointer; transition: background 0.3s; }
+    button.action { width: 100%; padding: 15px; font-size: 1rem; border: none; border-radius: 5px; cursor: pointer; transition: background 0.3s; margin-bottom: 10px; }
     .copyable { cursor: pointer; }
     .input-group { position: relative; }
     .paste-btn { position: absolute; top: 50%; right: 10px; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: inherit; font-size: 1.5rem; }
+    .extra-actions { display: flex; gap: 10px; }
     @media (max-width:600px){ .container { padding:15px; } button.action { padding:12px; font-size:0.9rem; } }
   </style>
 </head>
@@ -57,6 +58,11 @@
         <textarea id="generatedKey" class="copyable" readonly></textarea>
         <p>Encrypted Text (Base64):</p>
         <textarea id="encryptedText" class="copyable" readonly></textarea>
+        <div class="extra-actions">
+          <button id="clearEncryption" class="action">Clear</button>
+          <button id="downloadEncryption" class="action">Download Encrypted</button>
+        </div>
+        <p id="encryptionTime"></p>
       </div>
     </div>
     <div id="decryptSection" class="section hidden">
@@ -72,84 +78,121 @@
       <div id="decryptResult" class="hidden">
         <p>Decrypted Text:</p>
         <textarea id="decryptedText" readonly></textarea>
+        <div class="extra-actions">
+          <button id="clearDecryption" class="action">Clear</button>
+          <button id="downloadDecryption" class="action">Download Decrypted</button>
+        </div>
       </div>
     </div>
   </div>
   <script>
-    const arrayBufferToBase64=buffer=>{let binary='';const bytes=new Uint8Array(buffer);for(let b of bytes)binary+=String.fromCharCode(b);return window.btoa(binary)};
-    const base64ToArrayBuffer=base64=>{const binary=window.atob(base64);const bytes=new Uint8Array(binary.length);for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);return bytes.buffer};
-    const encoder=new TextEncoder(),decoder=new TextDecoder();
+    const arrayBufferToBase64 = buffer => { let binary = ''; const bytes = new Uint8Array(buffer); for (let b of bytes) binary += String.fromCharCode(b); return window.btoa(binary); }
+    const base64ToArrayBuffer = base64 => { const binary = window.atob(base64); const bytes = new Uint8Array(binary.length); for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i); return bytes.buffer; }
+    const encoder = new TextEncoder(), decoder = new TextDecoder();
     async function encryptText(){
-      const plainText=document.getElementById('plainText').value;
+      const plainText = document.getElementById('plainText').value;
       if(!plainText)return alert("Enter text to encrypt");
-      const key=await crypto.subtle.generateKey({name:"AES-GCM",length:256},true,["encrypt","decrypt"]);
-      const rawKey=await crypto.subtle.exportKey("raw",key);
-      const base64Key=arrayBufferToBase64(rawKey);
-      const iv=crypto.getRandomValues(new Uint8Array(12));
-      const encryptedBuffer=await crypto.subtle.encrypt({name:"AES-GCM",iv},key,encoder.encode(plainText));
-      const combined=new Uint8Array(iv.byteLength+encryptedBuffer.byteLength);
+      const start = performance.now();
+      const key = await crypto.subtle.generateKey({name:"AES-GCM",length:256},true,["encrypt","decrypt"]);
+      const rawKey = await crypto.subtle.exportKey("raw",key);
+      const base64Key = arrayBufferToBase64(rawKey);
+      const iv = crypto.getRandomValues(new Uint8Array(12));
+      const encryptedBuffer = await crypto.subtle.encrypt({name:"AES-GCM",iv},key,encoder.encode(plainText));
+      const combined = new Uint8Array(iv.byteLength+encryptedBuffer.byteLength);
       combined.set(iv);
       combined.set(new Uint8Array(encryptedBuffer),iv.byteLength);
-      const base64Encrypted=arrayBufferToBase64(combined.buffer);
-      document.getElementById('generatedKey').value=base64Key;
-      document.getElementById('encryptedText').value=base64Encrypted;
+      const base64Encrypted = arrayBufferToBase64(combined.buffer);
+      const end = performance.now();
+      document.getElementById('generatedKey').value = base64Key;
+      document.getElementById('encryptedText').value = base64Encrypted;
       document.getElementById('encryptResult').classList.remove('hidden');
+      document.getElementById('encryptionTime').innerText = "Encryption time: " + (end - start).toFixed(2) + " ms";
     }
     async function decryptText(){
-      const base64Encrypted=document.getElementById('encryptedInput').value.trim(),base64Key=document.getElementById('keyInput').value.trim();
-      if(!base64Encrypted||!base64Key)return alert("Enter encrypted text and key");
-      const keyBuffer=base64ToArrayBuffer(base64Key);
-      const key=await crypto.subtle.importKey("raw",keyBuffer,{name:"AES-GCM"},false,["decrypt"]);
-      const combinedBuffer=base64ToArrayBuffer(base64Encrypted);
-      const combined=new Uint8Array(combinedBuffer);
-      const iv=combined.slice(0,12),ciphertext=combined.slice(12);
-      const decryptedBuffer=await crypto.subtle.decrypt({name:"AES-GCM",iv},key,ciphertext);
-      const decryptedText=decoder.decode(decryptedBuffer);
-      document.getElementById('decryptedText').value=decryptedText;
+      const base64Encrypted = document.getElementById('encryptedInput').value.trim(), base64Key = document.getElementById('keyInput').value.trim();
+      if(!base64Encrypted || !base64Key)return alert("Enter encrypted text and key");
+      const keyBuffer = base64ToArrayBuffer(base64Key);
+      const key = await crypto.subtle.importKey("raw",keyBuffer,{name:"AES-GCM"},false,["decrypt"]);
+      const combinedBuffer = base64ToArrayBuffer(base64Encrypted);
+      const combined = new Uint8Array(combinedBuffer);
+      const iv = combined.slice(0,12), ciphertext = combined.slice(12);
+      const decryptedBuffer = await crypto.subtle.decrypt({name:"AES-GCM",iv},key,ciphertext);
+      const decryptedText = decoder.decode(decryptedBuffer);
+      document.getElementById('decryptedText').value = decryptedText;
       document.getElementById('decryptResult').classList.remove('hidden');
+    }
+    function clearEncryptionFields(){
+      document.getElementById('plainText').value = "";
+      document.getElementById('generatedKey').value = "";
+      document.getElementById('encryptedText').value = "";
+      document.getElementById('encryptResult').classList.add('hidden');
+      document.getElementById('encryptionTime').innerText = "";
+    }
+    function clearDecryptionFields(){
+      document.getElementById('encryptedInput').value = "";
+      document.getElementById('keyInput').value = "";
+      document.getElementById('decryptedText').value = "";
+      document.getElementById('decryptResult').classList.add('hidden');
+    }
+    function downloadContent(content, filename){
+      const blob = new Blob([content], {type:"text/plain"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+    function downloadEncryptedData(){
+      const key = document.getElementById('generatedKey').value, encrypted = document.getElementById('encryptedText').value;
+      if(!key || !encrypted)return alert("No encrypted data to download");
+      downloadContent("Key: " + key + "\nEncrypted Text: " + encrypted, "encrypted.txt");
+    }
+    function downloadDecryptedData(){
+      const decrypted = document.getElementById('decryptedText').value;
+      if(!decrypted)return alert("No decrypted data to download");
+      downloadContent(decrypted, "decrypted.txt");
+    }
+    function validateBase64(str){
+      try{return btoa(atob(str))===str;}catch(e){return false;}
+    }
+    function autoResize(e){
+      e.target.style.height = "auto";
+      e.target.style.height = e.target.scrollHeight + "px";
     }
     document.getElementById('encryptButton').addEventListener('click',encryptText);
     document.getElementById('decryptButton').addEventListener('click',decryptText);
-    document.getElementById('encryptTab').addEventListener('click',()=>{
+    document.getElementById('encryptTab').addEventListener('click',() => {
       document.getElementById('encryptSection').classList.remove('hidden');
       document.getElementById('decryptSection').classList.add('hidden');
       document.getElementById('encryptTab').classList.add('active');
       document.getElementById('decryptTab').classList.remove('active');
     });
-    document.getElementById('decryptTab').addEventListener('click',()=>{
+    document.getElementById('decryptTab').addEventListener('click',() => {
       document.getElementById('decryptSection').classList.remove('hidden');
       document.getElementById('encryptSection').classList.add('hidden');
       document.getElementById('decryptTab').classList.add('active');
       document.getElementById('encryptTab').classList.remove('active');
     });
-    document.getElementById('generatedKey').addEventListener('click',e=>{
-      e.target.select();
-      navigator.clipboard.writeText(e.target.value);
-    });
-    document.getElementById('encryptedText').addEventListener('click',e=>{
-      e.target.select();
-      navigator.clipboard.writeText(e.target.value);
-    });
-    document.getElementById('pasteEncrypted').addEventListener('click',async ()=>{
-      const text=await navigator.clipboard.readText();
-      document.getElementById('encryptedInput').value=text;
-    });
-    document.getElementById('pasteKey').addEventListener('click',async ()=>{
-      const text=await navigator.clipboard.readText();
-      document.getElementById('keyInput').value=text;
-    });
+    document.getElementById('generatedKey').addEventListener('click',e => { e.target.select(); navigator.clipboard.writeText(e.target.value); });
+    document.getElementById('encryptedText').addEventListener('click',e => { e.target.select(); navigator.clipboard.writeText(e.target.value); });
+    document.getElementById('pasteEncrypted').addEventListener('click',async () => { const text = await navigator.clipboard.readText(); document.getElementById('encryptedInput').value = text; });
+    document.getElementById('pasteKey').addEventListener('click',async () => { const text = await navigator.clipboard.readText(); document.getElementById('keyInput').value = text; });
+    document.getElementById('clearEncryption').addEventListener('click',clearEncryptionFields);
+    document.getElementById('clearDecryption').addEventListener('click',clearDecryptionFields);
+    document.getElementById('downloadEncryption').addEventListener('click',downloadEncryptedData);
+    document.getElementById('downloadDecryption').addEventListener('click',downloadDecryptedData);
+    document.querySelectorAll('textarea').forEach(el => { el.addEventListener('input',autoResize); });
     if("serviceWorker" in navigator){
-      const swCode=`self.addEventListener("install",e=>self.skipWaiting());
-self.addEventListener("activate",e=>e.waitUntil(clients.claim()));
-self.addEventListener("fetch",e=>e.respondWith(fetch(e.request)));`;
-      const blob=new Blob([swCode],{type:"application/javascript"});
+      const swCode = 'self.addEventListener("install",e=>self.skipWaiting());self.addEventListener("activate",e=>e.waitUntil(clients.claim()));self.addEventListener("fetch",e=>e.respondWith(fetch(e.request)));';
+      const blob = new Blob([swCode], {type:"application/javascript"});
       navigator.serviceWorker.register(URL.createObjectURL(blob));
     }
-    const manifest={name:"Quantum Encryption",short_name:"QEncrypt",start_url:".",display:"standalone",background_color:"#000",theme_color:"#0ff",description:"Advanced text encryption and decryption tool.",icons:[{src:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABH0lEQVR4Xu3XQQ2DMAwF0E1s/56u7CxO5WMtUJ6GyZn4Q7EAAQIECBAgAABAgQIECBAgAABAj8l3bgvEEXXpOeqE6PU19LdMuL8+46Hj6a/8Lp+I7nzAv8J+5XcS/EJ7ldxL8QnuV3EvxCe5XcS/EJ7ldxL8QnuV3EvxCe5XcS/EJ7ldxL8QnuV3EvxCe5XcS/EJ7ldxL8QnuV3EvxCe5XcS/EJ7ldxL8QnuV3EvxCe5XcS/EJ7ldxL8QnuV3EvxCe5XcS/EJ7n+P/AO8Zr3HZ6fnYoAAAAASUVORK5CYII=",sizes:"64x64",type:"image/png"}]};
-    const manifestBlob=new Blob([JSON.stringify(manifest)],{type:"application/json"});
-    const manifestLink=document.createElement("link");
-    manifestLink.rel="manifest";
-    manifestLink.href=URL.createObjectURL(manifestBlob);
+    const manifest = {name:"Quantum Encryption",short_name:"QEncrypt",start_url:".",display:"standalone",background_color:"#000",theme_color:"#0ff",description:"Advanced text encryption and decryption tool.",icons:[{src:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABH0lEQVR4Xu3XQQ2DMAwF0E1s/56u7CxO5WMtUJ6GyZn4Q7EAAQIECBAgAABAgQIECBAgAABAj8l3bgvEEXXpOeqE6PU19LdMuL8+46Hj6a/8Lp+I7nzAv8J+5XcS/EJ7ldxL8QnuV3EvxCe5XcS/EJ7ldxL8QnuV3EvxCe5XcS/EJ7ldxL8QnuV3EvxCe5XcS/EJ7ldxL8QnuV3EvxCe5XcS/EJ7ldxL8QnuV3EvxCe5XcS/EJ7n+P/AO8Zr3HZ6fnYoAAAAASUVORK5CYII=",sizes:"64x64",type:"image/png"}]};
+    const manifestBlob = new Blob([JSON.stringify(manifest)], {type:"application/json"});
+    const manifestLink = document.createElement("link");
+    manifestLink.rel = "manifest";
+    manifestLink.href = URL.createObjectURL(manifestBlob);
     document.head.appendChild(manifestLink);
   </script>
 </body>
