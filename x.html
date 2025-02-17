@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0ff">
+  <title>Quantum Encryption</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+  <style>
+    :root { --accent: #0ff; --bg-dark: #000; --bg-light: #fff; }
+    @media (prefers-color-scheme: dark) {
+      body { background: linear-gradient(135deg, #000 0%, #111 100%); color: var(--accent); }
+      .container { background: rgba(0,0,0,0.85); border: 2px solid var(--accent); box-shadow: 0 0 20px var(--accent); }
+      textarea { background: var(--bg-dark); color: var(--accent); border: 2px solid var(--accent); }
+      .tabs button { border: 2px solid var(--accent); color: var(--accent); }
+      .tabs button.active, .tabs button:hover { background: var(--accent); color: var(--bg-dark); }
+      button.action { background: var(--accent); color: var(--bg-dark); }
+    }
+    @media (prefers-color-scheme: light) {
+      body { background: linear-gradient(135deg, #fff 0%, #ddd 100%); color: var(--bg-dark); }
+      .container { background: rgba(255,255,255,0.85); border: 2px solid var(--bg-dark); box-shadow: 0 0 20px var(--bg-dark); }
+      textarea { background: var(--bg-light); color: var(--bg-dark); border: 2px solid var(--bg-dark); }
+      .tabs button { border: 2px solid var(--bg-dark); color: var(--bg-dark); }
+      .tabs button.active, .tabs button:hover { background: var(--bg-dark); color: var(--bg-light); }
+      button.action { background: var(--bg-dark); color: var(--bg-light); }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 0; font-family: 'Orbitron', sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; transition: background 0.3s, color 0.3s; }
+    .container { width: 90%; max-width: 600px; border-radius: 10px; padding: 20px; }
+    h1 { text-align: center; margin-bottom: 20px; }
+    .tabs { display: flex; justify-content: center; margin-bottom: 20px; }
+    .tabs button { background: none; padding: 10px 20px; margin: 0 5px; border-radius: 5px; cursor: pointer; font-size: 1rem; transition: background 0.3s; }
+    .section { display: block; }
+    .hidden { display: none; }
+    textarea { width: 100%; min-height: 80px; padding: 10px; border-radius: 5px; font-family: 'Orbitron', sans-serif; resize: vertical; margin-bottom: 10px; }
+    button.action { width: 100%; padding: 15px; font-size: 1rem; border: none; border-radius: 5px; cursor: pointer; transition: background 0.3s; }
+    .copyable { cursor: pointer; }
+    .input-group { position: relative; }
+    .paste-btn { position: absolute; top: 50%; right: 10px; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: inherit; font-size: 1.5rem; }
+    @media (max-width:600px){ .container { padding:15px; } button.action { padding:12px; font-size:0.9rem; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Quantum Encryption</h1>
+    <div class="tabs">
+      <button id="encryptTab" class="active">Encrypt</button>
+      <button id="decryptTab">Decrypt</button>
+    </div>
+    <div id="encryptSection" class="section">
+      <textarea id="plainText" placeholder="Enter text to encrypt"></textarea>
+      <button id="encryptButton" class="action">Encrypt</button>
+      <div id="encryptResult" class="hidden">
+        <p>Key (Base64):</p>
+        <textarea id="generatedKey" class="copyable" readonly></textarea>
+        <p>Encrypted Text (Base64):</p>
+        <textarea id="encryptedText" class="copyable" readonly></textarea>
+      </div>
+    </div>
+    <div id="decryptSection" class="section hidden">
+      <div class="input-group">
+        <textarea id="encryptedInput" placeholder="Enter encrypted text (Base64)"></textarea>
+        <button class="paste-btn" id="pasteEncrypted"><span class="material-icons">content_paste</span></button>
+      </div>
+      <div class="input-group">
+        <textarea id="keyInput" placeholder="Enter key (Base64)"></textarea>
+        <button class="paste-btn" id="pasteKey"><span class="material-icons">content_paste</span></button>
+      </div>
+      <button id="decryptButton" class="action">Decrypt</button>
+      <div id="decryptResult" class="hidden">
+        <p>Decrypted Text:</p>
+        <textarea id="decryptedText" readonly></textarea>
+      </div>
+    </div>
+  </div>
+  <script>
+    const arrayBufferToBase64=buffer=>{let binary='';const bytes=new Uint8Array(buffer);for(let b of bytes)binary+=String.fromCharCode(b);return window.btoa(binary)};
+    const base64ToArrayBuffer=base64=>{const binary=window.atob(base64);const bytes=new Uint8Array(binary.length);for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);return bytes.buffer};
+    const encoder=new TextEncoder(),decoder=new TextDecoder();
+    async function encryptText(){
+      const plainText=document.getElementById('plainText').value;
+      if(!plainText)return alert("Enter text to encrypt");
+      const key=await crypto.subtle.generateKey({name:"AES-GCM",length:256},true,["encrypt","decrypt"]);
+      const rawKey=await crypto.subtle.exportKey("raw",key);
+      const base64Key=arrayBufferToBase64(rawKey);
+      const iv=crypto.getRandomValues(new Uint8Array(12));
+      const encryptedBuffer=await crypto.subtle.encrypt({name:"AES-GCM",iv},key,encoder.encode(plainText));
+      const combined=new Uint8Array(iv.byteLength+encryptedBuffer.byteLength);
+      combined.set(iv);
+      combined.set(new Uint8Array(encryptedBuffer),iv.byteLength);
+      const base64Encrypted=arrayBufferToBase64(combined.buffer);
+      document.getElementById('generatedKey').value=base64Key;
+      document.getElementById('encryptedText').value=base64Encrypted;
+      document.getElementById('encryptResult').classList.remove('hidden');
+    }
+    async function decryptText(){
+      const base64Encrypted=document.getElementById('encryptedInput').value.trim(),base64Key=document.getElementById('keyInput').value.trim();
+      if(!base64Encrypted||!base64Key)return alert("Enter encrypted text and key");
+      const keyBuffer=base64ToArrayBuffer(base64Key);
+      const key=await crypto.subtle.importKey("raw",keyBuffer,{name:"AES-GCM"},false,["decrypt"]);
+      const combinedBuffer=base64ToArrayBuffer(base64Encrypted);
+      const combined=new Uint8Array(combinedBuffer);
+      const iv=combined.slice(0,12),ciphertext=combined.slice(12);
+      const decryptedBuffer=await crypto.subtle.decrypt({name:"AES-GCM",iv},key,ciphertext);
+      const decryptedText=decoder.decode(decryptedBuffer);
+      document.getElementById('decryptedText').value=decryptedText;
+      document.getElementById('decryptResult').classList.remove('hidden');
+    }
+    document.getElementById('encryptButton').addEventListener('click',encryptText);
+    document.getElementById('decryptButton').addEventListener('click',decryptText);
+    document.getElementById('encryptTab').addEventListener('click',()=>{
+      document.getElementById('encryptSection').classList.remove('hidden');
+      document.getElementById('decryptSection').classList.add('hidden');
+      document.getElementById('encryptTab').classList.add('active');
+      document.getElementById('decryptTab').classList.remove('active');
+    });
+    document.getElementById('decryptTab').addEventListener('click',()=>{
+      document.getElementById('decryptSection').classList.remove('hidden');
+      document.getElementById('encryptSection').classList.add('hidden');
+      document.getElementById('decryptTab').classList.add('active');
+      document.getElementById('encryptTab').classList.remove('active');
+    });
+    document.getElementById('generatedKey').addEventListener('click',e=>{
+      e.target.select();
+      navigator.clipboard.writeText(e.target.value);
+    });
+    document.getElementById('encryptedText').addEventListener('click',e=>{
+      e.target.select();
+      navigator.clipboard.writeText(e.target.value);
+    });
+    document.getElementById('pasteEncrypted').addEventListener('click',async ()=>{
+      const text=await navigator.clipboard.readText();
+      document.getElementById('encryptedInput').value=text;
+    });
+    document.getElementById('pasteKey').addEventListener('click',async ()=>{
+      const text=await navigator.clipboard.readText();
+      document.getElementById('keyInput').value=text;
+    });
+    if("serviceWorker" in navigator){
+      const swCode=`self.addEventListener("install",e=>self.skipWaiting());
+self.addEventListener("activate",e=>e.waitUntil(clients.claim()));
+self.addEventListener("fetch",e=>e.respondWith(fetch(e.request)));`;
+      const blob=new Blob([swCode],{type:"application/javascript"});
+      navigator.serviceWorker.register(URL.createObjectURL(blob));
+    }
+    const manifest={name:"Quantum Encryption",short_name:"QEncrypt",start_url:".",display:"standalone",background_color:"#000",theme_color:"#0ff",description:"Advanced text encryption and decryption tool.",icons:[{src:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABH0lEQVR4Xu3XQQ2DMAwF0E1s/56u7CxO5WMtUJ6GyZn4Q7EAAQIECBAgAABAgQIECBAgAABAj8l3bgvEEXXpOeqE6PU19LdMuL8+46Hj6a/8Lp+I7nzAv8J+5XcS/EJ7ldxL8QnuV3EvxCe5XcS/EJ7ldxL8QnuV3EvxCe5XcS/EJ7ldxL8QnuV3EvxCe5XcS/EJ7ldxL8QnuV3EvxCe5XcS/EJ7ldxL8QnuV3EvxCe5XcS/EJ7ldxL8QnuV3EvxCe5XcS/EJ7n+P/AO8Zr3HZ6fnYoAAAAASUVORK5CYII=",sizes:"64x64",type:"image/png"}]};
+    const manifestBlob=new Blob([JSON.stringify(manifest)],{type:"application/json"});
+    const manifestLink=document.createElement("link");
+    manifestLink.rel="manifest";
+    manifestLink.href=URL.createObjectURL(manifestBlob);
+    document.head.appendChild(manifestLink);
+  </script>
+</body>
+</html>
