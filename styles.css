@@ -1,3 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+body {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+}
+
+.header h3 {
+    font-family: 'Inter', sans-serif;
+}
+
+.login-register {
+    font-family: 'Inter', sans-serif;
+}
+
+.login-register h2 {
+    font-family: 'Inter', sans-serif;
+}
+
+.login-register input, .login-register button {
+    font-family: 'Inter', sans-serif;
+}
+
+.login-register button {
+    font-family: 'Inter', sans-serif;
+}
 #chat-menu {
     background-color: #fff;
     border-radius: 4px;
@@ -65,7 +91,6 @@
 }
 
 body {
-    font-family: 'Baloo', sans-serif;
     font-weight: 400;
     margin: 0;
     padding: 0;
@@ -262,21 +287,18 @@ background-color: rgba(232, 247, 240, 0.6);
 }
 
 .login-register {
-    font-family: 'Russo One', sans-serif;
     padding: 30px;
     text-align: center;
 }
 
 .login-register h2 {
     font-size: 1.8rem;
-    font-family: 'Russo One', sans-serif;
     color: #333;
     margin-bottom: 20px;
 }
 
 .login-register input, .login-register button {
     display: block;
-    font-family: 'Russo One', sans-serif;
     width: 80%;
     background-color: #e8f7f0; 
     max-width: 420px;
@@ -292,7 +314,6 @@ background-color: rgba(232, 247, 240, 0.6);
 .login-register button {
     background-color: #ff7f50;
     color: white;
-    font-family: 'Russo One', sans-serif;
     border: none;
     cursor: pointer;
     font-weight: bold;
