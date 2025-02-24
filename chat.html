@@ -43,7 +43,7 @@
 
         <div id="room-selection" style="display: none;">
             <div class="login-register">
-                <h2>Join / Create</h2>
+                <h2>Join or Create</h2>
                 <input type="text" id="room-name" placeholder="Enter room name">
                 <button id="join-room">Join Room</button>
                 <button id="create-room">Create Room</button>
@@ -73,9 +73,6 @@
                     <button id="send-button" aria-label="Send message">
                         <span class="material-symbols-outlined">send</span>
                     </button>
-                  <!--  <button id="voice-message-button" aria-label="Record Voice" title="Record Voice Message">
-                        <span class="material-symbols-outlined">mic</span>
-                    </button> -->
                 </div>
             </div>
         </div>
@@ -433,32 +430,35 @@ function scrollToBottom() {
            }
          });
          
-         let typingTimeout;
-         messageInput.addEventListener("input", () => {
-           const typingRef = ref(database, `rooms/${currentRoom}/typing/${currentUsername}`);
-           set(typingRef, true);
-           clearTimeout(typingTimeout);
-           typingTimeout = setTimeout(() => {
-             set(typingRef, false);
-           }, 2000);
-         });
+let typingTimeout;
+messageInput.addEventListener("input", () => {
+  const typingRef = ref(database, `rooms/${currentRoom}/typing/${currentUsername}`);
+  set(typingRef, true); // Set typing status to true
+
+  if (typingTimeout) clearTimeout(typingTimeout); // Clear existing timeout
+  typingTimeout = setTimeout(() => {
+    set(typingRef, false); // Set typing status to false after 2 seconds of no typing
+  }, 2000);
+});
          
-         function loadTypingIndicator() {
-           const typingRef = ref(database, `rooms/${currentRoom}/typing`);
-           onValue(typingRef, (snapshot) => {
-             const typingData = snapshot.val();
-             const typingUsers = Object.keys(typingData).filter((username) => typingData[username] && username !== currentUsername);
-             if (typingUsers.length > 0) {
-               const typingText = typingUsers.length === 1
-                 ? `${typingUsers[0]} is typing...`
-                 : `${typingUsers.join(", ")} are typing...`;
-               document.getElementById("typing-indicator").textContent = typingText;
-               document.getElementById("typing-indicator").style.display = "block";
-             } else {
-               document.getElementById("typing-indicator").style.display = "none";
-             }
-           });
-         }
+function loadTypingIndicator() {
+  const typingRef = ref(database, `rooms/${currentRoom}/typing`);
+  onValue(typingRef, (snapshot) => {
+    const typingData = snapshot.val() || {}; // Ensure data exists
+    const typingUsers = Object.keys(typingData).filter(username => typingData[username] && username !== currentUsername);
+
+    const typingIndicator = document.getElementById("typing-indicator");
+    
+    if (typingUsers.length > 0) {
+      typingIndicator.textContent = typingUsers.length === 1
+        ? `${typingUsers[0]} is typing...`
+        : `${typingUsers.join(", ")} are typing...`;
+      typingIndicator.style.display = "block";
+    } else {
+      typingIndicator.style.display = "none"; // Hide indicator when no one is typing
+    }
+  });
+}
          
          
          function addLongPressMessageOptions() {
@@ -502,7 +502,6 @@ function scrollToBottom() {
       clearTimeout(pressTimer);
     });
 
-    // Triple-click support
     message.addEventListener('click', () => {
       clickCount++;
       
@@ -538,7 +537,6 @@ function scrollToBottom() {
       z-index: 1000;
     `;
 
-    // Create options container
     const optionsContainer = document.createElement('div');
     optionsContainer.style.cssText = `
       background: white;
@@ -549,7 +547,6 @@ function scrollToBottom() {
       width: 90%;
     `;
 
-    // Copy message option
     const copyButton = document.createElement('button');
     copyButton.textContent = 'Copy Message';
     copyButton.style.cssText = `
@@ -567,7 +564,6 @@ function scrollToBottom() {
       removeOverlay();
     });
 
-    // Delete message option (only for own messages)
     const messageText = message.querySelector('span');
     if (messageText) {
       const deleteButton = document.createElement('button');
@@ -583,8 +579,6 @@ function scrollToBottom() {
         border-radius: 5px;
       `;
       deleteButton.addEventListener('click', () => {
-        // Implement message deletion logic
-        // This would typically involve removing from Firebase database
         const messageId = message.id.replace('message-', '');
         const messageRef = ref(database, `rooms/${currentRoom}/messages/${messageId}`);
         remove(messageRef);
