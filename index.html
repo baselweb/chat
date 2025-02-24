@@ -15,11 +15,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agree to Proceed</title>
-    <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* Base Styles */
         body {
-            font-family: 'Russo One', sans-serif;
+            font-family: 'Inter', sans-serif;
             font-weight: 400;
             margin: 0;
             padding: 0;
@@ -73,7 +73,7 @@
         }
 
         .agree-btn, .disagree-btn {
-            font-family: 'Russo One', sans-serif;
+            font-family: 'Inter', sans-serif;
             margin-top: 25px;
             padding: 15px 30px;
             border-radius: 50px;  /* Rounded edges */
@@ -142,14 +142,15 @@
                 background-color: #ffa726; /* Slightly darker orange */
             }
         }
-.footer { 
-    position: fixed;
-    bottom: 20px;
-    width: 100%;
-    text-align: center;
-    left: 0;
-    transform: none;
-}
+
+        .footer { 
+            position: fixed;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            left: 0;
+            transform: none;
+        }
 
         /* Mobile Optimizations */
         @media (max-width: 480px) {
@@ -179,21 +180,18 @@
         </div>
         <button class="agree-btn" id="agreeBtn">Agree</button>
         <button class="disagree-btn" id="disagreeBtn">Disagree</button>
-      <p class="footer">
-        &copy; 2025 Adiasta. All rights reserved.
-      </p>
+        <p class="footer">
+            &copy; 2025 Adiasta. All rights reserved.
+        </p>
     </div>
 
     <script>
         // Check if the user has already agreed
         if (localStorage.getItem('hasAgreed') === 'true') {
-            // If user already agreed, redirect them automatically
             window.location.href = 'https://adiasta.com/chat';
         }
 
-        // Handle the 'Agree' button click
         document.getElementById('agreeBtn').addEventListener('click', function() {
-            // Save the user's agreement in localStorage
             localStorage.setItem('hasAgreed', 'true');
             // Redirect to the chat service
             window.location.href = 'https://adiasta.com/chat';
@@ -202,7 +200,7 @@
         // Handle the 'Disagree' button click
         document.getElementById('disagreeBtn').addEventListener('click', function() {
             // Redirect to DuckDuckGo
-            window.location.href = 'https://duckduckgo.com/';
+            window.location.href = 'https://adiasta.com/index.com';
         });
     </script>
 </body>
