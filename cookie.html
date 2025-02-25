@@ -3,12 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Unstoppable Page</title>
+  <title>Unbreakable Page</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 20px;
       background: #fafafa;
+      text-align: center;
+      transition: all 0.3s ease;
     }
     .protected {
       margin: 10px 0;
@@ -16,43 +18,57 @@
       background: #e0e0e0;
       border: 1px solid #ccc;
     }
+    #error {
+      display: none;
+      font-size: 2em;
+      color: red;
+      font-weight: bold;
+      margin-top: 20%;
+    }
   </style>
 </head>
 <body>
   <h1 class="protected">Safari Cannot Hide This</h1>
-  <p class="protected">No matter what you do, these elements will always come back.</p>
+  <p class="protected">If you try to hide anything, the website will break.</p>
   <div class="protected">Try hiding me—I dare you.</div>
-  <div class="protected">I will always return.</div>
+  <div class="protected">The website will crash if you do.</div>
+
+  <div id="error">🚨 You broke the site! 🚨</div>
 
   <script>
-    function generateRandomID() {
-      return 'element_' + Math.random().toString(36).substr(2, 10);
+    function crashSite() {
+      document.body.innerHTML = '<div id="error">🚨 You broke the site! 🚨</div>';
+      document.body.style.background = "black";
+      document.body.style.color = "red";
+      document.body.style.fontSize = "2em";
+      document.body.style.display = "flex";
+      document.body.style.justifyContent = "center";
+      document.body.style.alignItems = "center";
+      
+      // Prevent any further interaction
+      document.body.style.pointerEvents = "none";
+
+      // Stop all scripts from running
+      setTimeout(() => { while (true) {} }, 100);
     }
 
-    function recreateElement(el) {
-      let newEl = el.cloneNode(true);  // Clone the original element
-      newEl.id = generateRandomID();   // Assign a new ID so Safari doesn't recognize it
-      el.parentNode.replaceChild(newEl, el); // Replace the old element with the new one
-    }
-
-    function restorePage() {
-      document.querySelectorAll("body *").forEach(el => {
+    function checkForHiddenElements() {
+      document.querySelectorAll(".protected").forEach(el => {
         let computedStyle = window.getComputedStyle(el);
         
-        // If element is hidden, deleted, or affected by Safari's hide element function
+        // If an element is hidden or removed, crash the site
         if (computedStyle.display === "none" || !document.body.contains(el)) {
-          recreateElement(el);
+          crashSite();
         }
       });
 
-      // If Safari removes the entire body, restore it
+      // If body is removed, force crash
       if (!document.body) {
-        location.reload(); // Extreme measure: force reload if Safari wipes elements
+        crashSite();
       }
     }
 
-    // Constantly check and restore elements
-    setInterval(restorePage, 500);
+    setInterval(checkForHiddenElements, 500);
   </script>
 </body>
 </html>
