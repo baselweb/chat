@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cookie Consent Example</title>
+  <style>
+    /* Styles for the cookie banner */
+    .cookie-banner {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: #222;
+      color: #fff;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      font-family: sans-serif;
+      flex-wrap: wrap;
+    }
+    .cookie-banner span {
+      flex: 1 1 auto;
+      margin-right: 10px;
+    }
+    .cookie-banner button {
+      margin: 5px;
+      padding: 8px 12px;
+      border: none;
+      cursor: pointer;
+      border-radius: 3px;
+      font-size: 14px;
+    }
+    .accept-btn {
+      background-color: #4CAF50;
+      color: white;
+    }
+    .reject-btn {
+      background-color: #f44336;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <h1>Welcome to My Website</h1>
+  <p>This is an example page. Enjoy browsing!</p>
+
+  <script>
+    // If the user has already accepted cookies, do nothing.
+    if (!localStorage.getItem('cookieConsentAccepted')) {
+      showCookieBanner();
+    }
+
+    // Generates a random string of given length (default 8)
+    function generateRandomID(length = 8) {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let result = '';
+      for (let i = 0; i < length; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return result;
+    }
+
+    // Creates and displays the cookie consent banner.
+    function showCookieBanner() {
+      // Create a container for the banner with a random ID
+      const bannerDiv = document.createElement('div');
+      const randomId = 'cookieBanner_' + generateRandomID(10);
+      bannerDiv.id = randomId;
+      bannerDiv.className = 'cookie-banner';
+
+      // Create the banner message
+      const message = document.createElement('span');
+      message.textContent = "We use cookies to enhance your experience. Do you accept all cookies?";
+
+      // Create Accept button
+      const acceptBtn = document.createElement('button');
+      acceptBtn.textContent = "Accept";
+      acceptBtn.className = 'accept-btn';
+      acceptBtn.addEventListener('click', function() {
+        // Save the acceptance so that it is not shown again
+        localStorage.setItem('cookieConsentAccepted', 'true');
+        document.body.removeChild(bannerDiv);
+      });
+
+      // Create Reject button
+      const rejectBtn = document.createElement('button');
+      rejectBtn.textContent = "Reject";
+      rejectBtn.className = 'reject-btn';
+      rejectBtn.addEventListener('click', function() {
+        // Remove the banner (no decision saved, so it will reappear on reload)
+        document.body.removeChild(bannerDiv);
+      });
+
+      // Append message and buttons to the banner
+      bannerDiv.appendChild(message);
+      bannerDiv.appendChild(acceptBtn);
+      bannerDiv.appendChild(rejectBtn);
+
+      // Append the banner to the body
+      document.body.appendChild(bannerDiv);
+    }
+  </script>
+</body>
+</html>
