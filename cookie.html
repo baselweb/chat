@@ -2,9 +2,64 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Cookie Consent Example</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Swiss Universities - Cookie Project</title>
   <style>
-    /* Styles for the cookie banner */
+    /* General styles */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      background: #fafafa;
+      color: #333;
+    }
+    header {
+      background-color: #004080;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+    main {
+      padding: 20px;
+      max-width: 1000px;
+      margin: auto;
+    }
+    h1, h2 {
+      margin-top: 0;
+    }
+    /* Universities section */
+    #universities-info {
+      margin-bottom: 40px;
+    }
+    /* Cookie Project section */
+    #cookie-project-section {
+      margin-bottom: 40px;
+    }
+    #show-cookies-btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      background-color: #004080;
+      color: #fff;
+      border-radius: 5px;
+    }
+    #cookies-container {
+      margin-top: 20px;
+      gap: 10px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    }
+    .cookie-item {
+      background-color: #f0c040;
+      padding: 15px;
+      text-align: center;
+      border-radius: 8px;
+      font-weight: bold;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    /* Cookie banner styles */
     .cookie-banner {
       position: fixed;
       bottom: 0;
@@ -17,8 +72,8 @@
       justify-content: space-between;
       align-items: center;
       z-index: 1000;
-      font-family: sans-serif;
       flex-wrap: wrap;
+      box-shadow: 0 -2px 5px rgba(0,0,0,0.3);
     }
     .cookie-banner span {
       flex: 1 1 auto;
@@ -40,67 +95,132 @@
       background-color: #f44336;
       color: white;
     }
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+      .cookie-banner {
+        flex-direction: column;
+        text-align: center;
+      }
+      .cookie-banner span {
+        margin-bottom: 10px;
+      }
+    }
   </style>
 </head>
 <body>
-  <h1>Welcome to My Website</h1>
-  <p>This is an example page. Enjoy browsing!</p>
+  <header>
+    <h1>Swiss Universities</h1>
+    <p>Discover the excellence of Swiss higher education and our innovative Cookie Project.</p>
+  </header>
+
+  <main>
+    <section id="universities-info">
+      <h2>About Swiss Universities</h2>
+      <p>Switzerland is home to some of the world's most prestigious universities. From ETH Zurich and EPFL to the University of Zurich and beyond, Swiss institutions are known for their high research standards, innovation, and international outlook. Whether you are interested in technology, business, or the humanities, Swiss universities offer a vibrant and diverse academic environment.</p>
+    </section>
+
+    <section id="cookie-project-section">
+      <h2>Cookie Project</h2>
+      <p>In our Cookie Project, we celebrate cookies in more ways than one. Click the button below to reveal 20 delightful cookies!</p>
+      <button id="show-cookies-btn">Show 20 Cookies</button>
+      <div id="cookies-container" style="display: none;"></div>
+    </section>
+  </main>
 
   <script>
-    // If the user has already accepted cookies, do nothing.
-    if (!localStorage.getItem('cookieConsentAccepted')) {
-      showCookieBanner();
-    }
+    (function(){
+      // Global variable to store the current banner's random ID.
+      let currentBannerId = null;
 
-    // Generates a random string of given length (default 8)
-    function generateRandomID(length = 8) {
-      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-      let result = '';
-      for (let i = 0; i < length; i++) {
-        result += chars.charAt(Math.floor(Math.random() * chars.length));
+      // Generate a random string of given length.
+      function generateRandomID(length = 8) {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let result = '';
+        for (let i = 0; i < length; i++) {
+          result += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return result;
       }
-      return result;
-    }
 
-    // Creates and displays the cookie consent banner.
-    function showCookieBanner() {
-      // Create a container for the banner with a random ID
-      const bannerDiv = document.createElement('div');
-      const randomId = 'cookieBanner_' + generateRandomID(10);
-      bannerDiv.id = randomId;
-      bannerDiv.className = 'cookie-banner';
+      // Create and display the cookie consent banner.
+      function showCookieBanner() {
+        if (localStorage.getItem('cookieConsentAccepted')) return; // already accepted
 
-      // Create the banner message
-      const message = document.createElement('span');
-      message.textContent = "We use cookies to enhance your experience. Do you accept all cookies?";
+        const bannerDiv = document.createElement('div');
+        const randomId = 'cookieBanner_' + generateRandomID(10);
+        bannerDiv.id = randomId;
+        currentBannerId = randomId;
+        bannerDiv.className = 'cookie-banner';
 
-      // Create Accept button
-      const acceptBtn = document.createElement('button');
-      acceptBtn.textContent = "Accept";
-      acceptBtn.className = 'accept-btn';
-      acceptBtn.addEventListener('click', function() {
-        // Save the acceptance so that it is not shown again
-        localStorage.setItem('cookieConsentAccepted', 'true');
-        document.body.removeChild(bannerDiv);
+        const message = document.createElement('span');
+        message.textContent = "We use cookies to enhance your experience. Do you accept all cookies?";
+
+        const acceptBtn = document.createElement('button');
+        acceptBtn.textContent = "Accept";
+        acceptBtn.className = 'accept-btn';
+        acceptBtn.addEventListener('click', function() {
+          localStorage.setItem('cookieConsentAccepted', 'true');
+          if (bannerDiv.parentNode) bannerDiv.parentNode.removeChild(bannerDiv);
+        });
+
+        const rejectBtn = document.createElement('button');
+        rejectBtn.textContent = "Reject";
+        rejectBtn.className = 'reject-btn';
+        rejectBtn.addEventListener('click', function() {
+          // Remove the banner without saving the decision so that it reappears.
+          if (bannerDiv.parentNode) bannerDiv.parentNode.removeChild(bannerDiv);
+        });
+
+        bannerDiv.appendChild(message);
+        bannerDiv.appendChild(acceptBtn);
+        bannerDiv.appendChild(rejectBtn);
+        document.body.appendChild(bannerDiv);
+      }
+
+      // Check every second to ensure the banner is visible (or re-create it if removed).
+      setInterval(function() {
+        if (localStorage.getItem('cookieConsentAccepted')) return; // do nothing if accepted
+
+        var banner = currentBannerId ? document.getElementById(currentBannerId) : null;
+        if (!banner) {
+          // Banner is missing—recreate it.
+          showCookieBanner();
+        } else {
+          // If the banner is hidden (e.g. via Safari's hide element), force it visible.
+          let compStyle = window.getComputedStyle(banner);
+          if (compStyle.display === 'none') {
+            banner.style.display = 'flex';
+          }
+        }
+      }, 1000);
+
+      // Initially show the cookie banner if cookies haven't been accepted.
+      if (!localStorage.getItem('cookieConsentAccepted')) {
+        showCookieBanner();
+      }
+
+      // Cookie Project: Toggle display of 20 cookie items.
+      const showCookiesBtn = document.getElementById('show-cookies-btn');
+      const cookiesContainer = document.getElementById('cookies-container');
+      let cookiesLoaded = false;
+      showCookiesBtn.addEventListener('click', function() {
+        // Toggle the container's display.
+        if (cookiesContainer.style.display === 'none' || cookiesContainer.style.display === '') {
+          if (!cookiesLoaded) {
+            for (let i = 1; i <= 20; i++) {
+              let cookieDiv = document.createElement('div');
+              cookieDiv.className = 'cookie-item';
+              cookieDiv.textContent = 'Cookie #' + i;
+              cookiesContainer.appendChild(cookieDiv);
+            }
+            cookiesLoaded = true;
+          }
+          cookiesContainer.style.display = 'grid';
+        } else {
+          cookiesContainer.style.display = 'none';
+        }
       });
-
-      // Create Reject button
-      const rejectBtn = document.createElement('button');
-      rejectBtn.textContent = "Reject";
-      rejectBtn.className = 'reject-btn';
-      rejectBtn.addEventListener('click', function() {
-        // Remove the banner (no decision saved, so it will reappear on reload)
-        document.body.removeChild(bannerDiv);
-      });
-
-      // Append message and buttons to the banner
-      bannerDiv.appendChild(message);
-      bannerDiv.appendChild(acceptBtn);
-      bannerDiv.appendChild(rejectBtn);
-
-      // Append the banner to the body
-      document.body.appendChild(bannerDiv);
-    }
+    })();
   </script>
 </body>
 </html>
