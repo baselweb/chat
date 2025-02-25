@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Unhide Protection</title>
+  <title>Unstoppable Elements</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -21,35 +21,48 @@
 </head>
 <body>
   <h1 class="protected">Safari Cannot Hide This</h1>
-  <p class="protected">If you try to hide elements, the page will reset.</p>
-  <div class="protected">Try hiding me—I dare you.</div>
-  <div class="protected">Let's see if you can keep me hidden.</div>
+  <p class="protected">Try to hide or delete me—I dare you.</p>
+  <div class="protected">This content will always come back.</div>
 
   <script>
-    function clearUserData() {
-      // Delete cookies
-      document.cookie.split(";").forEach((c) => { 
-        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date(0).toUTCString() + ";path=/");
-      });
-
-      // Clear localStorage and sessionStorage
-      localStorage.clear();
-      sessionStorage.clear();
+    function forceShow(el) {
+      el.style.display = "block";
+      el.style.visibility = "visible";
+      el.style.opacity = "1";
+      el.style.height = "auto";
+      el.style.width = "auto";
+      el.style.position = "relative";
     }
 
-    function checkForHiddenElements() {
-      document.querySelectorAll(".protected").forEach(el => {
-        let computedStyle = window.getComputedStyle(el);
-        
-        // If an element is hidden or removed, clear data and refresh
-        if (computedStyle.display === "none" || !document.body.contains(el)) {
-          clearUserData();
-          location.reload();
-        }
-      });
+    function recreateElement(el) {
+      let newEl = el.cloneNode(true);
+      el.parentNode.replaceChild(newEl, el);
+      observeElement(newEl); // Keep watching the new element
     }
 
-    setInterval(checkForHiddenElements, 1000);
+    function observeElement(el) {
+      forceShow(el); // Ensure it's visible
+      
+      new MutationObserver((mutations) => {
+        mutations.forEach(mutation => {
+          if (mutation.attributeName === "style") {
+            forceShow(el);
+          }
+        });
+      }).observe(el, { attributes: true, attributeFilter: ["style"] });
+
+      new MutationObserver((mutations) => {
+        mutations.forEach(mutation => {
+          mutation.removedNodes.forEach(removed => {
+            if (removed === el) {
+              recreateElement(el);
+            }
+          });
+        });
+      }).observe(el.parentNode, { childList: true });
+    }
+
+    document.querySelectorAll(".protected").forEach(observeElement);
   </script>
 </body>
 </html>
