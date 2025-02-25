@@ -3,17 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>No Hiding Allowed!</title>
+  <title>Unstoppable Page</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 20px;
       background: #fafafa;
     }
-    h1 {
-      color: #333;
-    }
-    p, div {
+    .protected {
       margin: 10px 0;
       padding: 10px;
       background: #e0e0e0;
@@ -22,24 +19,29 @@
   </style>
 </head>
 <body>
-  <h1>This page overcomes Safari's "Hide Element" feature</h1>
-  <p>Try using Safari’s hide element function (right-click or long-press on an element and choose “Hide Element”). Every element on this page is monitored and forced to be visible!</p>
-  
-  <div>Element 1: Always visible</div>
-  <div>Element 2: Always visible</div>
-  <div>Element 3: Always visible</div>
-  <p>Even paragraphs cannot be hidden.</p>
+  <h1 class="protected">Safari Cannot Hide This</h1>
+  <p class="protected">No matter what you do, these elements will always come back.</p>
+  <div class="protected">Try hiding me—I dare you.</div>
+  <div class="protected">I will always return.</div>
   
   <script>
-    // Every second, iterate over all elements and force any hidden element to be displayed.
-    setInterval(function() {
-      // Select all elements inside the body.
-      var allElements = document.querySelectorAll("body *");
-      allElements.forEach(function(el) {
-        // Check computed style for display:none.
-        if (getComputedStyle(el).display === "none") {
-          // Force display: block with !important.
-          el.style.setProperty("display", "block", "important");
+    function generateRandomID() {
+      return 'element_' + Math.random().toString(36).substr(2, 10);
+    }
+
+    function recreateElement(el) {
+      let newEl = el.cloneNode(true);  // Clone the original element
+      newEl.id = generateRandomID();   // Assign a new ID so Safari doesn't recognize it
+      el.parentNode.replaceChild(newEl, el); // Replace the old element with the new one
+    }
+
+    setInterval(() => {
+      document.querySelectorAll(".protected").forEach(el => {
+        let computedStyle = window.getComputedStyle(el);
+        
+        // If hidden (display: none), recreate it
+        if (computedStyle.display === "none" || !document.body.contains(el)) {
+          recreateElement(el);
         }
       });
     }, 1000);
