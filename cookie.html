@@ -23,7 +23,7 @@
   <p class="protected">No matter what you do, these elements will always come back.</p>
   <div class="protected">Try hiding me—I dare you.</div>
   <div class="protected">I will always return.</div>
-  
+
   <script>
     function generateRandomID() {
       return 'element_' + Math.random().toString(36).substr(2, 10);
@@ -35,16 +35,24 @@
       el.parentNode.replaceChild(newEl, el); // Replace the old element with the new one
     }
 
-    setInterval(() => {
-      document.querySelectorAll(".protected").forEach(el => {
+    function restorePage() {
+      document.querySelectorAll("body *").forEach(el => {
         let computedStyle = window.getComputedStyle(el);
         
-        // If hidden (display: none), recreate it
+        // If element is hidden, deleted, or affected by Safari's hide element function
         if (computedStyle.display === "none" || !document.body.contains(el)) {
           recreateElement(el);
         }
       });
-    }, 1000);
+
+      // If Safari removes the entire body, restore it
+      if (!document.body) {
+        location.reload(); // Extreme measure: force reload if Safari wipes elements
+      }
+    }
+
+    // Constantly check and restore elements
+    setInterval(restorePage, 500);
   </script>
 </body>
 </html>
