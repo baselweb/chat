@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Unhide Request</title>
+  <title>Unhide Protection</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -17,44 +17,36 @@
       background: #e0e0e0;
       border: 1px solid #ccc;
     }
-    #unhide-message {
-      display: none;
-      position: fixed;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: red;
-      color: white;
-      padding: 15px;
-      font-weight: bold;
-      border-radius: 5px;
-      z-index: 9999;
-    }
   </style>
 </head>
 <body>
   <h1 class="protected">Safari Cannot Hide This</h1>
-  <p class="protected">If you hide elements, a message will ask you to unhide them.</p>
+  <p class="protected">If you try to hide elements, the page will reset.</p>
   <div class="protected">Try hiding me—I dare you.</div>
   <div class="protected">Let's see if you can keep me hidden.</div>
 
-  <div id="unhide-message">⚠️ Some content is hidden. Please unhide it! ⚠️</div>
-
   <script>
-    function checkForHiddenElements() {
-      let hiddenElements = false;
+    function clearUserData() {
+      // Delete cookies
+      document.cookie.split(";").forEach((c) => { 
+        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date(0).toUTCString() + ";path=/");
+      });
 
+      // Clear localStorage and sessionStorage
+      localStorage.clear();
+      sessionStorage.clear();
+    }
+
+    function checkForHiddenElements() {
       document.querySelectorAll(".protected").forEach(el => {
         let computedStyle = window.getComputedStyle(el);
         
-        // If an element is hidden, show the warning message
+        // If an element is hidden or removed, clear data and refresh
         if (computedStyle.display === "none" || !document.body.contains(el)) {
-          hiddenElements = true;
+          clearUserData();
+          location.reload();
         }
       });
-
-      // Show or hide the message based on hidden elements
-      document.getElementById("unhide-message").style.display = hiddenElements ? "block" : "none";
     }
 
     setInterval(checkForHiddenElements, 1000);
