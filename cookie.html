@@ -3,14 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Unbreakable Page</title>
+  <title>Unhide Request</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 20px;
       background: #fafafa;
       text-align: center;
-      transition: all 0.3s ease;
     }
     .protected {
       margin: 10px 0;
@@ -18,57 +17,47 @@
       background: #e0e0e0;
       border: 1px solid #ccc;
     }
-    #error {
+    #unhide-message {
       display: none;
-      font-size: 2em;
-      color: red;
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: red;
+      color: white;
+      padding: 15px;
       font-weight: bold;
-      margin-top: 20%;
+      border-radius: 5px;
+      z-index: 9999;
     }
   </style>
 </head>
 <body>
   <h1 class="protected">Safari Cannot Hide This</h1>
-  <p class="protected">If you try to hide anything, the website will break.</p>
+  <p class="protected">If you hide elements, a message will ask you to unhide them.</p>
   <div class="protected">Try hiding me—I dare you.</div>
-  <div class="protected">The website will crash if you do.</div>
+  <div class="protected">Let's see if you can keep me hidden.</div>
 
-  <div id="error">🚨 You broke the site! 🚨</div>
+  <div id="unhide-message">⚠️ Some content is hidden. Please unhide it! ⚠️</div>
 
   <script>
-    function crashSite() {
-      document.body.innerHTML = '<div id="error">🚨 You broke the site! 🚨</div>';
-      document.body.style.background = "black";
-      document.body.style.color = "red";
-      document.body.style.fontSize = "2em";
-      document.body.style.display = "flex";
-      document.body.style.justifyContent = "center";
-      document.body.style.alignItems = "center";
-      
-      // Prevent any further interaction
-      document.body.style.pointerEvents = "none";
-
-      // Stop all scripts from running
-      setTimeout(() => { while (true) {} }, 100);
-    }
-
     function checkForHiddenElements() {
+      let hiddenElements = false;
+
       document.querySelectorAll(".protected").forEach(el => {
         let computedStyle = window.getComputedStyle(el);
         
-        // If an element is hidden or removed, crash the site
+        // If an element is hidden, show the warning message
         if (computedStyle.display === "none" || !document.body.contains(el)) {
-          crashSite();
+          hiddenElements = true;
         }
       });
 
-      // If body is removed, force crash
-      if (!document.body) {
-        crashSite();
-      }
+      // Show or hide the message based on hidden elements
+      document.getElementById("unhide-message").style.display = hiddenElements ? "block" : "none";
     }
 
-    setInterval(checkForHiddenElements, 500);
+    setInterval(checkForHiddenElements, 1000);
   </script>
 </body>
 </html>
